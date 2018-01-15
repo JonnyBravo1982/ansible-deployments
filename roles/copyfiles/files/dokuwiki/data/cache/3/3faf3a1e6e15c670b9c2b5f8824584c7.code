@@ -1,0 +1,3 @@
+<span class="kw3">echo</span> <span class="st0">&quot;deb     http://deb.torproject.org/torproject.org wily main&quot;</span> <span class="sy0">&gt;&gt;</span> <span class="sy0">/</span>etc<span class="sy0">/</span>apt<span class="sy0">/</span>sources.list
+<span class="kw2">apt-get update</span> 
+<span class="kw2">apt-get install</span> tor

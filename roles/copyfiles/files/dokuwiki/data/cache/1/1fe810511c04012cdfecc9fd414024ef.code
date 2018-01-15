@@ -1,0 +1,254 @@
+<span class="kw1">IF</span> OBJECT_ID<span class="br0">&#40;</span><span class="st0">'SP_SearchTables'</span><span class="sy0">,</span><span class="st0">'P'</span><span class="br0">&#41;</span> <span class="kw1">IS</span> <span class="kw1">NOT</span> <span class="kw1">NULL</span>
+	<span class="kw1">DROP</span> <span class="kw1">PROCEDURE</span> SP_SearchTables
+<span class="kw1">GO</span>
+<span class="kw1">CREATE</span> <span class="kw1">PROCEDURE</span> SP_SearchTables
+ @Tablenames <span class="kw1">VARCHAR</span><span class="br0">&#40;</span><span class="nu0">500</span><span class="br0">&#41;</span>
+<span class="sy0">,</span>@SearchStr NVARCHAR<span class="br0">&#40;</span><span class="nu0">60</span><span class="br0">&#41;</span>
+<span class="sy0">,</span>@GenerateSQLOnly Bit <span class="sy0">=</span> <span class="nu0">0</span>
+<span class="kw1">AS</span>
+&nbsp;
+<span class="coMULTI">/*
+	Parameters and usage
+&nbsp;
+	@Tablenames		-- Provide a single table name or multiple table name with comma seperated. 
+						If left blank , it will check for all the tables in the database
+						Provide wild card tables names with comma seperated
+						EX :'%tbl%,Dim%' -- This will search the table having names comtains &quot;tbl&quot; and starts with &quot;Dim&quot;
+&nbsp;
+	@SearchStr		-- Provide the search string. Use the '%' to coin the search. Also can provide multiple search with comma seperated
+						EX : X%--- will give data staring with X
+							 %X--- will give data ending with X
+							 %X%--- will give data containig  X
+							 %X%,Y%--- will give data containig  X or starting with Y
+							 %X%,%,,% -- Use a double comma to search comma in the data
+	@GenerateSQLOnly -- Provide 1 if you only want to generate the SQL statements without seraching the database. 
+						By default it is 0 and it will search.
+&nbsp;
+	Samples :
+&nbsp;
+	1. To search data in a table
+&nbsp;
+		EXEC SP_SearchTables @Tablenames = 'T1'
+						 ,@SearchStr  = '%TEST%'
+&nbsp;
+		The above sample searches in table T1 with string containing TEST.
+&nbsp;
+	2. To search in a multiple table
+&nbsp;
+		EXEC SP_SearchTables @Tablenames = 'T2'
+						 ,@SearchStr  = '%TEST%'
+&nbsp;
+		The above sample searches in tables T1 &amp; T2 with string containing TEST.
+&nbsp;
+	3. To search in a all table
+&nbsp;
+		EXEC SP_SearchTables @Tablenames = '%'
+						 ,@SearchStr  = '%TEST%'
+&nbsp;
+		The above sample searches in all table with string containing TEST.
+&nbsp;
+	4. Generate the SQL for the Select statements
+&nbsp;
+		EXEC SP_SearchTables @Tablenames		= 'T1'
+						 ,@SearchStr		= '%TEST%'
+						 ,@GenerateSQLOnly	= 1
+&nbsp;
+	5. To Search in tables with specfic name
+&nbsp;
+		EXEC SP_SearchTables @Tablenames		= '%T1%'
+						 ,@SearchStr		= '%TEST%'
+						 ,@GenerateSQLOnly	= 0
+&nbsp;
+	6. To Search in multiple tables with specfic names
+&nbsp;
+		EXEC SP_SearchTables @Tablenames		= '%T1%,Dim%'
+						 ,@SearchStr		= '%TEST%'
+						 ,@GenerateSQLOnly	= 0
+&nbsp;
+	7. To specify multiple search strings
+&nbsp;
+		EXEC SP_SearchTables @Tablenames		= '%T1%,Dim%'
+						 ,@SearchStr		= '%TEST%,TEST1%,%TEST2'
+						 ,@GenerateSQLOnly	= 0
+&nbsp;
+&nbsp;
+	8. To search comma itself in the tables use double comma &quot;,,&quot;
+&nbsp;
+		EXEC SP_SearchTables @Tablenames		= '%T1%,Dim%'
+						 ,@SearchStr		= '%,,%'
+						 ,@GenerateSQLOnly	= 0
+&nbsp;
+		EXEC SP_SearchTables @Tablenames		= '%T1%,Dim%'
+						 ,@SearchStr		= '%with,,comma%'
+						 ,@GenerateSQLOnly	= 0
+*/</span>
+&nbsp;
+	<span class="kw1">SET</span> NOCOUNT <span class="kw1">ON</span>
+&nbsp;
+	<span class="kw1">DECLARE</span> @MatchFound BIT
+&nbsp;
+	<span class="kw1">SELECT</span> @MatchFound <span class="sy0">=</span> <span class="nu0">0</span>
+&nbsp;
+	<span class="kw1">DECLARE</span> @CheckTableNames <span class="kw1">TABLE</span>
+	<span class="br0">&#40;</span>
+	Tablename sysname
+	<span class="br0">&#41;</span>
+&nbsp;
+	<span class="kw1">DECLARE</span> @SearchStringTbl <span class="kw1">TABLE</span>
+	<span class="br0">&#40;</span>
+	SearchString <span class="kw1">VARCHAR</span><span class="br0">&#40;</span><span class="nu0">500</span><span class="br0">&#41;</span>
+	<span class="br0">&#41;</span>
+&nbsp;
+	<span class="kw1">DECLARE</span> @SQLTbl <span class="kw1">TABLE</span>
+	<span class="br0">&#40;</span>
+	 Tablename		SYSNAME
+	<span class="sy0">,</span>WHEREClause    <span class="kw1">VARCHAR</span><span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span>
+	<span class="sy0">,</span>SQLStatement   <span class="kw1">VARCHAR</span><span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span>
+	<span class="sy0">,</span>Execstatus		BIT 
+	<span class="br0">&#41;</span>
+&nbsp;
+	<span class="kw1">DECLARE</span> @<span class="kw1">SQL</span> <span class="kw1">VARCHAR</span><span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span>
+	<span class="kw1">DECLARE</span> @TblSQL <span class="kw1">VARCHAR</span><span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span>
+	<span class="kw1">DECLARE</span> @tmpTblname sysname
+	<span class="kw1">DECLARE</span> @ErrMsg <span class="kw1">VARCHAR</span><span class="br0">&#40;</span><span class="nu0">100</span><span class="br0">&#41;</span>
+&nbsp;
+	<span class="kw1">IF</span> LTRIM<span class="br0">&#40;</span>RTRIM<span class="br0">&#40;</span>@Tablenames<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="kw1">IN</span> <span class="br0">&#40;</span><span class="st0">''</span> <span class="sy0">,</span><span class="st0">'%'</span><span class="br0">&#41;</span>
+	<span class="kw1">BEGIN</span>
+&nbsp;
+		<span class="kw1">INSERT</span> <span class="kw1">INTO</span> @CheckTableNames
+		<span class="kw1">SELECT</span> Name
+		  <span class="kw1">FROM</span> sys<span class="sy0">.</span>tables
+	<span class="kw1">END</span>
+	<span class="kw1">ELSE</span>
+	<span class="kw1">BEGIN</span>
+&nbsp;
+		<span class="kw1">IF</span> CHARINDEX<span class="br0">&#40;</span><span class="st0">','</span><span class="sy0">,</span>@Tablenames<span class="br0">&#41;</span> <span class="sy0">&gt;</span> <span class="nu0">0</span> 
+			<span class="kw1">SELECT</span> @<span class="kw1">SQL</span> <span class="sy0">=</span> <span class="st0">'SELECT '</span><span class="st0">''</span> <span class="sy0">+</span> <span class="kw1">REPLACE</span><span class="br0">&#40;</span>@Tablenames<span class="sy0">,</span><span class="st0">','</span><span class="sy0">,</span><span class="st0">''</span><span class="st0">'as TblName UNION SELECT '</span><span class="st0">''</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">''</span><span class="st0">''</span>
+		<span class="kw1">ELSE</span>
+			<span class="kw1">SELECT</span> @<span class="kw1">SQL</span> <span class="sy0">=</span> <span class="st0">'SELECT '</span><span class="st0">''</span> <span class="sy0">+</span> @Tablenames <span class="sy0">+</span> <span class="st0">''</span><span class="st0">' as TblName '</span>
+&nbsp;
+		<span class="kw1">SELECT</span> @TblSQL <span class="sy0">=</span> <span class="st0">'SELECT T.NAME
+							FROM SYS.TABLES T
+							JOIN ('</span> <span class="sy0">+</span> @<span class="kw1">SQL</span> <span class="sy0">+</span> <span class="st0">') tblsrc
+							 ON T.name LIKE tblsrc.tblname '</span>
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+		<span class="kw1">INSERT</span> <span class="kw1">INTO</span> @CheckTableNames
+		<span class="kw1">EXEC</span><span class="br0">&#40;</span>@TblSQL<span class="br0">&#41;</span>
+&nbsp;
+	<span class="kw1">END</span>
+&nbsp;
+	<span class="kw1">IF</span> <span class="kw1">NOT</span> <span class="kw1">EXISTS</span><span class="br0">&#40;</span><span class="kw1">SELECT</span> <span class="nu0">1</span> <span class="kw1">FROM</span> @CheckTableNames<span class="br0">&#41;</span>
+	<span class="kw1">BEGIN</span>
+&nbsp;
+		<span class="kw1">SELECT</span> @ErrMsg <span class="sy0">=</span> <span class="st0">'No tables are found in this database '</span> <span class="sy0">+</span> DB_NAME<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">' for the specified filter'</span>
+		PRINT @ErrMsg
+		<span class="kw1">RETURN</span>
+&nbsp;
+	<span class="kw1">END</span>
+&nbsp;
+&nbsp;
+	<span class="kw1">IF</span> LTRIM<span class="br0">&#40;</span>RTRIM<span class="br0">&#40;</span>@SearchStr<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">=</span><span class="st0">''</span>
+	<span class="kw1">BEGIN</span>
+&nbsp;
+		<span class="kw1">SELECT</span> @ErrMsg <span class="sy0">=</span> <span class="st0">'Please specify the search string in @SearchStr Parameter'</span>
+		PRINT @ErrMsg
+		<span class="kw1">RETURN</span>
+	<span class="kw1">END</span>
+	<span class="kw1">ELSE</span>
+	<span class="kw1">BEGIN</span> 
+		<span class="kw1">SELECT</span> @SearchStr <span class="sy0">=</span> <span class="kw1">REPLACE</span><span class="br0">&#40;</span>@SearchStr<span class="sy0">,</span><span class="st0">',,,'</span><span class="sy0">,</span><span class="st0">',#DOUBLECOMMA#'</span><span class="br0">&#41;</span>
+		<span class="kw1">SELECT</span> @SearchStr <span class="sy0">=</span> <span class="kw1">REPLACE</span><span class="br0">&#40;</span>@SearchStr<span class="sy0">,</span><span class="st0">',,'</span><span class="sy0">,</span><span class="st0">'#DOUBLECOMMA#'</span><span class="br0">&#41;</span>
+&nbsp;
+		<span class="kw1">SELECT</span> @<span class="kw1">SQL</span> <span class="sy0">=</span> <span class="st0">'SELECT '</span><span class="st0">''</span> <span class="sy0">+</span> <span class="kw1">REPLACE</span><span class="br0">&#40;</span>@SearchStr<span class="sy0">,</span><span class="st0">','</span><span class="sy0">,</span><span class="st0">''</span><span class="st0">'as SearchString UNION SELECT '</span><span class="st0">''</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">''</span><span class="st0">''</span>
+&nbsp;
+		<span class="kw1">INSERT</span> <span class="kw1">INTO</span> @SearchStringTbl
+		<span class="br0">&#40;</span>SearchString<span class="br0">&#41;</span>
+		<span class="kw1">EXEC</span><span class="br0">&#40;</span>@<span class="kw1">SQL</span><span class="br0">&#41;</span>
+&nbsp;
+		<span class="kw1">UPDATE</span> @SearchStringTbl
+		   <span class="kw1">SET</span> SearchString <span class="sy0">=</span> <span class="kw1">REPLACE</span><span class="br0">&#40;</span>SearchString <span class="sy0">,</span><span class="st0">'#DOUBLECOMMA#'</span><span class="sy0">,</span><span class="st0">','</span><span class="br0">&#41;</span>
+	<span class="kw1">END</span>
+&nbsp;
+&nbsp;
+&nbsp;
+	<span class="kw1">INSERT</span> <span class="kw1">INTO</span> @SQLTbl
+	<span class="br0">&#40;</span> Tablename<span class="sy0">,</span>WHEREClause<span class="br0">&#41;</span>
+	<span class="kw1">SELECT</span> QUOTENAME<span class="br0">&#40;</span>SCh<span class="sy0">.</span>name<span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">'.'</span> <span class="sy0">+</span> QUOTENAME<span class="br0">&#40;</span>ST<span class="sy0">.</span>NAME<span class="br0">&#41;</span><span class="sy0">,</span>
+			<span class="br0">&#40;</span>
+				<span class="kw1">SELECT</span> <span class="st0">'['</span> <span class="sy0">+</span> SC<span class="sy0">.</span>Name <span class="sy0">+</span> <span class="st0">']'</span> <span class="sy0">+</span> <span class="st0">' LIKE '</span><span class="st0">''</span> <span class="sy0">+</span> SearchSTR<span class="sy0">.</span>SearchString <span class="sy0">+</span> <span class="st0">''</span><span class="st0">' OR '</span> <span class="sy0">+</span> <span class="kw1">CHAR</span><span class="br0">&#40;</span><span class="nu0">10</span><span class="br0">&#41;</span>
+				  <span class="kw1">FROM</span> SYS<span class="sy0">.</span>columns SC
+				  <span class="kw1">JOIN</span> SYS<span class="sy0">.</span>types STy
+					<span class="kw1">ON</span> STy<span class="sy0">.</span>system_type_id <span class="sy0">=</span> SC<span class="sy0">.</span>system_type_id
+				   <span class="kw1">AND</span> STy<span class="sy0">.</span>user_type_id <span class="sy0">=</span>SC<span class="sy0">.</span>user_type_id
+				  <span class="kw1">CROSS</span> <span class="kw1">JOIN</span> @SearchStringTbl SearchSTR
+				 <span class="kw1">WHERE</span> STY<span class="sy0">.</span>name <span class="kw1">IN</span> <span class="br0">&#40;</span><span class="st0">'varchar'</span><span class="sy0">,</span><span class="st0">'char'</span><span class="sy0">,</span><span class="st0">'nvarchar'</span><span class="sy0">,</span><span class="st0">'nchar'</span><span class="sy0">,</span><span class="st0">'text'</span><span class="br0">&#41;</span>
+				   <span class="kw1">AND</span> SC<span class="sy0">.</span>object_id <span class="sy0">=</span> ST<span class="sy0">.</span>object_id
+				 <span class="kw1">ORDER</span> <span class="kw1">BY</span> SC<span class="sy0">.</span>name
+				<span class="kw1">FOR</span> XML PATH<span class="br0">&#40;</span><span class="st0">''</span><span class="br0">&#41;</span>
+			<span class="br0">&#41;</span>
+	  <span class="kw1">FROM</span>  SYS<span class="sy0">.</span>tables ST
+	  <span class="kw1">JOIN</span> @CheckTableNames chktbls
+				<span class="kw1">ON</span> chktbls<span class="sy0">.</span>Tablename <span class="sy0">=</span> ST<span class="sy0">.</span>name 
+	  <span class="kw1">JOIN</span> SYS<span class="sy0">.</span>schemas SCh
+	    <span class="kw1">ON</span> ST<span class="sy0">.</span>schema_id <span class="sy0">=</span> SCh<span class="sy0">.</span>schema_id
+	 <span class="kw1">WHERE</span> ST<span class="sy0">.</span>name <span class="sy0">&lt;&gt;</span> <span class="st0">'SearchTMP'</span>
+      <span class="kw1">GROUP</span> <span class="kw1">BY</span> ST<span class="sy0">.</span>object_id<span class="sy0">,</span> QUOTENAME<span class="br0">&#40;</span>SCh<span class="sy0">.</span>name<span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">'.'</span> <span class="sy0">+</span>  QUOTENAME<span class="br0">&#40;</span>ST<span class="sy0">.</span>NAME<span class="br0">&#41;</span> ;
+&nbsp;
+&nbsp;
+	  <span class="kw1">UPDATE</span> @SQLTbl
+		 <span class="kw1">SET</span> SQLStatement <span class="sy0">=</span> <span class="st0">'SELECT * INTO SearchTMP FROM '</span> <span class="sy0">+</span> Tablename <span class="sy0">+</span> <span class="st0">' WHERE '</span> <span class="sy0">+</span> <span class="kw1">SUBSTRING</span><span class="br0">&#40;</span>WHEREClause<span class="sy0">,</span><span class="nu0">1</span><span class="sy0">,</span>len<span class="br0">&#40;</span>WHEREClause<span class="br0">&#41;</span><span class="sy0">-</span><span class="nu0">5</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+&nbsp;
+	  <span class="kw1">DELETE</span> <span class="kw1">FROM</span> @SQLTbl
+	   <span class="kw1">WHERE</span> WHEREClause <span class="kw1">IS</span> <span class="kw1">NULL</span>
+&nbsp;
+	WHILE <span class="kw1">EXISTS</span> <span class="br0">&#40;</span><span class="kw1">SELECT</span> <span class="nu0">1</span> <span class="kw1">FROM</span> @SQLTbl <span class="kw1">WHERE</span> ISNULL<span class="br0">&#40;</span>Execstatus <span class="sy0">,</span><span class="nu0">0</span><span class="br0">&#41;</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="br0">&#41;</span>
+	<span class="kw1">BEGIN</span>
+&nbsp;
+		<span class="kw1">SELECT</span> TOP <span class="nu0">1</span> @tmpTblname <span class="sy0">=</span> Tablename <span class="sy0">,</span> @<span class="kw1">SQL</span> <span class="sy0">=</span> SQLStatement
+		  <span class="kw1">FROM</span> @SQLTbl 
+		 <span class="kw1">WHERE</span> ISNULL<span class="br0">&#40;</span>Execstatus <span class="sy0">,</span><span class="nu0">0</span><span class="br0">&#41;</span> <span class="sy0">=</span> <span class="nu0">0</span>
+&nbsp;
+		 <span class="kw1">IF</span> @GenerateSQLOnly <span class="sy0">=</span> <span class="nu0">0</span>
+		 <span class="kw1">BEGIN</span>
+&nbsp;
+			<span class="kw1">IF</span> OBJECT_ID<span class="br0">&#40;</span><span class="st0">'SearchTMP'</span><span class="sy0">,</span><span class="st0">'U'</span><span class="br0">&#41;</span> <span class="kw1">IS</span> <span class="kw1">NOT</span> <span class="kw1">NULL</span>
+				<span class="kw1">DROP</span> <span class="kw1">TABLE</span> SearchTMP
+&nbsp;
+			<span class="kw1">EXEC</span> <span class="br0">&#40;</span>@<span class="kw1">SQL</span><span class="br0">&#41;</span>
+&nbsp;
+			<span class="kw1">IF</span> <span class="kw1">EXISTS</span><span class="br0">&#40;</span><span class="kw1">SELECT</span> <span class="nu0">1</span> <span class="kw1">FROM</span> SearchTMP<span class="br0">&#41;</span>
+			<span class="kw1">BEGIN</span>
+				<span class="kw1">SELECT</span> Tablename<span class="sy0">=</span>@tmpTblname<span class="sy0">,*</span> <span class="kw1">FROM</span> SearchTMP
+				<span class="kw1">SELECT</span> @MatchFound <span class="sy0">=</span> <span class="nu0">1</span>
+			<span class="kw1">END</span>
+&nbsp;
+		 <span class="kw1">END</span>
+		 <span class="kw1">ELSE</span>
+		 <span class="kw1">BEGIN</span>
+			 PRINT REPLICATE<span class="br0">&#40;</span><span class="st0">'-'</span><span class="sy0">,</span><span class="nu0">100</span><span class="br0">&#41;</span>
+			 PRINT @tmpTblname
+			 PRINT REPLICATE<span class="br0">&#40;</span><span class="st0">'-'</span><span class="sy0">,</span><span class="nu0">100</span><span class="br0">&#41;</span>
+			 PRINT <span class="kw1">REPLACE</span><span class="br0">&#40;</span>@<span class="kw1">SQL</span><span class="sy0">,</span><span class="st0">'INTO SearchTMP'</span><span class="sy0">,</span><span class="st0">''</span><span class="br0">&#41;</span>
+		 <span class="kw1">END</span>
+&nbsp;
+		 <span class="kw1">UPDATE</span> @SQLTbl
+		    <span class="kw1">SET</span> Execstatus <span class="sy0">=</span> <span class="nu0">1</span>
+		  <span class="kw1">WHERE</span> Tablename <span class="sy0">=</span> @tmpTblname
+&nbsp;
+	<span class="kw1">END</span>
+&nbsp;
+	<span class="kw1">IF</span> @MatchFound <span class="sy0">=</span> <span class="nu0">0</span> 
+	<span class="kw1">BEGIN</span>
+		<span class="kw1">SELECT</span> @ErrMsg <span class="sy0">=</span> <span class="st0">'No Matches are found in this database '</span> <span class="sy0">+</span> DB_NAME<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">' for the specified filter'</span>
+		PRINT @ErrMsg
+		<span class="kw1">RETURN</span>
+	<span class="kw1">END</span>
+&nbsp;
+	<span class="kw1">SET</span> NOCOUNT OFF
+&nbsp;
+<span class="kw1">GO</span>

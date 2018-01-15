@@ -1,0 +1,67 @@
+<span class="co1">#XAML Testing</span>
+<span class="br0">&#91;</span>void<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="re4">System.Reflection.Assembly</span><span class="br0">&#93;</span>::<span class="re5">LoadWithPartialName</span><span class="br0">&#40;</span><span class="st0">'presentationframework'</span><span class="br0">&#41;</span>
+<span class="br0">&#91;</span><span class="re3">xml</span><span class="br0">&#93;</span><span class="re0">$XAML</span> <span class="sy0">=</span> <span class="sy0">@</span><span class="st0">'
+&lt;Window 
+        xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+        xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+        Title=&quot;MainWindow&quot; Height=&quot;331.361&quot; Width=&quot;275.444&quot;&gt;
+       &lt;Grid Margin=&quot;0,0,2,-4&quot; Background=&quot;{DynamicResource {x:Static SystemColors.ControlBrushKey}}&quot; Height=&quot;424&quot; VerticalAlignment=&quot;Top&quot;&gt;      
+&nbsp;
+        &lt;Button Name=&quot;button&quot; Content=&quot;Button&quot; HorizontalAlignment=&quot;Left&quot; Margin=&quot;10,10,0,0&quot; VerticalAlignment=&quot;Top&quot; Width=&quot;75&quot;/&gt;
+        &lt;Button Name=&quot;Exit&quot; Content=&quot;Exit&quot; HorizontalAlignment=&quot;Left&quot; Margin=&quot;10,35,0,0&quot; VerticalAlignment=&quot;Top&quot; Width=&quot;75&quot; RenderTransformOrigin=&quot;0.795,0.374&quot;/&gt;
+        &lt;Button Name=&quot;Remote&quot; Content=&quot;RemoteCon&quot; HorizontalAlignment=&quot;Left&quot; Margin=&quot;90,10,0,0&quot; VerticalAlignment=&quot;Top&quot; Width=&quot;75&quot;/&gt;
+        &lt;TextBox Name=&quot;CName&quot; HorizontalAlignment=&quot;Left&quot; Height=&quot;21&quot; Margin=&quot;130,81,0,0&quot; TextWrapping=&quot;Wrap&quot; Text=&quot;TextBox&quot; VerticalAlignment=&quot;Top&quot; Width=&quot;129&quot; IsEnabled=&quot;False&quot; /&gt;
+        &lt;TextBox Name=&quot;CName_W&quot; HorizontalAlignment=&quot;Left&quot; Height=&quot;21&quot; Margin=&quot;10,81,0,0&quot; TextWrapping=&quot;Wrap&quot; Text=&quot;TextBox&quot; VerticalAlignment=&quot;Top&quot; Width=&quot;99&quot; IsEnabled=&quot;False&quot;/&gt;
+        &lt;TextBox Name=&quot;RemoteConT&quot; HorizontalAlignment=&quot;Left&quot; Height=&quot;23&quot; TextWrapping=&quot;Wrap&quot; Text=&quot;TextBox&quot; VerticalAlignment=&quot;Top&quot; Width=&quot;98&quot; Margin=&quot;0,271,0,0&quot; IsEnabled=&quot;False&quot; /&gt; 
+        &lt;TextBox Name=&quot;RemoteCon&quot; HorizontalAlignment=&quot;Left&quot; Height=&quot;23&quot; Margin=&quot;119,271,0,0&quot; TextWrapping=&quot;Wrap&quot; Text=&quot;TextBox&quot; VerticalAlignment=&quot;Top&quot; Width=&quot;146&quot;  /&gt;    
+&nbsp;
+    &lt;/Grid&gt;
+&lt;/Window&gt;
+'</span><span class="sy0">@</span>
+&nbsp;
+<span class="co1">#Read XAML</span>
+<span class="re0">$reader</span> <span class="sy0">=</span> <span class="br0">&#40;</span><span class="kw1">New-Object</span> <span class="kw5">-TypeName</span> System.Xml.XmlNodeReader <span class="kw5">-ArgumentList</span> <span class="re0">$XAML</span><span class="br0">&#41;</span> 
+<span class="co1">#    $Form = [Windows.Markup.XamlReader]::Load($reader)</span>
+try
+<span class="br0">&#123;</span>
+    <span class="re0">$Form</span> <span class="sy0">=</span> <span class="br0">&#91;</span>Windows.Markup.XamlReader<span class="br0">&#93;</span>::<span class="re5">Load</span><span class="br0">&#40;</span><span class="re0">$reader</span><span class="br0">&#41;</span>
+<span class="br0">&#125;</span>
+catch
+<span class="br0">&#123;</span>
+    <span class="kw1">Write-Host</span> <span class="kw5">-Object</span> <span class="st0">'Unable to load Windows.Markup.XamlReader. Some possible causes for this problem include: .NET Framework is missing PowerShell must be launched with PowerShell -sta, invalid XAML code was encountered.'</span>
+    exit
+<span class="br0">&#125;</span>
+<span class="co1">#===========================================================================</span>
+<span class="co1"># Store Form Objects In PowerShell</span>
+<span class="co1">#===========================================================================</span>
+<span class="re0">$XAML</span>.SelectNodes<span class="br0">&#40;</span><span class="st0">'//*[@Name]'</span><span class="br0">&#41;</span> <span class="sy0">|</span> <span class="kw1">ForEach-Object</span> <span class="kw5">-Process</span> <span class="br0">&#123;</span>
+    <span class="kw1">Set-Variable</span> <span class="kw5">-Name</span> <span class="br0">&#40;</span><a href="about:blank"><span class="kw6">$_</span></a>.Name<span class="br0">&#41;</span> <span class="kw5">-Value</span> <span class="re0">$Form</span>.FindName<span class="br0">&#40;</span><a href="about:blank"><span class="kw6">$_</span></a>.Name<span class="br0">&#41;</span>
+<span class="br0">&#125;</span>
+<span class="co1">#===========================================================================</span>
+<span class="co1"># WMI Query</span>
+<span class="co1">#===========================================================================</span>
+<span class="re0">$oWMIOS</span> <span class="sy0">=</span> <span class="kw1">Get-WmiObject</span> <span class="kw5">-Class</span> win32_OperatingSystem
+<span class="co1">#===========================================================================</span>
+<span class="co1"># Add events to Form Objects</span>
+<span class="co1">#===========================================================================</span>
+<span class="re0">$button</span>.Add_Click<span class="br0">&#40;</span><span class="br0">&#123;</span>
+        <span class="re0">$msg</span> <span class="sy0">=</span> <span class="st0">&quot;Ich bin ein Test &quot;</span> <span class="sy0">+</span> <span class="re0">$textBox2</span>.text
+        <span class="br0">&#91;</span>System.Windows.Forms.MessageBox<span class="br0">&#93;</span>::Show<span class="br0">&#40;</span><span class="re0">$msg</span><span class="sy0">,</span><span class="st0">&quot;Titel&quot;</span><span class="sy0">,</span><span class="nu0">0</span><span class="br0">&#41;</span>
+<span class="br0">&#125;</span><span class="br0">&#41;</span>
+<span class="re0">$Exit</span>.Add_Click<span class="br0">&#40;</span><span class="br0">&#123;</span>
+        <span class="re0">$Form</span>.Close<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#125;</span><span class="br0">&#41;</span>
+<span class="re0">$Remote</span>.Add_Click<span class="br0">&#40;</span><span class="br0">&#123;</span>
+      <span class="re0">$pro</span> <span class="sy0">=</span> Start<span class="sy0">-</span>Process <span class="st0">&quot;$env:windir\system32\mstsc.exe&quot;</span> <span class="kw5">-ArgumentList</span> <span class="st0">&quot;-v $($RemoteCon.text)&quot;</span> <span class="kw5">-PassThru</span>
+&nbsp;
+<span class="br0">&#125;</span><span class="br0">&#41;</span>
+<span class="co1">#===========================================================================</span>
+<span class="co1"># Info Box</span>
+<span class="co1">#===========================================================================</span>
+<span class="re0">$CName</span>.Text <span class="sy0">=</span> hostname
+<span class="re0">$CName_W</span>.Text <span class="sy0">=</span> <span class="st0">&quot;Hostname&quot;</span>
+<span class="re0">$RemoteConT</span>.Text <span class="sy0">=</span> <span class="st0">&quot;Remote Conect&quot;</span>
+<span class="co1">#===========================================================================</span>
+<span class="co1"># Shows the form</span>
+<span class="co1">#===========================================================================</span>
+<span class="re0">$null</span> <span class="sy0">=</span> <span class="re0">$Form</span>.ShowDialog<span class="br0">&#40;</span><span class="br0">&#41;</span>

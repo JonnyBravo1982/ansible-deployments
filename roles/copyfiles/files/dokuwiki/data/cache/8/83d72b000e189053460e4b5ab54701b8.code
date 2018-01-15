@@ -1,0 +1,1 @@
+New<span class="sy0">-</span>VMSwitch <span class="kw5">-Name</span> <span class="st0">&quot;NAT&quot;</span> <span class="sy0">-</span>SwitchType NAT <span class="sy0">-</span>NATSubnetAddress 10.0.75.0<span class="sy0">/</span><span class="nu0">24</span>

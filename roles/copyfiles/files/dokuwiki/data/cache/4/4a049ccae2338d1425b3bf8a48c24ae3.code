@@ -1,0 +1,13 @@
+ <span class="sy0">**</span>lang <span class="sy0">:**</span>
+<span class="sy0">*</span><span class="re0">$i</span> <span class="sy0">=</span> <span class="nu0">6</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">if</span> <span class="br0">&#40;</span><span class="re0">$i</span> <span class="sy0">%</span> <span class="nu0">2</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span><span class="sy0">*</span>
+<span class="sy0">*</span>  <span class="re0">$fazit</span> <span class="sy0">=</span>  <span class="st0">&quot;gerade&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="br0">&#125;</span><span class="sy0">*</span>
+<span class="sy0">*</span><span class="kw1">else</span> <span class="br0">&#123;</span><span class="sy0">*</span>
+<span class="sy0">*</span>  <span class="re0">$fazit</span> <span class="sy0">=</span> <span class="st0">&quot;nicht gerade&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="br0">&#125;</span><span class="sy0">*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;Das Ergebnis: <span class="es4">$fazit</span>&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;&lt;br /&gt;<span class="es1">\n</span>&quot;</span><span class="sy0">;*</span>
+<span class="sy0">**</span>kurz<span class="sy0">:**</span>
+<span class="sy0">**</span><span class="re0">$fazit</span> <span class="sy0">=</span> <span class="br0">&#40;</span><span class="re0">$i</span> <span class="sy0">%</span> <span class="nu0">2</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span> ? <span class="st0">&quot;gerade&quot;</span> <span class="sy0">:</span> <span class="st0">&quot;ungerade&quot;</span><span class="sy0">;**</span>
+<span class="kw1">echo</span> <span class="st0">&quot;Das Ergebnis: <span class="es4">$fazit</span>&quot;</span><span class="sy0">;</span>

@@ -1,0 +1,25 @@
+---
+ - name: Create Folder for owncloud Files
+   file: state=directory path={{item}} mode=0777
+   with_items:
+         - /home/{{allusers.owncloud.name}}/owncloud
+         - /home/{{allusers.owncloud.name}}/owncloud/site
+         - /home/{{allusers.owncloud.name}}/owncloud/data
+         - /home/{{allusers.owncloud.name}}/owncloud/build
+
+ - name: Copy Folder
+   copy: src=downcloud dest=/home/{{allusers.owncloud.name}}/owncloud/build mode=0777
+ - name: Create a User {{allusers.owncloud.name}}
+   user: name={{allusers.owncloud.name}} uid=33 groups=docker password=Start12345  
+ - name: Create a Image Docker Image
+   docker_image: name=owncloud-dan path=/home/{{allusers.owncloud.name}}/owncloud/build/downcloud state=present tag={{owncloudtag}}
+ - name: Create a service
+   template: src=owncloud.service.j2 dest=/etc/sysconfig/owncloud
+ - name: Register Unit Dokuwiki
+   template: src=owncloud.service.j2 dest=/lib/systemd/system/owncloud.service mode=644
+   notify:
+       - reload systemctl
+
+ - name: Start Service owncloud
+   service: name=owncloud.service state=started enabled=yes
+

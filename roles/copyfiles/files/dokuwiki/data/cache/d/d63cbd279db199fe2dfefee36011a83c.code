@@ -1,0 +1,23 @@
+<span class="kw1">from</span> TorCtl <span class="kw1">import</span> TorCtl
+<span class="kw1">import</span> <span class="kw3">urllib2</span>
+&nbsp;
+user_agent <span class="sy0">=</span> <span class="st0">'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'</span>
+headers<span class="sy0">=</span><span class="br0">&#123;</span><span class="st0">'User-Agent'</span>:user_agent<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw1">def</span> request<span class="br0">&#40;</span>url<span class="br0">&#41;</span>:
+    <span class="kw1">def</span> _set_urlproxy<span class="br0">&#40;</span><span class="br0">&#41;</span>:
+        proxy_support <span class="sy0">=</span> <span class="kw3">urllib2</span>.<span class="me1">ProxyHandler</span><span class="br0">&#40;</span><span class="br0">&#123;</span><span class="st0">&quot;http&quot;</span> : <span class="st0">&quot;127.0.0.1:8118&quot;</span><span class="br0">&#125;</span><span class="br0">&#41;</span>
+        opener <span class="sy0">=</span> <span class="kw3">urllib2</span>.<span class="me1">build_opener</span><span class="br0">&#40;</span>proxy_support<span class="br0">&#41;</span>
+        <span class="kw3">urllib2</span>.<span class="me1">install_opener</span><span class="br0">&#40;</span>opener<span class="br0">&#41;</span>
+    _set_urlproxy<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    request<span class="sy0">=</span><span class="kw3">urllib2</span>.<span class="me1">Request</span><span class="br0">&#40;</span>url<span class="sy0">,</span> <span class="kw2">None</span><span class="sy0">,</span> headers<span class="br0">&#41;</span>
+    <span class="kw1">return</span> <span class="kw3">urllib2</span>.<span class="me1">urlopen</span><span class="br0">&#40;</span>request<span class="br0">&#41;</span>.<span class="me1">read</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="kw1">def</span> renew_connection<span class="br0">&#40;</span><span class="br0">&#41;</span>:
+    conn <span class="sy0">=</span> TorCtl.<span class="me1">connect</span><span class="br0">&#40;</span>controlAddr<span class="sy0">=</span><span class="st0">&quot;127.0.0.1&quot;</span><span class="sy0">,</span> controlPort<span class="sy0">=</span><span class="nu0">9051</span><span class="sy0">,</span> passphrase<span class="sy0">=</span><span class="st0">&quot;your_password&quot;</span><span class="br0">&#41;</span>
+    conn.<span class="me1">send_signal</span><span class="br0">&#40;</span><span class="st0">&quot;NEWNYM&quot;</span><span class="br0">&#41;</span>
+    conn.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="kw1">for</span> i <span class="kw1">in</span> <span class="kw2">range</span><span class="br0">&#40;</span><span class="nu0">0</span><span class="sy0">,</span> <span class="nu0">10</span><span class="br0">&#41;</span>:
+    renew_connection<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="kw1">print</span> request<span class="br0">&#40;</span><span class="st0">&quot;http://icanhazip.com/&quot;</span><span class="br0">&#41;</span>

@@ -1,0 +1,9 @@
+*<span class="kw2">&lt;?php</span><span class="sy0">*</span>
+<span class="sy0">*</span><span class="re0">$liste</span> <span class="sy0">=</span> <a href="http://php.net/array"><span class="kw3">array</span></a> <span class="br0">&#40;</span><span class="st0">&quot;Kapern&quot;</span><span class="sy0">,</span> <span class="st0">&quot;Oliven&quot;</span><span class="sy0">,</span> <span class="st0">&quot;Ananas&quot;</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><a href="http://php.net/sort"><span class="kw3">sort</span></a><span class="br0">&#40;</span><span class="re0">$liste</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;&lt;pre&gt;&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><a href="http://php.net/print_r"><span class="kw3">print_r</span></a><span class="br0">&#40;</span><span class="re0">$liste</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><a href="http://php.net/rsort"><span class="kw3">rsort</span></a><span class="br0">&#40;</span><span class="re0">$liste</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><a href="http://php.net/print_r"><span class="kw3">print_r</span></a><span class="br0">&#40;</span><span class="re0">$liste</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;&lt;/pre&gt;&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="sy1">?&gt;</span>*

@@ -1,0 +1,11 @@
+    <span class="kw1">Get-Wmiobject</span> <span class="kw5">-Namespace</span> <span class="st0">&quot;root\SMS\Site_S01&quot;</span> <span class="kw5">-Class</span> SMS_Application <span class="sy0">-</span><span class="kw3">Filter</span> <span class="st0">&quot;isLatest='true' and isExpired='false'&quot;</span> <span class="sy0">|</span> <span class="kw3">foreach</span><span class="br0">&#123;</span>
+           <span class="re0">$name</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.LocalizedDisplayName
+           <span class="kw2">echo</span> <span class="st0">&quot;Application : $name&quot;</span>
+           <span class="re0">$dptypes</span> <span class="sy0">=</span> Get<span class="sy0">-</span>CMDeploymentType <span class="sy0">-</span>ApplicationName <span class="st0">&quot;$name&quot;</span>
+           <span class="kw3">foreach</span> <span class="br0">&#40;</span><span class="re0">$dpt</span> <span class="kw3">in</span> <span class="re0">$dptypes</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+                <span class="re0">$dptname</span> <span class="sy0">=</span> <span class="re0">$dpt</span>.LocalizedDisplayName
+               <span class="co1"># echo &quot;Deployment Type: $dptname&quot;</span>
+                Start<span class="sy0">-</span>CMContentDistribution <span class="sy0">-</span>ApplicationName <span class="st0">&quot;$name&quot;</span> <span class="sy0">-</span>DistributionPointGroupName <span class="st0">&quot;LRA&quot;</span>
+                <span class="br0">&#125;</span>
+           <span class="br0">&#125;</span>
+    <a href="about:blank"><span class="kw6">$_</span></a>.Exception.Message

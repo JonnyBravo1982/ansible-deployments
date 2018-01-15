@@ -1,0 +1,105 @@
+
+<h1 class="sectionedit1" id="zeit_erstmalig_einmalig_einstellen">Zeit erstmalig/einmalig einstellen</h1>
+<div class="level1">
+<pre class="code">ntpdate de.pool.ntp.org</pre>
+
+<p>
+oder
+</p>
+<pre class="code">sntp -v -P no -r 1.de.pool.ntp.org</pre>
+<pre class="code">hwclock --systohc</pre>
+
+</div>
+<!-- EDIT1 SECTION "Zeit erstmalig/einmalig einstellen" [1-140] -->
+<h1 class="sectionedit2" id="zeitserver">Zeitserver</h1>
+<div class="level1">
+
+<p>
+Zeitserver konfigurieren:
+</p>
+
+<p>
+<code>/etc/ntp.conf</code>: (SuSE 10.0, Debian, CentOS 5)
+<pre class="file">server 127.127.1.0              # local clock (LCL)
+fudge  127.127.1.0 stratum 10   # LCL is unsynchronized
+
+server 0.de.pool.ntp.org
+server 1.de.pool.ntp.org
+server 2.de.pool.ntp.org
+
+driftfile /var/lib/ntp/drift/ntp.drift # path for drift file
+logfile   /var/log/ntp          # alternate log file</pre>
+
+</p>
+
+<p>
+Weitere Zeitserver im Netz können sich dann mit diesem Zeitserver syncronisieren. Einfach den <code>server</code> Parameter auf den ersten Zeitserver einstellen. 
+</p>
+
+<p>
+Zeitserver starten: ( CentOS 5 )
+</p>
+<pre class="code">/etc/init.d/ntpd start</pre>
+
+<p>
+Zeitserver starten: ( SuSE 10.0, Debian 4.0 )
+</p>
+<pre class="code">/etc/init.d/ntp start</pre>
+
+<p>
+Zeitserver starten: ( Debian 3.1 )
+</p>
+<pre class="code">/etc/init.d/ntp-server start</pre>
+
+<p>
+Warten bis der Zeitserver sich syncronisiert hat (kann bis zu 30 Minuten dauern, geht aber meistens schneller):
+</p>
+<pre class="code">watch ntpq -np</pre>
+
+<p>
+Die Syncronisation ist an einem * am Beginn einer Zeile zu erkennen. Die Spalten haben folgende Bedeutung:
+</p>
+<div class="table sectionedit3"><table class="inline">
+	<tr class="row0">
+		<td class="col0">remote</td><td class="col1 leftalign">Mit welchen Servern ist mein Zeitserver verbunden?                     </td>
+	</tr>
+	<tr class="row1">
+		<td class="col0">refid </td><td class="col1 leftalign">Von welcher Zeitquelle stammt die Zeit?                                </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">st    </td><td class="col1 leftalign">stratum (Entfernung von der Zeitquelle in )                            </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">t     </td><td class="col1 leftalign">type (u = unicast, m = multicast, l = local, - = don&#039;t know)           </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">when  </td><td class="col1 leftalign">Wann wurde der Server zuletzt angefragt                                </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign">poll  </td><td class="col1">Wie oft wird mit diesem Server syncronisiert? ( Intervall in Sekunden )</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">reach </td><td class="col1 leftalign">Wie gut ist der Server erreichbar? 377 = optimal                       </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">delay </td><td class="col1 leftalign">                                                                       </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0">offset</td><td class="col1 leftalign">                                                                       </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0">jitter</td><td class="col1 leftalign"> Abweichung in Millisekunden                                           </td>
+	</tr>
+</table></div>
+<!-- EDIT3 TABLE [1146-1955] -->
+</div>
+<!-- EDIT2 SECTION "Zeitserver" [141-1959] -->
+<h1 class="sectionedit4" id="links">Links</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="http://support.ntp.org/bin/view/Servers/WebHome" class="urlextern" title="http://support.ntp.org/bin/view/Servers/WebHome"  rel="nofollow">Liste mit Zeitservern</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Links" [1960-] -->

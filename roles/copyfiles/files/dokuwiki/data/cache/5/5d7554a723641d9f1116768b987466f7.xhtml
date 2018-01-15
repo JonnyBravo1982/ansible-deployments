@@ -1,0 +1,136 @@
+
+<h1 class="sectionedit1" id="upstart">Upstart</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Upstart" [1-22] -->
+<h2 class="sectionedit2" id="erste_init-skripte">erste init-Skripte</h2>
+<div class="level2">
+
+<p>
+Welche Start-Skripte werden bei <em class="u">jedem</em> Bootvorgang als <em class="u">erstes</em> gestartet?
+</p>
+
+</div>
+
+<h4 id="centos_6">CentOS 6</h4>
+<div class="level4">
+
+<p>
+<code>/etc/init/rcS.conf</code>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "erste init-Skripte" [23-175] -->
+<h2 class="sectionedit3" id="runlevel_start-skripte">runlevel Start-Skripte</h2>
+<div class="level2">
+
+<p>
+Die native Upstart Konfiguration liegt in
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>/etc/init/</code> und</div>
+</li>
+<li class="level1"><div class="li"> <code>/etc/event.d</code></div>
+</li>
+</ul>
+
+<p>
+Upstart ist aber auch weiterhin kompatibel zu den aus <a href="/doku.php?id=init" class="wikilink2" title="init" rel="nofollow">sysVinit</a> bekannten Startskripten in
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>/etc/init.d/</code></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "runlevel Start-Skripte" [176-419] -->
+<h3 class="sectionedit4" id="dienste_starten_und_eintragen">Dienste starten und eintragen</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="dienst_sofort_einmalig_starten">Dienst sofort, einmalig starten</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="upstart_nativ">upstart nativ</h5>
+<div class="level5">
+
+<p>
+Beispiel: tty4
+</p>
+<pre class="code">initctl start tty TTY=/dev/tty4</pre>
+
+</div>
+
+<h5 id="sysvinit_kompatibel">sysVinit kompatibel</h5>
+<div class="level5">
+<pre class="code">service dienst start</pre>
+
+</div>
+
+<h4 id="dienst_immer_beim_booten_starten">Dienst immer beim Booten starten</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="upstart_nativ1">upstart nativ</h5>
+<div class="level5">
+
+<p>
+Konfigurationsdateien <code>/etc/init/*.conf</code>
+<sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup>
+</p>
+
+</div>
+
+<h5 id="sysvinit_kompatibel1">sysVinit kompatibel</h5>
+<div class="level5">
+<pre class="code">chkconfig dienst on</pre>
+
+</div>
+
+<h4 id="dienst_sofort_einmalig_beenden">Dienst sofort, einmalig beenden</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="upstart_nativ2">upstart nativ</h5>
+<div class="level5">
+
+<p>
+Beispiel: tty4
+</p>
+<pre class="code">initctl stop tty TTY=/dev/tty4</pre>
+
+</div>
+
+<h5 id="sysvinit_kompatibel2">sysVinit kompatibel</h5>
+<div class="level5">
+<pre class="code">service dienst stop</pre>
+
+</div>
+
+<h4 id="dienst_beim_booten_nicht_starten">Dienst beim Booten nicht starten</h4>
+<div class="level4">
+
+<p>
+Konfigurationsdateien <code>/etc/init/*.conf</code>
+<sup><a href="#fn__2" id="fnt__2" class="fn_top">2)</a></sup>
+</p>
+
+</div>
+
+<h5 id="sysvinit_kompatibel3">sysVinit kompatibel</h5>
+<div class="level5">
+<pre class="code">chkconfig dienst off</pre>
+
+</div>
+<!-- EDIT4 SECTION "Dienste starten und eintragen" [420-] --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+, <sup><a href="#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+ siehe<pre class="code">man 5 init</pre>
+</div>
+</div>

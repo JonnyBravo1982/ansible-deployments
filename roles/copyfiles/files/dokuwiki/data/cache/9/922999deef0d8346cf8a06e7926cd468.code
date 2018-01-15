@@ -1,0 +1,25 @@
+_{<span class="sc0">&lt;!DOCTYPE html&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>
+ <span class="sc2">&lt;<a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+  <span class="sc2">&lt;<a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>Klasse Kunde mit Objekt<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>
+  <span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">charset</span><span class="sy0">=</span><span class="st0">&quot;UTF-8&quot;</span> <span class="sy0">/</span>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>
+<span class="sc2">&lt;?php</span>
+<span class="sc2"><span class="kw3">class</span> Kunde </span>
+<span class="sc2"><span class="br0">&#123;</span></span>
+<span class="sc2">  public $name;</span>
+<span class="sc2">  public function __construct<span class="br0">&#40;</span>$name<span class="br0">&#41;</span> </span>
+<span class="sc2">  <span class="br0">&#123;</span></span>
+<span class="sc2">$this-&gt;</span>name=$name;
+  }
+  public function halloSagen()
+ {
+echo &quot;Hallo {$this-&gt;name}&quot;;
+  }
+}
+$neuerKunde = new Kunde(&quot;Anja&quot;);
+$neuerKunde-&gt;halloSagen();
+?&gt;
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>}

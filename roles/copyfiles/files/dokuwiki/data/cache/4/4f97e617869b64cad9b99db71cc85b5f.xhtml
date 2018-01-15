@@ -1,0 +1,22 @@
+
+<p>
+Szenario : 
+</p>
+
+<p>
+Auf einem SCCM Server 2012 R2 beendet sich der WDS in regelmäßigen Abständen.   
+</p>
+
+<p>
+Lösung : 
+folgender Regkey muss gesetzt werden 
+HKLM\Software\Microsoft\SMS\DP\NumberOfThreads and set it to 1
+</p>
+
+<p>
+Sollte dies nicht ausreichen muss der WDS auf dem DP neuinstalliert werden. 
+</p>
+
+<p>
+Warum : 
+</p>

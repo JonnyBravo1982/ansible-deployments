@@ -1,0 +1,21 @@
+<span class="sc0">&lt;!DOCTYPE html&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>
+ <span class="sc2">&lt;<a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+  <span class="sc2">&lt;<a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>Dateien einbinden<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>
+  <span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">charset</span><span class="sy0">=</span><span class="st0">&quot;UTF-8&quot;</span> <span class="sy0">/</span>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>
+**<span class="sc2">&lt;?php**</span>
+<span class="sc2">**include <span class="st0">&quot;header.php&quot;</span>;**</span>
+<span class="sc2">**?&gt;</span>**
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/h2.html"><span class="kw2">h2</span></a>&gt;</span>Lorem ipsum dolor <span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/h2.html"><span class="kw2">h2</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/p.html"><span class="kw2">p</span></a>&gt;</span>sit amet, consetetur sadipscing elitr, sed diam nonumy 
+eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam 
+voluptua. At vero eos et accusam et justo duo dolores et ea rebum. 
+Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum 
+dolor sit amet.<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/p.html"><span class="kw2">p</span></a>&gt;</span>
+**<span class="sc2">&lt;?php**</span>
+<span class="sc2">**include <span class="st0">&quot;copyright.php&quot;</span>;**</span>
+<span class="sc2">**?&gt;</span>**
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>

@@ -1,0 +1,62 @@
+===== Prompt ======
+Aufgabe:
+
+Lese das Kapitel "Prompting" in der "man"-Page für "bash". Erstelle einen Prompt-String welcher die folgenden Daten beinhaltet:
+
+  * Loginname
+  * Hostname des Rechners
+  * die History-Nummer des aktuellen Kommandos, in Klammern "z.B. (10)"
+  * das aktuelle Verzeichnis
+  * Prompt-Zeichen für normalen Benutzer oder "root"
+
+Baue das neue Prompt in das Profile-Startscript für die Bash für deinen aktuellen Benutzer ein. (( 
+  export PS1="\u@\h (\!) \w\$"
+))
+
+===== Bash Konfigurationsdateien =====
+Testen, welche Konfigurationsdateien wann benutzt werden:
+  for file in /etc/profile /etc/bash.bashrc ~/.bash_profile ~/.bash_login ~/.profile ~/.bashrc ~/.bash_logout;
+  do
+    echo "echo Hello $file" >> $file
+  done
+
+==== profile oder bashrc? ====
+''umask'' und ''export''ierte Variablen gehören besser in die ''.profile'', weil Beides an die Kindprozesse vererbt wird.
+
+Eine Ersetzung in der Form ''$PATH="$PATH:$HOME/bin"'' würde z.B. mit jeder weiteren Subshell ausgeführt und jedes Mal neu evaluiert werden.
+===== Häufige Kommandofolgen abkürzen =====
+
+''ls -l'' abkürzen:
+  alias ll='ls -l'
+
+Aliase anzeigen:
+  alias
+
+Dateiinhalt ohne Kommentare ausgeben:
+  alias ccat='egrep -v "^\s*(#|$)"'
+oder
+<code bash>
+function ccat { 
+  egrep -v '^\s*(#|$)' "$1" 
+}
+</code>
+
+Dateiinhalt ohne Kommentare durchsuchen:
+<code bash>
+function cgrep {
+  egrep -v '^\s*(#|$)' "$2" | grep --colour=auto "$1"
+}
+</code>
+
+Funktonen und Variablen anzeigen:
+  set
+
+Funktion löschen
+  unset -f ccat
+
+===== Dokumentation =====
+  man bash
+  /INVOCATION
+
+  help function
+

@@ -1,0 +1,11 @@
+*<span class="kw2">&lt;?php</span><span class="sy0">*</span>
+<span class="sy0">*</span><span class="kw2">function</span> brutto<span class="br0">&#40;</span><span class="re0">$netto</span><span class="sy0">,</span> <span class="re0">$mwstSatz</span><span class="br0">&#41;</span> <span class="sy0">*</span>
+<span class="sy0">*</span><span class="br0">&#123;</span><span class="sy0">*</span>
+<span class="sy0">*</span>  <span class="kw1">return</span> <span class="re0">$netto</span> <span class="sy0">*</span> <span class="br0">&#40;</span><span class="nu0">100</span> <span class="sy0">+</span> <span class="re0">$mwstSatz</span><span class="br0">&#41;</span> <span class="sy0">/</span> <span class="nu0">100</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="br0">&#125;</span><span class="sy0">*</span>
+<span class="sy0">*</span><span class="re0">$betrag</span> <span class="sy0">=</span> <span class="nu0">25</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="re0">$bruttowert</span> <span class="sy0">=</span> brutto<span class="br0">&#40;</span><span class="re0">$betrag</span><span class="sy0">,</span> <span class="nu0">7</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;<span class="es4">$betrag</span> ergibt <span class="es4">$bruttowert</span> inkl. MWSt&lt;br /&gt;<span class="es1">\n</span>&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="re0">$bruttowert2</span> <span class="sy0">=</span> brutto<span class="br0">&#40;</span><span class="re0">$betrag</span><span class="sy0">,</span> <span class="nu0">19</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;<span class="es4">$betrag</span> ergibt <span class="es4">$bruttowert2</span> inkl. MWSt&lt;br /&gt;<span class="es1">\n</span>&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="sy1">?&gt;</span>*

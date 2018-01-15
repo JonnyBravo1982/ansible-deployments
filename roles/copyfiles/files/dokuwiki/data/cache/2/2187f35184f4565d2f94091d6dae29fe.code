@@ -1,0 +1,49 @@
+<span class="sc0">&lt;!DOCTYPE html&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>
+ <span class="sc2">&lt;<a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+  <span class="sc2">&lt;<a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>Beispielformular<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>
+  <span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">charset</span><span class="sy0">=</span><span class="st0">&quot;UTF-8&quot;</span> <span class="sy0">/</span>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/form.html"><span class="kw2">form</span></a> <span class="kw3">action</span><span class="sy0">=</span><span class="st0">&quot;&lt;?php echo htmlentities($_SERVER[&quot;</span>PHP_SELF<span class="st0">&quot;]); ?&gt;</span></span>&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+Datei: <span class="sc2">&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/input.html"><span class="kw2">input</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;hidden&quot;</span> <span class="kw3">name</span><span class="sy0">=</span><span class="st0">&quot;MAX_FILE_SIZE&quot;</span> <span class="kw3">value</span><span class="sy0">=</span><span class="st0">&quot;300000&quot;</span> <span class="sy0">/</span>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/input.html"><span class="kw2">input</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;file&quot;</span> <span class="kw3">name</span><span class="sy0">=</span><span class="st0">&quot;datei&quot;</span> <span class="sy0">/</span>&gt;&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/input.html"><span class="kw2">input</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;submit&quot;</span> <span class="kw3">value</span><span class="sy0">=</span><span class="st0">&quot;Hochladen&quot;</span> <span class="sy0">/</span>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/form.html"><span class="kw2">form</span></a>&gt;</span>
+<span class="sc2">&lt;?php</span>
+<span class="sc2">if <span class="br0">&#40;</span>isset<span class="br0">&#40;</span>$_FILES<span class="br0">&#91;</span><span class="st0">&quot;datei&quot;</span><span class="br0">&#93;</span><span class="br0">&#41;</span> AND ! $_FILES<span class="br0">&#91;</span><span class="st0">&quot;datei&quot;</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st0">&quot;error&quot;</span><span class="br0">&#93;</span>  AND  <span class="br0">&#40;</span>$_FILES<span class="br0">&#91;</span><span class="st0">&quot;datei&quot;</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st0">&quot;size&quot;</span><span class="br0">&#93;</span> &lt; <span class="nu0">300000</span> <span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span></span>
+<span class="sc2">$bildinfo <span class="sy0">=</span> getimagesize<span class="br0">&#40;</span>$_FILES<span class="br0">&#91;</span><span class="st0">&quot;datei&quot;</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st0">&quot;tmp_name&quot;</span><span class="br0">&#93;</span><span class="br0">&#41;</span>;</span>
+<span class="sc2">if <span class="br0">&#40;</span>$bildinfo <span class="sy0">===</span> false<span class="br0">&#41;</span> <span class="br0">&#123;</span></span>
+<span class="sc2">  die<span class="br0">&#40;</span><span class="st0">&quot;kein Bild&quot;</span><span class="br0">&#41;</span>;</span>
+<span class="sc2"><span class="br0">&#125;</span> else <span class="br0">&#123;</span></span>
+<span class="sc2">  $mime <span class="sy0">=</span> $bildinfo<span class="br0">&#91;</span><span class="st0">&quot;mime&quot;</span><span class="br0">&#93;</span>;</span>
+<span class="sc2">  $mimetypen <span class="sy0">=</span> array <span class="br0">&#40;</span></span>
+<span class="sc2"><span class="st0">&quot;image/jpeg&quot;</span> <span class="sy0">=</span>&gt;</span> &quot;jpg&quot;,
+&quot;image/gif&quot; =&gt; &quot;gif&quot;,
+&quot;image/png&quot; =&gt; &quot;png&quot;
+);
+ if (!isset($mimetypen[$mime])) {
+   die(&quot;nicht das richtige Format&quot;);
+ } else {
+   $endung = $mimetypen[$mime];
+ }
+ $neuername = basename($_FILES[&quot;datei&quot;][&quot;name&quot;]);
+ $neuername = preg_replace(&quot;/\.(jpe?g|gif|png)$/i&quot;, &quot;&quot;, $neuername);  
+ $neuername = preg_replace(&quot;/[^a-zA-Z0-9_-]/&quot;, &quot;&quot;, $neuername);     
+ $neuername .= &quot;.$endung&quot;;
+ $ziel = &quot;upload/$neuername&quot;;
+ while (file_exists($ziel)) {
+   $neuername = &quot;kopie_$neuername&quot;;
+   $ziel = &quot;upload/$neuername&quot;;
+ }
+  if (@move_uploaded_file($_FILES[&quot;datei&quot;][&quot;tmp_name&quot;], $ziel)) {
+echo &quot;Dateiupload hat geklappt&quot;;
+ } else {
+   echo &quot;Dateiupload hat nicht geklappt&quot;;
+}
+  }
+}
+?&gt;
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>

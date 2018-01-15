@@ -1,0 +1,4 @@
+<span class="kw2">yum install</span> attr
+<span class="kw3">cd</span> <span class="sy0">/</span>data<span class="sy0">/</span>brick1<span class="sy0">/</span>gv0
+<span class="kw1">for</span> i <span class="kw1">in</span> <span class="sy0">`</span>attr <span class="re5">-lq</span> .<span class="sy0">`</span>; <span class="kw1">do</span>   setfattr <span class="re5">-x</span> trusted.<span class="re1">$i</span> .; <span class="kw1">done</span>
+attr <span class="re5">-lq</span> <span class="sy0">/</span>data<span class="sy0">/</span>brick1<span class="sy0">/</span>gv0 <span class="co0"># Bei leer läuft es wieder </span>

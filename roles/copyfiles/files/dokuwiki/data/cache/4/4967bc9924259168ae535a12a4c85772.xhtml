@@ -1,0 +1,133 @@
+
+<h1 class="sectionedit1" id="howto_privoxy">HowTo Privoxy</h1>
+<div class="level1">
+
+<p>
+Dieses Beispiel beschreibt wie ein Privoxy Proxy im eigenen Netzwerk konfiguriert werden kann als Anynomisierungsservice wird Tor genutzt. In diesem Beispiel wird Ubuntu Mate 15.10 genutzt. 
+</p>
+
+</div>
+<!-- EDIT1 SECTION "HowTo Privoxy" [1-221] -->
+<h2 class="sectionedit2" id="installation">Installation</h2>
+<div class="level2">
+
+<p>
+In wenigen Schritten ist der Proxy installiert. 
+<pre class="code bash"><span class="kw2">sudo</span> <span class="kw2">apt-get install</span> privoxy</pre>
+
+Bei der installation von Tor sollte man immer auf die aktuellen Sourcen über das Repository zugreifen. Die nächste Kommandozeile bezieht sich auf Ubuntu 15.10 !
+</p>
+
+<p>
+<pre class="code bash"><span class="kw3">echo</span> <span class="st0">&quot;deb     http://deb.torproject.org/torproject.org wily main&quot;</span> <span class="sy0">&gt;&gt;</span> <span class="sy0">/</span>etc<span class="sy0">/</span>apt<span class="sy0">/</span>sources.list
+<span class="kw2">apt-get update</span> 
+<span class="kw2">apt-get install</span> tor</pre>
+
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Installation" [222-655] -->
+<h2 class="sectionedit3" id="konfiguration">Konfiguration</h2>
+<div class="level2">
+
+<p>
+Der Proxy wird über die Datei /etc/privoxy/config folgenden Einstellungen können gesetzt werden. 
+</p>
+
+<p>
+<pre class="code">debug     1 # Log the destination for each request Privoxy let through. See also debug 1024.
+debug     2 # show each connection status
+debug     4 # show I/O status
+debug     8 # show header parsing
+listen-address  192.168.50.32:8118
+enable-edit-actions 1
+forward-socks5t   /               127.0.0.1:9050 .</pre>
+
+</p>
+
+<p>
+Die <strong>debug</strong> konfiguration gibt den Inhalt von dem was geloggt werden soll an. Die Log ist im Verzeichnis /var/log/privoxy/ und kann im wie im folgenden Beispiel ausgewertet.
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">tail</span> <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>privoxy<span class="sy0">/</span>logfile  <span class="re5">-F</span> <span class="re5">-n</span> <span class="nu0">50</span> <span class="re5">-s</span> <span class="nu0">2</span><span class="sy0">|</span><span class="kw2">grep</span> <span class="st0">&quot;Connect:&quot;</span></pre>
+
+</p>
+
+<p>
+<strong>listen-address</strong> erlaubt es Privoxy im <abbr title="Local Area Network">LAN</abbr> zu betreiben. 
+</p>
+
+<p>
+<strong>forward-socks5t</strong> leitet die Anfragen auf den socks5 ins Tor-Netz um.
+</p>
+
+<p>
+<strong>enable-edit-actions</strong> erlaubt es den Proxy über die Webschnittstelle zu konfigurieren die Einstellung sollte nach einer fertigen konfiguration wieder entfernt werden.
+</p>
+
+<p>
+Die Webschnittstelle ist über folgende Addresse zu erreichen  <a href="http://config.privoxy.org/" class="urlextern" title="http://config.privoxy.org/" rel="nofollow">http://config.privoxy.org/</a>. 
+</p>
+
+<p>
+Wenn der Editor aktiviert ist, sollte als erstes in der match-all.action die Standard-Aggressivität eingestellt werden. Sie gilt für alle Seiten, kann aber durch Ausnahmeregeln umgangen werden. Es kann eine von drei Stufen gewählt werden: „Cautious“ (Vorsichtig), „Medium“ (Mittel) und „Advanced“ (für Fortgeschrittene).
+</p>
+
+<p>
+Je aggressiver die Grundeinstellung, desto mehr Werbung und Spionage-Blödsinn wird unterdrückt, es häufen sich jedoch auch die unbeabsichtigten Effekte und es kann passieren, dass manche Seiten nicht mehr nutzbar sind. Für den Anfang ist es sicher nicht verkehrt, erste Erfahrungen mit „Cautious“ zu sammeln und die Stufe zu erhöhen, wenn man mit der Privoxy-Bedienung etwas besser vertraut ist. 
+</p>
+
+<p>
+ Anständige Browser ermöglichen die Cookie-Kontrolle von sich aus, Privoxy ermöglicht es jedoch, Einstellungen für mehrere Browser gleichzeitig vorzunehmen. Wird nur ein Browser benutzt, ist es egal, wo die Einstellungen vorgenommen werden. Ab zwei Browsern ist Privoxy jedoch die komfortablere Lösung.
+</p>
+
+<p>
+Privoxy verfügt über folgende Aktionen die für Cookies relevant sind:
+</p>
+<pre class="code">  crunch-incoming-cookies
+  crunch-outgoing-cookies
+  session-cookies-only
+  filter{content-cookies}</pre>
+
+<p>
+Mit „crunch-incoming-cookies“ vernichtet man eingehende Cookies, bevor sie beim Browser ankommen. Mit „crunch-outgoing-cookies“ vernichtet man vom Browser gesendete Cookies.
+</p>
+
+<p>
+„session-cookies-only“ löscht das Haltbarkeitsdatum des Cookies, der weiter oben genannte Session-Cookie entsteht. Wenn man in einer Sektion „session-cookies-only“ aktiviert, sind gleichzeitig „crunch-incoming-cookies“ und „crunch-outgoing-cookies“ zu deaktivieren.
+</p>
+
+<p>
+Um Missverständnissen vorzubeugen: die verschiedene Cookie-Einstellungen in verschiedenen Sektionen sind erlaubt. Wenn jedoch eine der beiden Optionen bereits in einer allgemein gehaltenen anderen Sektion aktiviert wurde, gilt sie auch für jede folgende Sektion, da ihre Einstellung dort auf „No Change“ steht. „session-cookies-only“ wäre dann wirkungslos, explizites Deaktivieren der beiden Session-Cruncher sorgt vor. 
+</p>
+
+<p>
+Wenn alle Einstellungen setzt sind muss der Proxy einmal neugestartet werden. 
+<pre class="code bash"><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>privoxy restart </pre>
+
+</p>
+
+<p>
+Info Link : <a href="https://www.fabiankeil.de/privoxy-anleitung/" class="urlextern" title="https://www.fabiankeil.de/privoxy-anleitung/" rel="nofollow">https://www.fabiankeil.de/privoxy-anleitung/</a>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Konfiguration" [656-4039] -->
+<h2 class="sectionedit4" id="browser_konfiguration">Browser Konfiguration</h2>
+<div class="level2">
+
+<p>
+Der Browser wird dann wie im folgenden Bild konfiguriert : 
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=privoxy&amp;media=bildschirmfoto.png" class="media" title="bildschirmfoto.png"><img src="/lib/exe/fetch.php?w=200&amp;tok=14c656&amp;media=bildschirmfoto.png" class="media" alt="" width="200" /></a>
+</p>
+
+<p>
+Über folgenden Link kann geprüft werden ob man mit dem Tor Netzwerk verbunden ist. <a href="https://check.torproject.org/" class="urlextern" title="https://check.torproject.org/" rel="nofollow">https://check.torproject.org/</a>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Browser Konfiguration" [4040-] -->

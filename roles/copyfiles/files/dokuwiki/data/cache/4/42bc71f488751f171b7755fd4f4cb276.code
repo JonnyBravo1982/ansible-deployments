@@ -1,0 +1,14 @@
+*<span class="sc0">&lt;!DOCTYPE html&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>*
+*  <span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">charset</span><span class="sy0">=</span><span class="st0">&quot;UTF-8&quot;</span> <span class="sy0">/</span>&gt;</span>*
+*  <span class="sc2">&lt;<a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>PHP in HTML einbinden<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/script.html"><span class="kw2">script</span></a> <span class="kw3">language</span><span class="sy0">=</span><span class="st0">&quot;php&quot;</span>&gt;</span>*
+*  echo &quot;Unser erstes PHP-Dokument&quot;;*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/script.html"><span class="kw2">script</span></a>&gt;</span>*
+*<span class="sc2">&lt;? echo <span class="st0">&quot;noch mal hallo&quot;</span>; ?&gt;</span>*
+*<span class="sc2">&lt;% echo <span class="st0">&quot;auch das ist möglich; %&gt;</span></span>*
+* <span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>*

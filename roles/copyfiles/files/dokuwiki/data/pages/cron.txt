@@ -1,0 +1,31 @@
+====== cron ======
+Programme regelmäßig starten
+
+  crontab -e
+
+  * ''/etc/crontab''
+  * ''/etc/cron.d/*''
+  * ''/var/spool/cron/*''
+
+Einfachere Variante:
+
+  * ''/etc/cron.hourly''
+  * ''/etc/cron.daily''
+  * ''/etc/cron.weekly''
+  * ''/etc/cron.monthly''
+
+===== Dokumentation =====
+  * man 1 crontab
+  * man 5 crontab
+  * [[http://de.wikipedia.org/wiki/Cron|Wikipedia zu Cron]]
+
+Beispiele 
+crontab e
+<code bash>
+#m       h       s      t       m       dow
+* * * * * date >> /tmp/crontest
+* 9-17 * * * logger -p user.alert "Von 9-17 Uhr jeden Tag"
+*/5 * * * * logger -p user.alert "aller 5 min "
+* 9-17 28-31 apr,nov * logger -p user.alert "Von 9-17 vom 28-31 im Monat"
+
+</code>

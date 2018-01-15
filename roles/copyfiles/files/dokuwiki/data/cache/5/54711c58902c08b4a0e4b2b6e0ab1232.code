@@ -1,0 +1,7 @@
+<span class="kw2">fdisk</span> <span class="sy0">/</span>dev<span class="sy0">/</span>sdb
+n
+<span class="kw2">w</span>
+mkfs.xfs <span class="re5">-i</span> <span class="re2">size</span>=<span class="nu0">512</span> <span class="sy0">/</span>dev<span class="sy0">/</span>sdb1 <span class="re5">-f</span>
+<span class="kw2">mkdir</span> <span class="re5">-p</span> <span class="sy0">/</span>data<span class="sy0">/</span>brick1
+<span class="kw3">echo</span> <span class="st0">&quot;/dev/sdb1 /data/brick1 xfs defaults 1 2&quot;</span> <span class="sy0">&gt;&gt;</span> <span class="sy0">/</span>etc<span class="sy0">/</span>fstab
+<span class="kw2">mount</span> <span class="re5">-a</span>

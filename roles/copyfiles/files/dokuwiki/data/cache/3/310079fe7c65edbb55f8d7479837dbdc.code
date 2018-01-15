@@ -1,0 +1,1 @@
+iptables <span class="re5">-t</span> nat <span class="re5">-A</span> PREROUTING <span class="re5">-p</span> tcp <span class="re5">--dport</span> <span class="nu0">443</span> <span class="re5">-j</span> REDIRECT

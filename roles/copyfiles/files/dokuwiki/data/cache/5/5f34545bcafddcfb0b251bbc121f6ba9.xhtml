@@ -1,0 +1,80 @@
+
+<h3 class="sectionedit1" id="welche_partitionen_sind_am_vollsten">Welche Partitionen sind am vollsten</h3>
+<div class="level3">
+<pre class="code">df -i
+df -h</pre>
+
+</div>
+<!-- EDIT1 SECTION "Welche Partitionen sind am vollsten" [1-63] -->
+<h3 class="sectionedit2" id="wieviel_platz_ist_reserviert">Wieviel Platz ist reserviert</h3>
+<div class="level3">
+<pre class="code">tune2fs -l /dev/sda5 | grep -i reserved</pre>
+
+</div>
+<!-- EDIT2 SECTION "Wieviel Platz ist reserviert" [64-145] -->
+<h3 class="sectionedit3" id="wieviel_platz_wird_in_einer_subhierarchie_verbraucht">Wieviel Platz wird in einer Subhierarchie verbraucht</h3>
+<div class="level3">
+<pre class="code">du -sh /usr</pre>
+
+</div>
+<!-- EDIT3 SECTION "Wieviel Platz wird in einer Subhierarchie verbraucht" [146-223] -->
+<h3 class="sectionedit4" id="welche_verzeichnisse_sind_am_vollsten">Welche Verzeichnisse sind am vollsten</h3>
+<div class="level3">
+<pre class="code">du -mx --max-depth=1 / | sort -n
+du -mx / | sort -n</pre>
+
+<p>
+oder
+</p>
+<pre class="code">du -hx / | sort -h</pre>
+
+</div>
+<!-- EDIT4 SECTION "Welche Verzeichnisse sind am vollsten" [224-354] -->
+<h3 class="sectionedit5" id="wo_sind_die_groessten_dateien">Wo sind die größten Dateien</h3>
+<div class="level3">
+<pre class="code">find / -xdev -size +1G
+find / -xdev -size +10M -ls | sort -n -k 7
+find / -xdev -size +10M -printf &#039;%k %p\n&#039; | sort -n</pre>
+
+</div>
+<!-- EDIT5 SECTION "Wo sind die größten Dateien" [355-519] -->
+<h3 class="sectionedit6" id="welche_3_dateien_sind_am_groessten">Welche 3 Dateien sind am größten</h3>
+<div class="level3">
+<pre class="code">find / -mount -type f  -printf &quot;%s\t%p\n&quot; | sort -nr | head -3</pre>
+
+</div>
+<!-- EDIT6 SECTION "Welche 3 Dateien sind am größten" [520-632] -->
+<h3 class="sectionedit7" id="welche_pakete_verbrauchen_am_meisten_platz">Welche Pakete verbrauchen am meisten Platz</h3>
+<div class="level3">
+
+<p>
+dpkg-basierte Distributionen:
+</p>
+<pre class="code">dpkg-query -W --showformat=&#039;${Installed-Size} ${Package}\n&#039; | sort -n</pre>
+
+<p>
+rpm-basierte Distributionen:
+</p>
+<pre class="code">rpm -qa --queryformat &#039;%{SIZE} %{NAME}\n&#039; | sort -n</pre>
+
+</div>
+<!-- EDIT7 SECTION "Welche Pakete verbrauchen am meisten Platz" [633-871] -->
+<h3 class="sectionedit8" id="welcher_benutzer_verbraucht_wie_viel_platz">Welcher Benutzer verbraucht wie viel Platz</h3>
+<div class="level3">
+<pre class="code">find / -mount -printf &#039;%k %u\n&#039; | perl -ane &#039;$sum{$F[1]} += $F[0]; END {print join $/, %sum}&#039;</pre>
+
+</div>
+<!-- EDIT8 SECTION "Welcher Benutzer verbraucht wie viel Platz" [872-1021] -->
+<h3 class="sectionedit9" id="zuletzt_geaenderte_dateien_im_verzeichnisbaum_finden">Zuletzt geänderte Dateien im Verzeichnisbaum finden</h3>
+<div class="level3">
+<pre class="code">find / -xdev -type f -printf &#039;%TY%Tm%Td%TH%TM %p\n&#039; | sort -n</pre>
+
+</div>
+<!-- EDIT9 SECTION "Zuletzt geänderte Dateien im Verzeichnisbaum finden" [1022-1149] -->
+<h3 class="sectionedit10" id="graphische_darstellung">Graphische Darstellung</h3>
+<div class="level3">
+<pre class="code">kdirstat
+baobab</pre>
+
+</div>
+<!-- EDIT10 SECTION "Graphische Darstellung" [1150-] -->

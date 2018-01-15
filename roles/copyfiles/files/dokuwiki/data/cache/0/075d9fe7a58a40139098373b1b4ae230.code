@@ -1,0 +1,16 @@
+   <span class="kw3">function</span> SetPermamentEnvironmentVariables <span class="br0">&#123;</span>
+  <span class="coMULTI">&lt;#
+         .Synopsis
+            Dieses Skript ändert eine Umgebungsvariablen 
+         .Example
+           &quot;Modify_Environment_Variable.ps1&quot; osver T6.1
+           &quot;Modify_Environment_Variable.ps1&quot; &lt;name&gt; &lt;value&gt;
+  #&gt;</span>
+     <span class="kw3">param</span><span class="br0">&#40;</span>
+       <span class="br0">&#91;</span>Parameter<span class="br0">&#40;</span>Mandatory<span class="sy0">=</span><span class="re0">$True</span><span class="br0">&#41;</span><span class="br0">&#93;</span>
+           <span class="br0">&#91;</span><span class="re3">String</span><span class="br0">&#93;</span><span class="re0">$VAR</span><span class="sy0">,</span>
+       <span class="br0">&#91;</span>Parameter<span class="br0">&#40;</span>Mandatory<span class="sy0">=</span><span class="re0">$True</span><span class="br0">&#41;</span><span class="br0">&#93;</span>
+           <span class="br0">&#91;</span><span class="re3">String</span><span class="br0">&#93;</span><span class="re0">$OSVAL</span>
+  <span class="br0">&#41;</span>
+  <span class="br0">&#91;</span>System.Environment<span class="br0">&#93;</span>::SetEnvironmentVariable<span class="br0">&#40;</span><span class="re0">$VAR</span><span class="sy0">,</span><span class="re0">$OSVAL</span><span class="sy0">,</span> <span class="st0">&quot;Machine&quot;</span><span class="br0">&#41;</span>
+  <span class="br0">&#125;</span>

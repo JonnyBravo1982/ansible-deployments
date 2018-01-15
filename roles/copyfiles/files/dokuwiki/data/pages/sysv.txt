@@ -1,0 +1,145 @@
+====== SysV-init ======
+===== runlevel =====
+Unter RedHat und SuSE gibt es Runlevel 1 als Notfall-Modus. Unter Debian ist Runlevel 1 nicht als Notfall-Modus geeignet. ''emergency'' am Bootprompt angeben startet den Debian Notfall-Modus. 
+Welche Runlevel auf einem System definiert sind, steht in der Datei ''/etc/inittab''. 
+
+==== SuSE und RedHat ====
+
+|runlevel | heißt? [Kurz-Beschreibung]|
+|       0 | System halt [System angehalten, nichts geht mehr]|
+|       1 | Single user mode [root wird angemeldet, sonst nichts gestartet]|
+|       2 | Local multiuser without remote network (e.g. NFS) [zur lokalen Administration ohne Netzwerk. Vorsicht! Schon per "ping" erreichbar]|
+|       3 | Full multiuser with network [vollwertiges System ohne graphische Oberfläche, z.B. Server]|
+|       4 | Not used [nicht genutzt -> frei für Jobs des Admins]|
+|       5 | Full multiuser with network and xdm [vollwertiges System, z.B. Desktop-PCs]|
+|       6 | System reboot [System wird neu gestartet] (Do not use this for initdefault!) [ist gut für Reboot-Test]|
+
+==== Debian und Ubuntu ====
+
+|runlevel | heißt? [Kurz-Beschreibung]|
+|       0 | System halt [System angehalten, nichts geht mehr]|
+|       1 | Single user mode [root wird angemeldet, sonst nichts gestartet]|
+|    2 - 5 | Full multiuser with network and xdm [vollwertiges System, z.B. Desktop-PCs]|
+|       6 | System reboot [System wird neu gestartet] (Do not use this for initdefault!) [ist gut für Reboot-Test]|
+
+===== /etc/inittab =====
+
+==== wait ====
+Beispiel: netcat in den Runleveln 2 und 3 einmalig starten
+
+Paket: netcat-traditional ((die Alternative ''netcat-openbsd'' kennt den Schalter ''-o'' nicht))
+
+''/etc/inittab'' :
+
+<file>
+nc:23:wait:/bin/netcat -lp 5000 -o /tmp/netcat
+</file>
+
+  ps -C netcat
+  init q
+  ps -C netcat
+  pkill netcat
+  ps -C netcat
+
+==== respawn ====
+Beispiel: netcat in den Runleveln 2 und 3 einmalig starten
+
+Paket: netcat-traditional
+
+''/etc/inittab'' :
+
+<file>
+nc:23:respawn:/bin/netcat -lp 5000 -o /tmp/netcat
+</file>
+
+  ps -C netcat
+  init q
+  ps -C netcat
+  pkill netcat
+  ps -C netcat
+
+===== erste init-Skripte =====
+Welche Start-Skripte werden bei __jedem__ Bootvorgang als __erstes__ gestartet?
+
+=== SuSE ===
+  /etc/init.d/boot.d/
+
+=== Debian ===
+  /etc/init.d/rcS
+  /etc/rcS.d/
+
+=== CentOS 5 ===
+  /etc/rc.d/rc.sysinit
+
+===== runlevel Start-Skripte =====
+Hier werden die meisten Dienste gestartet: (abhängig vom eingestellen Runlevel, hier 2)
+  /etc/init.d/rc2.d/
+bzw.
+  /etc/rc2.d/
+
+=== SuSE und RedHat ===
+Alle Links mit "S*" (für Start) am Beginn des Filenamens aufgerufen.
+Beim Verlassen des Runlevels (z.B. shutdown) werden die Links mit Filenamen "K*" (für Kill) gerufen. 
+
+=== Debian und Ubuntu ===
+Alle Links mit "S*" (für Start) am Beginn des Filenamens aufgerufen.
+Beim Verlassen des Runlevels (z.B. shutdown) werden die selben Links in umgekehrter Reihenfolge aufgerufen. 
+
+==== Dienste starten und eintragen ====
+=== Dienst sofort, einmalig starten ===
+  /etc/init.d/dienst start
+oder
+  service dienst start
+
+=== Dienst immer beim Booten starten ===
+
+== SuSE und RedHat ==
+  chkconfig dienst on
+
+== Debian ==
+  update-rc.d dienst default
+oder
+  insserv dienst
+
+=== Dienst sofort, einmalig beenden ===
+  /etc/init.d/dienst stop
+oder
+  service dienst stop
+
+=== Dienst beim Booten nicht starten ===
+== SuSE und RedHat ==
+  chkconfig dienst off
+
+== Debian ==
+  update-rc.d -f dienst remove
+oder
+  insserv -r dienst
+
+==== Startoptionen eines Dienstes ändern ====
+
+Debian, Ubuntu:
+  cp -a /etc/default/dienst{,.orig}
+  vim /etc/default/dienst
+
+SuSE, RedHat:
+  cp -a /etc/sysconfig/dienst{,.orig}
+  vim /etc/sysconfig/dienst
+
+Änderungen anzeigen:
+  diff /etc/sysconfig/dienst{,.orig}
+
+Dienst neu starten:
+  /etc/init.d/dienst restart
+
+===== Start-Skript für Dienste von Drittanbietern =====
+=== RedHat / Centos ===
+  * http://kbase.redhat.com/faq/FAQ_52_5120.shtm
+
+=== SuSE ===
+''/etc/init.d/skeleton'' kopieren und anpassen
+
+=== Ubuntu 8.04 ===
+''/etc/init.d/skeleton'' kopieren und anpassen
+
+====== Dokumentation der Distributoren ======
+[[ http://docs.redhat.com/docs/de-DE/Red_Hat_Enterprise_Linux/5/html/Installation_Guide/s1-boot-init-shutdown-sysv.html | RedHat ]]

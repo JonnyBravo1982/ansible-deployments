@@ -1,0 +1,5 @@
+Starten einer PowerShell im WinPE
+
+<code>
+ServiceUI.exe -process:TSProgressUI.exe %SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File Department-Switch_rev01.ps1
+</code>

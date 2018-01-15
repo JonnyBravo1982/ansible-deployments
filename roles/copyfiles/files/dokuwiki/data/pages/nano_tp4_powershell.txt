@@ -1,0 +1,10 @@
+In der TP4 gibt es ein Verzeichnis für den NanoServer. 
+
+- djoin.exe zum Domain join (.djoin)
+
+- module NanoServer muss importiert werden
+
+- Test-WSMAN mit cread.??? 
+
+-Enter-PSSession verbinden
+

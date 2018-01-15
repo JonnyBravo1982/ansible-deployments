@@ -1,0 +1,12 @@
+
+<p>
+Es kann vorkommen das bei einem SCCM Reporting Server die Logfile enorm groß wird. Dies liegt daran das, das logging auf Full gestellt ist. Im SQL Management Studio kann das wie folgt geändert werden. Rechts Klick Database/Properties/Optionen. Im Reiter Recovery model kann nun auf Simple gestellt werden (siehe Bild). 
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=reporting_server_datenbank_zu_gross&amp;media=sql_logging_model.png" class="media" title="sql_logging_model.png"><img src="/lib/exe/fetch.php?w=400&amp;tok=64724f&amp;media=sql_logging_model.png" class="media" alt="" width="400" /></a>
+</p>
+
+<p>
+Nun kann die Datei gelöscht werden das geht nur wen der MSSQLServer Dienste beendet ist. 
+</p>

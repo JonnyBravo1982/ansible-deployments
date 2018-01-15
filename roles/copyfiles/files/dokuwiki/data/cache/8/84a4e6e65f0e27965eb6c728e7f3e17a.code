@@ -1,0 +1,1 @@
+New<span class="sy0">-</span>NetIPAddress –IPAddress 10.0.75.1 <span class="sy0">-</span>PrefixLength <span class="nu0">24</span> <span class="sy0">-</span>InterfaceAlias <span class="st0">&quot;vEthernet (NAT)&quot;</span>

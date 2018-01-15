@@ -1,0 +1,2 @@
+Objektorientiertes Programmieren mit der PowerShell 5.0 Folie http://IT-Visions.de/vortraege
+

@@ -1,0 +1,196 @@
+====== X Window System ======
+===== X Server =====
+==== Konfiguration ====
+Nach Graphikkarten suchen:
+  X -scanpci
+Vorhandene Treiber anzeigen:
+  ls /usr/lib*/xorg/modules/drivers/
+Konfigurationsdatei erzeugen:
+  X -configure
+X testweise starten:
+  X -probeonly
+Logdatei ansehen:
+  less /var/log/Xorg.0.log
+Aufbau Konfigdatei:
+  egrep 'Section|Identifier|Device|Screen|Monitor' /etc/X11/xorg.conf
+  grep -- '-->' /var/log/Xorg.0.log
+
+=== Debian (5.0) ===
+  dpkg-reconfigure xserver-xorg
+
+=== openSuSE (bis 12.1) ===
+  sax2
+
+=== Centos / Redhat ===
+  system-config-display
+
+==== X Server starten ====
+//So nur zum Testen gedacht, bessere Methoden siehe unten//
+
+Debian:
+  aptitude install xserver-common
+
+CentOS 7:
+  yum install xorg-x11-apps
+
+SuSE, Debian, CentOS:
+
+  <Strg>+<Alt>+<F2>
+  X :1 vt8 &
+startet einen X-Server auf der Textkonsole 8 mit der laufenden Nr. 1 ( beginnt bei 0 ) im Hintergrund
+
+Der zusätzliche Parameter ''-retro'' erzeugt einen "checkerboard" Hintergrund, wie er früher üblich war.
+==== Dokumentation ====
+  * man xorg.conf
+  * man Xorg
+  * man Pages zu den Treibern
+  * [[ http://wiki.ubuntuusers.de/XServer ]]
+
+===== X Client =====
+//So nur zum Testen gedacht//
+
+Debian:
+  aptitude install xbase-clients
+SuSE, Debian, CentOS:
+  export DISPLAY=localhost:1
+  xclock &
+startet einen X-Client, hier z.B. xclock
+
+===== X Windowmanager =====
+==== Debian ====
+  aptitude install wmaker
+  export DISPLAY=localhost:1
+  wmaker &
+startet einen Windowmanager, hier z.B. windowmaker
+
+==== SuSE ====
+  export DISPLAY=localhost:1
+  twm &
+startet einen Windowmanager, hier z.B. twm
+
+==== CentOS / RedHat ====
+  export DISPLAY=localhost:1
+  twm &
+startet einen Windowmanager, hier z.B. twm
+
+====== X Window System starten ======
+===== startx =====
+  startx /usr/bin/twm -- :1 vt8 &
+oder
+
+''~/.xinitrc'' bzw. ''/etc/X11/xinit/xinitrc'':
+<file>
+export DISPLAY=:1
+/usr/bin/xclock &
+exec /usr/bin/twm
+</file>
+
+''~/.xserverrc'' :
+<file>
+exec /usr/bin/Xorg :1 vt8
+</file>
+
+''/etc/X1.hosts'' :
+<file>
+localhost
+</file>
+
+  startx
+
+===== X Display Manager =====
+siehe [[xdm]]
+
+==== Standard-Desktop ändern ====
+=== Debian ===
+KDE zum Standard Desktop Manager machen:
+  debconf-set-selections <<KDM
+<file>
+kdm shared/default-x-display-manager select kdm
+</file>
+  KDM
+  aptitude install kde
+oder
+  dpkg-reconfigure kdm
+
+KDE zur Standard-Sitzung machen:
+  update-alternatives --set x-session-manager /usr/bin/startkde
+
+====== xhost ======
+==== X-Server Rechner ====
+unsicheren Zugriff auf X-Server über Port 6000/tcp erlauben:
+=== gdm ===
+''/etc/gdm/custom.conf'' : ( CentOS 5 )
+<file>
+[security]
+DisallowTCP=false
+</file>
+  pkill gdm
+
+=== kde ===
+''/etc/X11/xdm/kdmrc'' : ( KDE )
+<file>
+ServerArgsLocal=
+</file>
+
+=== xhost ===
+  xhost +
+
+==== X-Client Rechner ====
+  export DISPLAY=server:0
+  xterm
+
+====== xauth ======
+xauth cookies anzeigen:
+  xauth list
+
+xauth cookies von anderem Benutzer (nutzer21) übernehmen:
+  xauth merge ~nutzer21/.Xauthority
+
+==== sudo / pam ====
+xauth cookies bei [[sudo]] setzen:
+
+<file>
+session  optional  pam_xauth.so
+</file>
+====== X gemeinsam nutzen ======
+=== Debian ===
+Pakete:
+  x2x
+
+  ssh -X nutzer01@notebook01 x2x -east -to :0.0
+
+====== TrueType Schriften installieren ======
+===== Debian =====
+  apt-get install msttcorefonts x-ttcidfont-conf
+
+
+====== TrackPoint ======
+
+
+''/etc/X11/xorg.conf.d/01-trackpoint.conf'' :
+
+<file>
+Section "InputClass"
+ Identifier     "Wheel Emulation"
+ MatchIsPointer "on"
+ MatchProduct   "TrackPoint"
+ Option         "EmulateWheelButton" "2"
+ Option "EmulateWheel" "on"
+ EndSection
+</file>
+
+Beide Befehle sollten nach jedem systemstart mit root-Rechten ausgeführt werden. (genauer pfad in /sys muss je nach Hardware angepasst werden.)
+
+  echo -n 200 > /sys/devices/platform/i8042/serio1/serio2/sensitivity
+
+  echo -n 180 > /sys/devices/platform/i8042/serio1/serio2/speed
+
+
+====== Dokus & Links ======
+  * [[ http://www.linux-magazin.de/heft_abo/ausgaben/2006/12/x_servieren?category=0 | Einführung zu X aus dem Linux-Magazin ]]
+  * [[ https://help.ubuntu.com/community/MultiseatX | Ein PC, mehrere Monitore für mehrere Benutzer ]]
+  * [[ http://en.wikipedia.org/wiki/X_Window_System | Wikipedia zum X Window System ]]
+  * [[ http://blog.mecheye.net/2012/06/the-linux-graphics-stack/ | The Linux Graphics Stack ]]
+  * X11 unter Windows:
+    * http://x.cygwin.com/
+    * http://xming.sf.net

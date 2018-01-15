@@ -1,0 +1,7 @@
+- name: "Create a jenkins Container"
+  docker_container:
+    name: jenkins
+    image: jenkins
+    ports:
+      - "20080:8080"
+      - "50000:50000"

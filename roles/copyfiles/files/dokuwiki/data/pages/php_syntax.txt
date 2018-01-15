@@ -1,0 +1,1792 @@
+# MySQL-PHP Syntax Beispiele
+Created Sonntag 21 September 2014
+
+
+# mysql Befehle
+Created Dienstag 11 November 2014
+
+Logisches Backup
+
+Ein logisches Backup dauert zwar länger, ist aber dafür etwas eleganter. Weiterhin haben logische Backups den Vorteil, dass diese sich grundsätzlich auf andere SQL-Datenbanken (z.B. PostgreSQL, Oracle, SQL Server) zurück sichern lassen. Ein logisches Backup besteht außerdem aus einer Textdatei, welche - wenn nötig - mit einem konventionellen Editor einsehbar ist.
+
+Ein logisches Backup erfolgt unter MySQL mit Hilfe des Programms mysqldump, welches standardmäßig mit installiert wird.
+Hinweis:
+
+Um einen konsistenten "dump" zu erzeugen, sperrt mysqldump die Datenbank. Je nach Größe und Aufwand ist der Server für normale Zugriffe somit eine gewisse Zeit nicht erreichbar.
+
+Der Befehl
+
+mysqldump -u root -p --all-databases > sicherung.sql 
+
+sichert mit den Rechten des (SQL-Benutzers) "root" alle Datenbanken in die Datei sicherung.sql. Die Sicherung kann natürlich auch mit einem anderen Benutzer durchgeführt werden, sofern dieser die notwendigen Rechte in den zu sichernden Datenbanken hat.
+
+# php5
+Created Samstag 27 September 2014
+
+
+
+# Arrays
+Created Montag 29 September 2014
+
+**einfacher Array**
+<code php>
+*<?php*
+* $antworten = array("nie", "manchmal", "oft"); * einen Array erstellen nur mit strings //
+* $werte = array(42, 54, 66); * array nur mit Zahlen //
+* echo $antworten[2]; *Ausgabe der 3 stelle also oft//
+* echo "<br/>"; *zeilenumbruch//
+* foreach ($antworten as $aw)*
+* {*
+*   echo "$aw <br/>";*
+* } * eine foreach schleife um den array komplett anzuzeigen //
+*var_dump($antworten); * zeigt Informationen des Arrays//
+*echo count($antworten); * zählt die Array values ausgabe 3//
+*?>*
+</code>
+**Assoziative Arrays**
+<code php>
+*<?php*
+*$farben = array (*
+ **"rot" =>   "#FF0000",** 
+*             "grün" => "#00FF00", *
+*             "blau" =>  "#0000FF"*
+*		  );*
+*echo $farben["rot"];*
+*foreach ($farben as $k => $v){*
+*  echo "Schlüssel: $k, Wert: $v<br />\n";*
+*}*
+*echo "Die Farbe ist: " . ***$farben["rot"];**
+*?>*
+</code>
+**Verschachtelte Arrays**
+<code php>
+*<?php*
+*$bilder = ***array***( *
+  **array***("pfad" => "blumen.jpg",*
+*                    "alt" => "rote Blumen", *
+*                    "titel" => "Strauß aus roten Blumen"),*
+  **array***("pfad" => "landschaft.jpg", *
+*                    "alt" => "Landschaft", *
+*                    "titel" => "Landschaft im Nebel"),*
+  **array***("pfad" => "stadt_am_meer.jpg", *
+*                    "alt" => "Häuser",*
+*                    "titel" => "Griechische Häuser am Abend"),*
+*              array("pfad" => "strand.jpg", *
+*                    "alt" => "Strand",*
+*                    "titel" => "Strand mit Bergen"), *
+*              array("pfad" => "boot.jpg", *
+*                    "alt" => "Boot", *
+*                    "titel" => "Boot auf einem Felsen")*
+*          );*
+?>
+</code>
+
+Mit dem Kommand implode kann ein Array in einen String umgewandelt werden 
+<code php>
+*<?php*
+*$liste = array ("Oliven", "Kapern", "Ananas");*
+*$str = implode(" und ", $liste);*
+*echo $str; *
+*?>*
+</code>
+Mit Explode kann ein String in einem Array umgewandelt werden. 
+<code php>
+*<?php*
+*$str = "Müsli Rosinen Bananen";*
+*$liste = explode(" ", $str);*
+*print_r($liste);*
+*?>*
+</code>
+
+Für die interne Programmierung ohne Ausgabe ist es besser mit serialize zu Arbeiten.
+<code php>
+*<?php*
+*$farben = array ("hellblau" =>  "lightblue", *
+*                 "schwarz" => "black", *
+*                 "gelb" => "yellow", *
+*                 "himmelblau" => "skyblue",*
+*                 "rot" => "red");*
+*$serial = serialize($farben);*
+*echo $serial;*
+*$arr = unserialize($serial);*
+*echo "<pre>";*
+*print_r($arr);*
+*echo "</pre>";*
+*?>*
+</code>
+Mit sort können arrays sortiert werden. 
+<code php>
+*<?php*
+*$liste = array ("Kapern", "Oliven", "Ananas");*
+*sort($liste);*
+*echo "<pre>";*
+*print_r($liste);*
+*rsort($liste);*
+*print_r($liste);*
+*echo "</pre>";*
+*?>*
+</code>
+In nächsten Beispiel kann man prüfen ob ein wert im Array vorhanden ist. 
+<code php>
+*<?php*
+*$farben = array ("hellblau" =>  "lightblue", *
+*                 "schwarz" => "black", *
+*                 "gelb" => "yellow", *
+*                 "himmelblau" => "skyblue",*
+*                 "rot" => "red");*
+*$such = "yellow";*
+*if (in_array($such, $farben)) {*
+*  echo "$such vorhanden.  ";*
+*}*
+*?>*
+</code>
+
+# case or switch
+Created Mittwoch 08 Oktober 2014
+
+Ihr eine einfache case anweisung  break schiesst die bedingung :
+<code php>
+*<?php*
+*$dasda = "Apfel";*
+*switch ($dasda) {*
+*case "Apfel":	*
+*    echo "$dasda ist ein Obst";		*
+*    break;		*
+*case "Karotte":	*
+*    echo "$dasda ist ein Gemüse";		*
+*    break;		*
+*case "Käse":	*
+*    echo "$dasda ist ein Milchprodukt";		*
+*    break;		*
+*default:	*
+*    echo "Kenne ich nicht";		*
+*}*
+*?>*
+</code>
+ohne Break :
+<code php>
+*<?php*
+*$dasda = "Apfel";*
+*switch ($dasda) {*
+*  case "Apfel":	*
+*    echo "$dasda ist ein Obst<br />";		*
+*  case "Karotte":	*
+*    echo "$dasda ist ein Gemüse<br />";		*
+*  case "Käse":	*
+*    echo "$dasda ist ein Milchprodukt<br />";		*
+*  default:	*
+*    echo "Kenne ich nicht";		*
+*}*
+*?>*
+</code>
+
+# class and konstruktor
+Created Mittwoch 10 Dezember 2014
+
+Beides wird zur Projektorientierten Programmierung benötigt.
+<code html>
+_{<!DOCTYPE html>
+<html>
+ <head>
+  <title>Klasse Kunde mit Objekt</title>
+  <meta charset="UTF-8" />
+</head>
+<body>
+<?php
+class Kunde 
+{
+  public $name;
+  public function __construct($name) 
+  {
+$this->name=$name;
+  }
+  public function halloSagen()
+ {
+echo "Hallo {$this->name}";
+  }
+}
+$neuerKunde = new Kunde("Anja");
+$neuerKunde->halloSagen();
+?>
+</body>
+</html>}
+</code>
+Class können über Public,Privat,Prodektit definiert werden.
+
+public					= es gibt keine einschränkungen 
+privat					=kein zugriff möglich 
+protected				=zugriff auf eine abgeleitet Class ist möglich 
+
+des weiteren gibt es 
+
+static 		=statsiche Methode Function 
+
+
+z.B. 
+<code php>
+_{class Datum
+{
+  public static function ausgeben() 
+  {
+date_default_timezone_set("Europe/Berlin");
+$tage = array (
+"Mon" => "Montag",
+"Tue" => "Dienstag",
+"Wed" => "Mittwoch",
+"Thu" => "Donnerstag",
+"Fri" => "Freitag", 
+"Sat" => "Samstag",
+"Sun" => "Sonntag");
+$wochentag = $tage[date("D")];
+$monate = array (
+   "Jan" => "Januar",
+   "Feb" => "Februar",
+   "Mar" => "März",
+   "Apr" => "April",
+   "Mai" => "Mai",
+   "Jun" => "Juni",
+   "Jul" => "Juli",
+   "Aug" => "August",
+   "Sep" => "September",
+   "Oct" => "Oktober",
+   "Nov" => "November",
+   "Dec" => "Dezember"
+   );
+$monat = $monate[date("M")];
+   $wochentag = $tage[date("D")];
+   echo "$wochentag, den ";
+   echo date("j. " ) .$monat . date(" Y");
+  }
+}
+Datum::ausgeben();
+?>}
+</code>
+Oder 
+
+<code php>
+<?php
+class Beispiel
+{
+  public static $zahl = 42;
+  public function ausgeben() 
+  {
+return self::$zahl;
+  }
+}
+echo Beispiel::$zahl;
+echo "<br />\n";
+
+/*Folgendes erzeugt einen Hinweis, wenn Fehlerlevel Strict */
+/*echo Beispiel::ausgeben();*/
+
+$bsp = new Beispiel();
+echo $bsp->ausgeben();
+
+?>
+</code>
+
+# cookies
+Created Samstag 29 November 2014
+
+PHP hat eine Funktion um COokies bereitzustellen 
+
+
+**setcookie()**
+
+
+Ein einfaches Beispiel um ein Cookie zu setzen !!
+
+<code php>
+<?php
+setcookie("name", "Marie", time()+7200);
+setcookie("farbe", "rot", time()+7200);
+?>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Cookies setzen</title>
+  <meta charset="UTF-8" />
+</head>
+<body>
+<p>In diesem Dokument sollten zwei Cookies gesetzt werden</p>
+<p>Prüfen Sie, ob das geklappt hat über 
+<a href="cookie_auslesen.php">cookie_auslesen.php</a></p>
+</body>
+</html>}
+</code>
+Die Cookies können mit einem Array ausgelesen werden. 
+
+<code html>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Cookies auslesen</title>
+  <meta charset="UTF-8" />
+</head>
+<body>
+<?php
+if (isset($_COOKIE["name"]) && isset($_COOKIE["farbe"])) {
+  echo "Cookies wurden gesetzt<br />\n";
+  echo "Name: " . htmlspecialchars($_COOKIE["name"]) . "<br />\n";
+  echo "Farbe: " . htmlspecialchars($_COOKIE["farbe"]);
+} else {
+  echo "keine Cookies gesetzt";
+}
+?>
+</body>
+</html>
+</code>
+
+
+# date()
+Created Montag 03 November 2014
+<code php>
+*<?php*
+*date_default_timezone_set("Europe/Berlin");*
+*echo date("d.m.Y H:i:s");*
+*echo "<br />\n";*
+*echo date("d.m.Y, \u\m H  \U\h\\r i");*
+*echo "<br />\nDer aktuelle Monat hat ";*
+*echo date("t") . " Tage.<br />\n";*
+*if (date("I") == 1) {*
+*   echo "Es ist Sommerzeit.";*
+*} else {*
+*  echo "Es ist keine Sommerzeit.";*
+*}*
+*?>*
+</code>
+Um es in deutsch umzuwandeln ist ein array nötig
+<code php>
+*<?php*
+*date_default_timezone_set("Europe/Berlin");*
+*$tage = array (*
+*        "Mon" => "Montag",*
+*        "Tue" => "Dienstag",*
+*        "Wed" => "Mittwoch",*
+*        "Thu" => "Donnerstag",*
+*        "Fri" => "Freitag", *
+*        "Sat" => "Samstag",*
+*        "Sun" => "Sonntag"*
+*	);*
+*$monate = array (*
+*        "Jan" => "Januar",*
+*        "Feb" => "Februar",*
+*        "Mar" => "März",*
+*        "Apr" => "April",*
+*        "Mai" => "Mai",*
+*        "Jun" => "Juni",*
+*        "Jul" => "Juli",*
+*        "Aug" => "August",*
+*        "Sep" => "September",*
+*        "Oct" => "Oktober",*
+*        "Nov" => "November",*
+*        "Dec" => "Dezember"*
+*	);*
+*$monat = $monate[date("M")];*
+*$wochentag = $tage[date("D")];*
+*echo "$wochentag, den ";*
+*echo date("j. " ) .$monat . date(" Y");*
+*?>
+</code>
+
+Zeit berechnungen in php mit date() und mktime
+<code php>
+*<?php*
+*date_default_timezone_set("Europe/Berlin");*
+*$tage = array (*
+*        "Mon" => "Montag",*
+*        "Tue" => "Dienstag",*
+*        "Wed" => "Mittwoch",*
+*        "Thu" => "Donnerstag",*
+*        "Fri" => "Freitag", *
+*        "Sat" => "Samstag",*
+*        "Sun" => "Sonntag");*
+*$weihnachten = mktime(17, 0, 0, 12, 24, 2015);*
+*$wochentag = $tage[date("D", $weihnachten)];*
+*echo "$wochentag, den ";*
+*echo date("d.m.Y H:i:s", $weihnachten);*
+*?>*
+</code>
+Mit dieser Funktion kann man die Zeit differenz berechnen.
+<code php>
+*<?php*
+*date_default_timezone_set("Europe/Berlin");*
+*function zeitdifferenz($t1, $t2, $einheit) *
+*{*
+*  $differenz = abs($t1 - $t2);*
+*  $anzSek = array (*
+*    "Sekunden" => 1,*
+*    "Minuten"  => 60,*
+*    "Stunden"  => 3600,*
+*    "Tage"     => 86400,*
+*    "Wochen"   => 604800*
+*  );*
+*  if (isset($anzSek[$einheit])) {*
+*    return floor($differenz/$anzSek[$einheit]);*
+*  } else {*
+*    return "Ungültige Eingabe";*
+*  }*
+*}*
+*$vorgestern = mktime(0, 0, 0, intval(date("m")), intval(date("d")-2));*
+*$heute      = time();*
+*echo zeitdifferenz($heute, $vorgestern, "Tage");*
+*echo "<br />\n";*
+*echo zeitdifferenz($vorgestern, $heute, "Tage");*
+*?>*
+</code>
+
+
+# Datei einbinden
+Created Freitag 03 Oktober 2014
+
+**Um Daten einzubinden gibt es die Kommandos include und require**
+<code html>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Dateien einbinden</title>
+  <meta charset="UTF-8" />
+</head>
+<body>
+**<?php**
+**include "header.php";**
+**?>**
+<h2>Lorem ipsum dolor </h2>
+<p>sit amet, consetetur sadipscing elitr, sed diam nonumy 
+eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam 
+voluptua. At vero eos et accusam et justo duo dolores et ea rebum. 
+Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum 
+dolor sit amet.</p>
+**<?php**
+**include "copyright.php";**
+**?>**
+</body>
+</html>
+</code>
+
+**header.php im selben Verzeichnis** 
+<code php>
+<?php
+date_default_timezone_set("Europe/Berlin");
+echo "<h1>Willkommen am ";
+echo date("j.n.Y");
+echo "</h1>\n";
+?>
+</code>
+**copyright.php im selben Verzeichnis**
+
+<p>&copy; 2012 Example.com</p>
+
+
+# Datei Uploade mit Formular
+Created Mittwoch 19 November 2014
+
+Ein Datei Upload kann nur mit Post erfolgen.
+<code html>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Beispielformular</title>
+  <meta charset="UTF-8" />
+</head>
+<body>
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+Datei: <br />
+<input type="hidden" name="MAX_FILE_SIZE" value="300000" />
+<input type="file" name="datei" /><br />
+<input type="submit" value="Hochladen" />
+</form>
+<?php
+if (isset($_FILES["datei"]) AND ! $_FILES["datei"]["error"]) {
+}**if (@move_uploaded_file($_FILES["datei"]["tmp_name"], "upload/" . basename($_FILES["datei"]["name"]))) {**
+**      echo "Dateiupload hat geklappt";**
+**   } else {**
+**     echo "Dateiupload hat nicht geklappt";**
+**   }**_{
+}
+?>
+</body>
+</html>
+</code>
+
+Der input MAX_FILE_SIZE muss vor dem Typ "file" stehen die Angabe value ist in byte.  Die Funktion@move_uploade_file legt die Datei im aktuellen Verzeichnis unter uploade ab.
+
+Bild Uploade absichern 
+<code html>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Beispielformular</title>
+  <meta charset="UTF-8" />
+</head>
+<body>
+<form action="<?php echo htmlentities($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+Datei: <br />
+<input type="hidden" name="MAX_FILE_SIZE" value="300000" />
+<input type="file" name="datei" /><br />
+<input type="submit" value="Hochladen" />
+</form>
+<?php
+if (isset($_FILES["datei"]) AND ! $_FILES["datei"]["error"]  AND  ($_FILES["datei"]["size"] < 300000 )) {
+$bildinfo = getimagesize($_FILES["datei"]["tmp_name"]);
+if ($bildinfo === false) {
+  die("kein Bild");
+} else {
+  $mime = $bildinfo["mime"];
+  $mimetypen = array (
+"image/jpeg" => "jpg",
+"image/gif" => "gif",
+"image/png" => "png"
+);
+ if (!isset($mimetypen[$mime])) {
+   die("nicht das richtige Format");
+ } else {
+   $endung = $mimetypen[$mime];
+ }
+ $neuername = basename($_FILES["datei"]["name"]);
+ $neuername = preg_replace("/\.(jpe?g|gif|png)$/i", "", $neuername);  
+ $neuername = preg_replace("/[^a-zA-Z0-9_-]/", "", $neuername);     
+ $neuername .= ".$endung";
+ $ziel = "upload/$neuername";
+ while (file_exists($ziel)) {
+   $neuername = "kopie_$neuername";
+   $ziel = "upload/$neuername";
+ }
+  if (@move_uploaded_file($_FILES["datei"]["tmp_name"], $ziel)) {
+echo "Dateiupload hat geklappt";
+ } else {
+   echo "Dateiupload hat nicht geklappt";
+}
+  }
+}
+?>
+</body>
+</html>
+</code>
+
+
+
+
+# Datentypen
+Created Montag 29 September 2014
+
+
+**Beispiel** 
+<code php>
+<?php
+ $text1 = "Das hier ist ein String"; //string
+ $text2 = 'Das hier ist ein String'; //string
+ $text3 = "10 Eier"; //string
+ $text4 = "Schachtel mit 10 Eiern";//string
+ $ganzezahl = 42; //int
+ $nocheine = -13; //int
+ $float = 1.5; //Flieskommazahl mit . float
+ $regnen = true; //wahrheitswerte 
+ $mehrere = array(1, 3, 5, 3); //array
+ $erg = $text3 + 2;
+ echo $erg;
+ echo "<br />\n";
+ $erg = $text4 + 2;
+ echo $erg;
+ ?>
+</code>
+# Formulare
+Created Sonntag 09 November 2014
+
+Hier ein einfaches Formular was den Benutzer abfragt in html und zur weiterverarbeitung in php
+
+Ein Formular muss immer in einer <form> </form> sein !!
+<code html>
+*<!DOCTYPE html>*
+*<html>*
+* <head>*
+*  <title>Beispielformular</title>*
+*  <meta charset="UTF-8" />*
+*</head>*
+*<body>*
+**<form*** action="verarbeitung.php" method="***get***">*
+*Ihr Vorname: <br />*
+*<input type="text" name="vorname" size="20" maxlength="30" />*
+*<br />*
+*Ihr Nachname: <br />*
+*<input type="text" name="nachname" size="20" maxlength="30" />*
+*<br />*
+*<input type="submit" value="Abschicken" />*
+**</form>**
+*</body>*
+*</html>*
+</code>
+
+In der verabeitung.php wird die eingabe ausgelesen !! GET = werden die Paramter über die URL mitgegeben bei POST 
+<code php>
+*<?php*
+*echo "Ihre Eingaben<br />\n";*
+*echo "Vorname: " . htmlspecialchars(***$_GET["vorname"]***) . "<br />\n";*
+*echo "Name: " . htmlspecialchars($_GET["nachname"]) . "<br />\n";*
+*?>*
+</code>
+
+<code php>
+**<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?> **liesst den direkten Pfad zum Skript aus 
+*<?php*
+*if (!isset($_GET["vorname"])) {*
+*?>*
+*<***form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="get">**
+*Ihr Vorname: <br />*
+*<input type="text" name="vorname" size="20" maxlength="30" />*
+*<br />*
+*Ihr Nachname: <br />*
+*<input type="text" name="nachname" size="20" maxlength="30" />*
+*<br />*
+*<input type="submit" value="Abschicken" />*
+*</form>*
+*<?php*
+*} else {*
+*    echo "Ihre Eingaben<br />\n" *
+*    . "Vorname: " . htmlspecialchars($_GET["vorname"]) *
+*    . "<br />\n Name: " . htmlspecialchars($_GET["nachname"]) *
+*    . "<br />\n";*
+*}*
+*?>*
+</code>
+**Übertragungsvorlagen get und post** 
+
+get 	*  .Name: " . htmlspecialchars($_GET["nachname"])	bei get werden die Daten an die URL gehängt 	Beispiel: für suche anfragen *
+Post	  *.Name: " . htmlspecialchars($_POST["nachname"])	bei post werden die Daten mit den Body mitgesendet Beispiel: in Datenbank schreiben oder email versenden (nicht sichtbar) !!*
+
+**Radiobuttons,Auswahllisten und Textfelder**
+
+**Radiobuttons**  immer nur eine auswahl Beispiel 
+
+*<input type="radio" name="anrede" value="Frau" checked="checked"/> Frau*
+*<input type="radio" name="anrede" value="Herr" /> Herr*
+*<input type="radio" name="anrede" value="Firma" /> Firma <br />*
+
+**Textfeld** 
+
+*<input type="text" name="nachname" size="20" maxlength="30" />*
+
+**Auswahlliste**
+
+*<select name="thema">*
+*  <option value="HTML">HTML</option>*
+*  <option value="CSS">CSS</option>*
+*  <option value="JavaScript">JavaScript</option>*
+*  <option value="PHP">PHP</option>*
+*</select>*
+
+**Kommendarfeld** rows und cols bestimmen die Größe 
+
+<textarea name="kommentar" rows="3" cols="20"></textarea>
+
+
+
+
+
+gesamte Skript : 
+<code html>
+*<!DOCTYPE html>*
+*<html>*
+* <head>*
+*  <title>Beispielformular</title>*
+*  <meta charset="UTF-8" />*
+*</head>*
+*<body>*
+*<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="get">*
+*<input type="radio" name="anrede" value="Frau" checked="checked"/> Frau*
+*<input type="radio" name="anrede" value="Herr" /> Herr*
+*<input type="radio" name="anrede" value="Firma" /> Firma <br />*
+*Nachname: <br />*
+*<input type="text" name="nachname" size="20" maxlength="30" />*
+*<br />*
+*Themen: <br />*
+*<select name="thema">*
+*  <option value="HTML">HTML</option>*
+*  <option value="CSS">CSS</option>*
+*  <option value="JavaScript">JavaScript</option>*
+*  <option value="PHP">PHP</option>*
+*</select>*
+*<br />*
+*Kommentar: <br />*
+*<textarea name="kommentar" rows="3" cols="20"></textarea>*
+*<br />*
+*<input type="submit" value="Abschicken" />*
+*</form>*
+
+*<?php*
+*if (!empty($_GET["nachname"])) {*
+*  echo "Ihre Eingaben<br />\n";*
+*  if (!empty($_GET["anrede"])) {*
+*    echo htmlspecialchars($_GET["anrede"]);*
+*  }*
+*  echo " " . htmlspecialchars($_GET["nachname"]) . "<br />\n";*
+*  if (!empty($_GET["thema"])){*
+*    echo "Das gewählten Thema: ". htmlspecialchars($_GET["thema"]) . "<br />\n ";*
+*   }*
+*  if (!empty($_GET["kommentar"])) {*
+*    echo "Ihr Kommentar: " . htmlspecialchars($_GET["kommentar"]);*
+*  }*
+*}*
+*?>*
+*</body>*
+*</html>*
+</code>
+
+**nl2br** gibt die Zeilenumbruche mit aus 
+
+ **echo nl2br(htmlspecialchars($_GET['kommentar']));**
+
+**Checkboxen** 
+
+Um Checkboxen richtig zu verabreiten werden arrays benötigt 
+
+Beispiel Skript : 
+<code html>
+*<!DOCTYPE html>*
+*<html>*
+* <head>*
+*  <title>Beispielformular</title>*
+*  <meta charset="UTF-8" />*
+*</head>*
+*<body>*
+*<form action="<?php echo $_SERVER["PHP_SELF"];?>" method="get">*
+*Ihr Nachname: <br />*
+*<input type="text" name="nachname" size="20" maxlength="30" />*
+*<br />*
+*Themen: <br />*
+*<input type="checkbox"  name="thema[]" value="HTML" />HTML *
+*<input type="checkbox"  name="thema[]" value="CSS" />CSS *
+*<input type="checkbox"  name="thema[]" value="JavaScript" />JavaScript *
+*<input type="checkbox"  name="thema[]" value="PHP" />PHP<br />*
+*<input type="submit" value="Abschicken" />*
+*</form>*
+*<?php*
+*if (!empty($_GET["nachname"])) {*
+*  echo "Ihre Eingaben<br />\n"*
+*    . "Name: ". htmlspecialchars($_GET["nachname"]) . "<br />\n";*
+*  if (isset($_GET["thema"]) && is_array($_GET["thema"])){*
+*    echo "Die gewählten Themen: <br />\n ";*
+*    foreach($_GET["thema"] as $th) {*
+*      echo htmlspecialchars($th) . "<br />\n";*
+*    }*
+*  }*
+*}*
+//*print_r($_GET);*
+*?>*
+*</body>*
+*</html>*
+</code>
+**der Kommand implode macht aus einen array einen String** 
+<code php>
+<?php
+if (!empty($_GET["nachname"])) {
+  echo "Ihre Eingaben<br />\n";
+  echo "Name: {$_GET['nachname']}<br />\n";
+if (isset($_GET["thema"]) && is_array($_GET["thema"])){
+echo "Die gewählten Themen: <br />\n ";
+$themen = **implode**(" ", $_GET["thema"]);
+echo htmlspecialchars($themen);
+  }
+}
+</code>
+
+WICHTIG : ALLE Felder können verändert werden und manupuliert werden.  Es muss geprüft werden  ob die richtigen werte angeben sind mit htmlspecialchars ist es möglich Eingabefelder zu schützen.
+=================================================================================================================================================================================================
+
+
+**Absichern von Formularen** 
+
+Auswahllisten Filtern in_array 
+<code html>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Beispielformular</title>
+  <meta charset="UTF-8" />
+</head>
+<body>
+<?php
+$themen = array("HTML", "CSS", "JavaScript", "PHP");
+?>
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="get">
+Ihr Nachname: <br />
+<input type="text" name="nachname" size="20" maxlength="30" />
+<br />
+Themen: <br />
+<select name="thema">
+<?php 
+foreach ($themen as $el) {
+  echo "<option value='$el'>$el</option>\n";
+}
+?>
+</select>
+<br />
+<input type="submit" value="Abschicken" />
+</form>
+<?php
+if (!empty($_GET["nachname"]) && is_string($_GET["nachname"])) {
+  echo "Ihre Eingaben<br />\n";
+  echo "Name: " . htmlspecialchars($_GET["nachname"]) . "<br />\n";
+  }**if (isset($_GET["thema"]) &&  (in_array($_GET["thema"], $themen))){**
+**    echo "Das gewählten Thema: {$_GET['thema']}<br />\n "**_{;
+   }
+}
+?>
+</body>
+</html>
+</code>
+Dies ist die eigentliche Filter funktion 
+<code php>
+<?php
+$email = "ich_mir.de";
+}**if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {**
+**  echo "E-Mail $email nicht gültig";**
+**} else {**
+**  echo "E-Mail gültig";**
+**}**_{
+>
+</code>
+
+Filtern auf Zahlen 
+<code php> 
+<?php
+$min = 3;
+$max = 99;
+$test = 2;
+$optionen = array("options" => array("min_range"=>$min, "max_range"=>$max));
+var_dump(filter_var($test, FILTER_VALIDATE_INT, $optionen));
+?>
+</code>
+
+Formulare validieren
+<code html>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Formulareingaben validieren</title>
+  <meta charset="UTF-8" />
+  <style type="text/css">
+.fehler { color: red; font-weight: bold; }
+   </style>
+</head>
+<body>
+<?php
+$themen = array("...", "HTML", "CSS", "JavaScript", "PHP");
+if (isset($_POST["gesendet"])) {
+  formverarbeiten();
+} else {
+  formausgeben();
+}
+function formausgeben($vorname= "", $nachname ="", $thema = "", $fehler="") 
+{ 
+  global $themen;
+  if (!empty($fehler)) {
+echo "<p class='fehler'>$fehler</p>";
+  }
+?>
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+Vorname <br />
+<input type="text" name="vorname" size="20" maxlength="30" value="<?php echo htmlspecialchars($vorname); ?>" />
+<br />
+Nachname* <br />
+<input type="text" name="nachname" size="20" maxlength="30" value="<?php echo htmlspecialchars($nachname); ?>" />
+<br />
+Themenwunsch* <br />
+<select name="thema">
+<?php
+  foreach ($themen as $el) {
+if ($el == $thema) {
+  $gew = " selected='selected' ";
+} else {
+  $gew = "";
+}
+echo "<option value='$el' $gew>$el</option>\n";
+   }
+?>
+</select>
+<br />
+<input type="submit" name="gesendet" />
+</form>
+<?php
+}
+function formverarbeiten()
+{
+  global $themen;
+  isset($_POST["nachname"]) && is_string($_POST["nachname"]) ? $nachname = trim($_POST["nachname"]) : $nachname= "";
+  isset($_POST["vorname"])  && is_string($_POST["vorname"])  ? $vorname =  trim($_POST["vorname"]) : $vorname= "";
+  isset($_POST["thema"]) && is_string($_POST["thema"])? $thema = $_POST["thema"] : $thema = "";
+  $fehler = "";
+  if (empty($nachname)) {
+$fehler = "Bitte geben Sie Ihren Nachnamen an. ";
+  }
+  if (!in_array($thema, $themen) || $thema == "...") {
+$fehler .= "Bitte wählen Sie ein Thema";
+  }
+  if (strlen($fehler) > 0) {
+formausgeben($vorname, $nachname, $thema, $fehler);
+  } else {
+echo "Vielen Dank für Ihre Eingaben";
+  //mail versenden;
+  } 
+}
+?>
+</body>
+</html>
+</code>
+
+
+
+# Funktionen
+Created Mittwoch 08 Oktober 2014
+
+Syntax:
+
+return 		= 	beendet die funktion auch 
+<code php>
+<?php
+**function ausgabe() **
+**{**
+**  echo "Hallo München";	**
+**}**
+ausgabe();
+echo "<br />\n";
+ **function copyright() {**
+**  return "Copyright 2012";	**
+**}**
+$c = copyright();
+echo strtoupper($c);
+echo "<br />\n";
+?>
+</code>
+Der funktion können auch parameter übergeben werden : 
+<code php>
+*<?php*
+*function brutto($netto, $mwstSatz) *
+*{*
+*  return $netto * (100 + $mwstSatz) / 100;*
+*}*
+*$betrag = 25;*
+*$bruttowert = brutto($betrag, 7);*
+*echo "$betrag ergibt $bruttowert inkl. MWSt<br />\n";*
+*$bruttowert2 = brutto($betrag, 19);*
+*echo "$betrag ergibt $bruttowert2 inkl. MWSt<br />\n";*
+*?>*
+</code>
+
+Man kann der funktion auch einen referenz wert mitgeben dies ist das kaufmänische und "&"
+<code html>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Funktionen</title>
+  <meta charset="UTF-8" />
+</head>
+<body>
+<?php
+echo "<h3>Übergabe per Wert</h3>\n";
+function veraendern($a) {
+  $a++;
+}
+$c = 2;
+echo "Vor Funktionsaufruf: \$c ist $c<br />\n";
+veraendern($c);
+echo "Nach Funktionsaufruf: \$c ist $c<br />\n";
+echo "<h3>Übergabe per Referenz</h3>\n";
+**function veraendern2(&$a) {			**
+**  $a++;				**
+**}**
+echo "Vor Funktionsaufruf: \$c ist $c<br />\n";
+veraendern2($c);
+echo "Nach Funktionsaufruf: \$c ist $c<br />\n";
+?>
+</body>
+</html>
+</code>
+Um auf ein variable zuzugreifen die auserhalb des Geltungsbereich ist , muss sie mit global definiert werden. Beispiel 
+<code php>
+*<?php*
+*$vorname = "Lilli";*
+*function gruss() {*
+*  global $vorname;	*
+*  echo "Hallo $vorname<br />\n";	*
+*}*
+*gruss();*
+*?>*
+</code>
+
+oder : 
+<code php>
+*<?php*
+*$vorname = "Lilli";*
+*function gruss() {*
+*    echo "Hallo {$GLOBALS['vorname']}<br />\n";*
+*}*
+*gruss();*
+
+ 
+*?>*
+</code>
+
+Es gibt vordefinierte funktionen in php diese können in der manual angelesen werden 
+<http://at2.php.net/manual/de/funcref.php>
+
+Um Informationen über variablen können die Befehle var_dump und printr genutzt werden Beispiel : 
+<code php>
+*<?php*
+*$antworten = array("nie", "manchmal", "oft", 42);*
+*print_r($antworten);*
+*echo "<br />\n";*
+*var_dump($antworten);*
+*?>*
+</code>
+
+Mit isset kann geprüft werden ob eine varibale existiert Beispiel :
+<code php>
+*<?php*
+*$z = 0;*
+*if (isset($z)) {*
+*  echo "Variable ist gesetzt<br />\n";*
+*}*
+*?>*
+</code>
+Mit empty wird geprüft ob die variable existiert und ob was drin steht Beispiel :
+<code php>
+*<?php*
+*$z      = 0;*
+*$falsch = false;*
+*if (empty($gibtsnicht)) {*
+*  echo " das ist zu wenig - ";*
+*}*
+*if (empty($z)) {*
+*  echo " von nichts kommt nichts - ";*
+*}*
+*if (empty($falsch)) {*
+*  echo " wieder nix ";*
+*}*
+*?>*
+</code>
+Die Funktionen "Preg_match()" und "preg_match_all()" ist eine php funktion für reguläre Ausdrücke. In diesen Beispiel wird die Ausgabe von pre_match in die variable $treffer geschrieben. 
+<code php>
+*<?php*
+*$muster = "/und/";*
+*$in = "Der Hund hat einen Knochen";*
+*if(preg_match($muster, $in, $treffer)) { *
+*  echo "$muster passt auf '$in'<br />\n";*
+*  print_r($treffer);*
+*}*
+*?>*
+</code>
+"preg_match_all()" ermöglicht mehre suchen zu definieren hier ein Beispiel 
+<code php>
+*<?php*
+*$muster = "/\b\d{3}\b/";*
+*$str = "123 456 7890 123";*
+*if(preg_match_all($muster, $str, $treffer)) {*
+*  echo "$muster passt auf '$str'<br />\n";*
+*  print_r($treffer);*
+*}*
+*?>*
+</code>
+**Funktionen für Arrays** 
+
+ 
+
+# if Verzweigungen
+Created Dienstag 07 Oktober 2014
+
+Einfache IF verzweigung ..
+<code php>
+*<?php$i = 4;***if ($i > 4)*** {*
+*  echo "$i ist größer als 4";*
+*  /* hier können weitere Anweisungen folgen **/
+*} elseif ($i == 4) {*
+*  echo "$i gleich 4";	}else {*
+*  echo "$i ist kleiner als 4";*
+*  /* weitere Anweisungen bei Bedarf **/
+*}*
+*?>*
+</code>
+Man kann auch eine verkürzte schreibweise nutzen 
+<code php>
+ **lang :**
+*$i = 6;*
+*if ($i % 2 == 0) {*
+*  $fazit =  "gerade";*
+*}*
+*else {*
+*  $fazit = "nicht gerade";*
+*}*
+*echo "Das Ergebnis: $fazit";*
+*echo "<br />\n";*
+**kurz:**
+**$fazit = ($i % 2 == 0) ? "gerade" : "ungerade";**
+echo "Das Ergebnis: $fazit";
+</code>
+*if Abfragen verknüpfen mit und oder als Beispiel || = oder*
+<code php>
+  **if ($uhrzeit < 5 || $uhrzeit > 20) {**
+*     $gruss = "Gute Nacht";*
+*  } elseif ($uhrzeit < 11) {*
+*     $gruss = "Guten Morgen";*
+*  } elseif ($uhrzeit < 15) {*
+*     $gruss = "Guten Mittag";*
+*  } elseif ($uhrzeit < 18) {*
+*     $gruss = "Guten Nachmittag";*
+*  } else  {*
+*     $gruss = "Guten Abend";*
+*  }* 
+</code>
+
+
+
+# Kommentare
+Created Samstag 27 September 2014
+
+Kommentare können in unterschiedlichen arten hinzugefügt werden. 
+
+   //Text  	-	 Einzeilige Kommentare
+   #Text		-	 Einzeilige (nicht in verwendung)
+   [/*](file:///C:/Users/daniel.schlaupitz/CloudStation/ZIM/*) Text */ 	-	 Mehrzeilig  
+
+# Login-system
+Created Samstag 29 November 2014
+
+Loginsystem können mit Sessions realisiert werden. Zum Beispiel : 
+<code html>
+start.php
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Login mit Sessions</title>
+  <meta charset="UTF-8" />
+<style type="text/css">
+  .fehler { color: red; }
+  </style>
+  </head>
+<body>
+<?php
+if (isset($_GET["f"]) && $_GET["f"] == 1) {
+  echo "<p class='fehler'>Login-Daten nicht korrekt</p>";
+}
+?>
+<form method="post" action="login.php">
+Ihr Name: <br />
+<input type="text" name="name" size="20" />
+<br />
+Passwort: <br />
+<input type="password" name="passwort" size="20" /><br />
+<input type="submit" value="Login" />
+</form>
+</body>
+</html>
+</code>
+
+<code php>
+login.php
+<?php
+session_start();
+$host  = htmlspecialchars($_SERVER["HTTP_HOST"]);
+$uri   = rtrim(dirname(htmlspecialchars($_SERVER["PHP_SELF"])), "/\\");
+if (isset($_POST["name"]) && $_POST["name"] == "Hans" && $_POST["passwort"] == "geheim") {
+  $_SESSION["name"] = "Hans";
+  $_SESSION["login"] = "ok";
+  $extra = "willkommen.php";
+} else {
+  $extra = "start.php?f=1";
+}
+header("Location: <http://$host$uri/$extra>");
+?>
+</code>
+
+<code php>
+Wollkommen.php
+<?php
+session_start();
+if (isset($_SESSION["login"]) && $_SESSION["login"] == "ok") {
+?>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Willkommen im geschützten Bereich</title>
+  <meta charset="UTF-8" />
+</head>
+<body>
+<?php
+  echo "<h1>Hallo {$_SESSION['name']}</h1>";
+?>
+<p>Hier stehen viele weitere interessante Informationen</p>
+<p><a href="logout.php">Ausloggen</p>
+</body>
+</html>
+<?php
+} else {
+  $host  = htmlspecialchars($_SERVER["HTTP_HOST"]);
+  $uri   = rtrim(dirname(htmlspecialchars($_SERVER["PHP_SELF"])), "/\\");
+  $extra = "start.php";
+  header("Location: <http://$host$uri/$extra>");
+}
+?>}
+</code>
+<code php>
+logout.php
+<?php
+session_start();
+$_SESSION = array();
+if (isset($_COOKIE[session_name()])) {
+setcookie(session_name(), "", time()-42000, "/");
+}
+session_destroy();
+$host  = htmlspecialchars($_SERVER["HTTP_HOST"]);
+$uri   = rtrim(dirname(htmlspecialchars($_SERVER["PHP_SELF"])), "/\\");
+$extra = "start.php";
+header("Location: <http://$host$uri/$extra>");
+?>
+</code>
+Passwörter können mit der php_funktion md5 verschlüsselt werden nun das angepasste Login 
+<code php>
+login.php
+<?php
+session_start();
+$host = htmlspecialchars($_SERVER["HTTP_HOST"]);
+$uri  = rtrim(dirname(htmlspecialchars($_SERVER["PHP_SELF"])), "/\\");
+if (isset($_POST["name"]) 
+&& $_POST["name"] == "Hans" 
+&& md5($_POST["passwort"]) == "e8636ea013e682faf61f56ce1cb1ab5c") {
+   $_SESSION["name"] = "Hans";
+   $_SESSION["login"] = "ok";
+   $extra = "willkommen.php";
+ } else {
+   $extra = "start.php?f=1";
+ }
+ header("Location: <http://$host$uri/$extra>");
+ ?>
+</code>
+
+
+# mit Session arbeiten (close Browser)
+Created Samstag 29 November 2014
+
+Über den $SESSION Array kann ich werte Speichern und auslesen. 
+Die session wird mit "session_start" gestartet.
+
+<code php>
+*<?php*
+*session_start();*
+*?>*
+*<!DOCTYPE html>*
+*<html>*
+* <head>*
+*  <title>Session verwenden</title>*
+*  <meta charset="UTF-8" />*
+*</head>*
+*<body>*
+*<?php*
+*$_SESSION["name"]  = "Marie";*
+*$_SESSION["farbe"] = "rot";*
+*echo "Dieses Mal werden Werte über Sessions gesetzt. ";*
+*echo "Hier können Sie sie auslesen <a href='session_auslesen.php'>session_auslesen.php*
+*</a>";*
+*?>*
+*</body>*
+*</html>*
+</code>
+# mysqli
+Created Sonntag 18 Januar 2015
+
+Eine Schnittstelle für mysql !!
+
+mysql conncet
+
+$mysqli = new mysqli("<servername>","<mysqlBenutzer>","<passwort>","<mysql-Datenbank>")
+
+In diesen Beispiel wird eine Abfrage und eon connect ausgeführt 
+<code html>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Datenbankabfrage ausgeben lassen</title>
+  <meta charset="UTF-8" />
+</head>
+<body>
+<?php
+$mysqli = new mysqli("localhost", "root", "", "garten");
+if ($mysqli->connect_error) {
+  echo "Fehler bei der Verbindung: " . mysqli_connect_error();
+  exit();
+}
+if (!$mysqli->set_charset("utf8")) {
+  echo "Fehler beim Laden von UTF8 ". $mysqli->error;
+}
+$ergebnis = $mysqli->query("SELECT name, beschreibung, preis FROM pflanzen;");
+while($zeile = $ergebnis->fetch_array()) {
+  echo "<strong>{$zeile['name']}</strong>: {$zeile['beschreibung']} {$zeile['preis']}<br />\n";
+}
+$ergebnis->close();
+$mysqli->close();
+?>
+</body>
+</html>
+</code>
+
+# Operatoren für Zahlen und Strings
+Created Montag 29 September 2014
+
+%	= Modulator ( den Rest einer division)
+
+* = Multipizieren
+
++	=Addieren 
+-	=Subtraktion
+/	=Division 
+
+
+**einfaches Beispiel :**
+<code php>
+<?php
+  $zahl1 = 7;
+  $zahl2 = 5;
+  $ergebnis = $zahl1 % $zahl2;
+  echo $ergebnis;
+?>
+</code>
+**kombiniert Beispiel :** 
+<code php>
+<?php
+  $i = 5;
+  $i++;
+  echo $i;
+?>
+</code>
+**Operatoren Strings Beispiel:**
+<code php>
+<?php
+  $vorname = "Denis";
+  echo "Hallo " . " Welt. "; /* Hallo Welt */
+  echo "Hallo " . $vorname; /* Hallo Denis */
+  echo "<br />Guten Morgen " . $vorname . " � gut geschlafen?"; 
+   ?>
+</code>
+
+# php einbinden
+Created Samstag 27 September 2014
+
+in HTML
+<code html>
+*<!DOCTYPE html>*
+*<html>*
+*<head>*
+*  <meta charset="UTF-8" />*
+*  <title>PHP in HTML einbinden</title>*
+*</head>*
+*<body>*
+**<?php**
+** echo "Unser erstes PHP-Dokument";**
+**?>**
+* </body>*
+*</html>*
+</code>
+alternative arten 
+<code html>
+*<!DOCTYPE html>*
+*<html>*
+*<head>*
+*  <meta charset="UTF-8" />*
+*  <title>PHP in HTML einbinden</title>*
+*</head>*
+*<body>*
+*<script language="php">*
+*  echo "Unser erstes PHP-Dokument";*
+*</script>*
+*<? echo "noch mal hallo"; ?>*
+*<% echo "auch das ist möglich; %>*
+* </body>*
+*</html>*
+</code>
+Der PHP-Code kann überall eingebunden werden head or Titel scheiß egal !! Ein Beispiel : 
+<code html>
+**<?php date_default_timezone_set("Europe/Berlin");?>**
+*<!DOCTYPE html>*
+*<html>*
+* <head>*
+  **<title><?php echo date("j.n.Y"); ?></title>**
+*  <meta charset="UTF-8" />*
+*  <style type="text/css">*
+  **body { background-color: <?php echo "yellow"; ?>; }**
+*</style>*
+*</head>*
+*<body>*
+*<p>*
+*<?php*
+  **echo "Schönen Tag <br />auch!";** *?>*
+*</p>*
+*</body>*
+*</html>*
+</code>
+
+# phpmailer
+Created Mittwoch 19 November 2014
+
+Um eine mail zu vesenden eignet sich der phpmail 
+
+<http://phpmailer.worxware.com/index.php?pg=sf&p=sfp>
+
+Beipspiel 
+<code php>
+<?php
+/* Damit dieses Beispiel funktioniert, müssen Sie Ihre SMTP-Daten eintragen :-) 
+und außerdem die benötigten Klassen von PHPMailer herunterladen :-) */
+require_once "class.phpmailer.php";
+include "class.smtp.php" ; 
+$mail = new PHPMailer();
+$body = "Hier ist der Mailbody";
+$email = "Mailadresse des Adressaten";
+$mail->CharSet = "utf-8"; 
+$mail->IsSMTP(); // telling the class to use SMTP
+$mail->Host  = "IHR SMTP SERVER"; // SMTP server
+$mail->SMTPDebug  = 1; // enables SMTP debug information (for testing)
+$mail->SMTPAuth = true;  // enable SMTP authentication
+$mail->Username = "Ihr Benutzernamen"; // SMTP account username
+$mail->Password = "Ihr Passwort"; // SMTP account password
+$mail->SetFrom("Ihre E-Mail-Adresse");
+$mail->Subject = "Testmail";
+$mail->Body=$body;
+$mail->AddAddress($email);
+if(!$mail->Send()) {
+  echo "Mailer Error: " . $mail->ErrorInfo;
+} else {
+  echo "Nachricht gesendet!";
+}
+?>}
+</code>
+Mit HTML : 
+
+<code php>
+<?php
+/* Damit dieses Beispiel funktioniert, müssen Sie Ihre SMTP-Daten eintragen :-) 
+und außerdem die benötigten Klassen von PHPMailer herunterladen :-) */
+require_once "class.phpmailer.php";
+include "class.smtp.php" ; 
+$mail = new PHPMailer();
+$mail->CharSet = 'utf-8'; 
+$body = file_get_contents("htmlmailtext.html");
+$body = preg_replace("/\\\/",'',$body);
+ $email = "Mailadresse des Adressaten";
+$mail->IsSMTP(); // telling the class to use SMTP
+$mail->Host       = "IHR SMTP SERVER"; // SMTP server
+$mail->SMTPDebug  = 1;                     // enables SMTP debug information (for testing)
+   // 1 = errors and messages
+   // 2 = messages only
+$mail->SMTPAuth   = true;                  // enable SMTP authentication
+$mail->Username   = "Ihr Benutzername"; // SMTP account username
+$mail->Password   = "Ihr Passwort";        // SMTP account password
+$mail->SetFrom("Ihre E-Mail-Adresse");
+$mail->Subject    = "Testmail";
+$mail->MsgHTML($body);
+$mail->AddAddress($email);
+if(!$mail->Send()) {
+  echo "Mailer Error: " . $mail->ErrorInfo;
+} else {
+  echo "Nachricht gesendet!";
+}
+?>
+</code>
+
+# Schleifen
+Created Mittwoch 08 Oktober 2014
+
+**while schleife die 6 die prüft ob i kleiner als 6 ist , also läuft 5mal  :**
+<code php>
+<?php
+$i = 1; 
+ while ($i < 6){
+ echo "hallo ";
+ $i++; 
+}
+?>
+</code>
+**eine do while schleife :**
+<code php>
+*<?php*
+*$i = 6; *
+*do {*
+*  echo "hallo ";	*
+*  $i++; 	*
+*}*
+*while ($i < 6);*
+*?>*
+</code>
+**einfache for Schleife :**
+<code php>
+<?php
+for ($i = 1; $i < 6; $i++){
+  echo "$i. Hallo<br [/>\n";](file:///C:/Users/daniel.schlaupitz/CloudStation/ZIM/%3E/n%22%3B)
+}
+?>
+</code>
+**Verschachtelt :** 
+<code html>
+*<!DOCTYPE html>*
+*<html>*
+* <head>	*
+*  <title>Einmaleins</title>		*
+*  <meta charset="UTF-8" />		*
+*</head>	*
+*<body>	*
+*<table border="1" cellpadding="5">		*
+*<?php			*
+for ($i = 1; $i <= 10; $i++) {
+  echo "<tr>\n";
+  for ($j = 1; $j <= 10; $j++) 9{
+   $zahl = $i*$j;
+echo "\t<td>$zahl</td>\n";
+  }
+  echo "</tr>\n";
+}
+?>		*</table>		*
+*</body>	*
+*</html>*
+</code>
+**Break und Continue  **
+Break		=	 beendet die Schleife
+Continue 	=	geht wieder zum schleifen Anfang 
+
+Hier ein Beispiel : 
+<code php>
+*<?php*
+*for ($i = 1; $i <= 10; $i++) {*
+*  if ($i == 3) {	*
+*    continue;		*
+*  } 	*
+*  echo "$i. Durchlauf<br />\n";	*
+*  if ($i == 5) {	*
+*    break;		*
+*  }    	*
+*}*
+*?>*
+</code>
+
+# Sonderzeichen bearbeiten
+Created Sonntag 26 Oktober 2014
+
+Hier ein Beispiel wie man html Sonderzeichen in php behandelt. Das Zauber Wort heisst htmlspecialchars
+<code php>
+<?php
+$behauptung = "2 < 4 && \"5\" == '5'";
+echo htmlspecialchars($behauptung);
+echo "<br />\n";
+echo htmlspecialchars($behauptung, ENT_QUOTES);
+echo "<br />\n";
+echo htmlspecialchars($behauptung, ENT_NOQUOTES);
+echo "<br />\n";
+$mit = htmlspecialchars($behauptung);
+$ohne = htmlspecialchars_decode($mit);
+echo $ohne;
+?>
+</code>
+Es ist auch möglich die strips direkt zu bearbeiten mit strip_tags hier ein Beispiel : 
+<code php>
+*<?php*
+*$string = "<p>Ein Absatz mit <em>mehrfacher</em> <strong>Betonung</strong></p>";*
+*echo $string;*
+*echo "\n";*
+*echo strip_tags($string);*
+*echo "\n";*
+*echo strip_tags($string, "<p><em>");*
+*?>*
+</code>
+
+
+
+# Variablen
+Created Montag 29 September 2014
+
+Ein einfache Beispiele
+<code php>
+<?php
+ $vorname = "Florence";
+ $zahl = 3;
+ $ergebnis = 12 + $zahl;
+ echo $ergebnis;
+ ?>
+</code>
+**Bearbeitung von strings** 
+
+Strings können wie arrays behandelt werden Beispiel :
+<code php>
+*<?php*
+*$tier = "Maus";*
+*$erster = $tier[0];*
+*echo "$tier beginnt mit $erster<br />\n";*
+*$tier[0] = "L";*
+*echo $tier;*
+*if (!isset($tier[4])) {*
+*  echo "<br />\n $tier hat weniger als 5 Buchstaben";*
+*}*
+*?>*
+</code>
+strlen zählt die Zeichen eines Strings 
+<code php>
+*<?php*
+*$name = " Hans-Heinerich ";*
+*$laenge = strlen($name);*
+*echo "$name ist $laenge Zeichen lang (inklusive Leerzeichen)<br />\n";*
+*?>*
+</code>
+trim entfernt Leerzeichen und beliebige Zeichen  Beispiel 
+<code php>
+*<?php*
+*$nn = "   Maier     ";*
+*$vn = "\tBerenice\n ";*
+*echo "<pre>";*
+*echo "Vor trim: *
+*         Name: '$nn',*
+*         Vorname '$vn'";*
+*$nn = trim($nn);*
+*$vn = trim($vn);*
+*echo "\nNach trim: *
+*         Name: '$nn'*
+*         Vorname: '$vn'";*
+*echo "</pre>";*
+*$str = "'O'Brien'...";*
+*echo trim($str, "'.");*
+*?>*
+</code>
+printf formatiert die Ausgabe String Beispiel 
+<code php>
+*<?php*
+*$name = "Ben"; *
+*$alter  = 4;*
+*$format = "%s ist %d Jahre alt";*
+*printf($format, $name, $alter);*
+*echo "<br />\n";*
+*printf("%d", 2.567);*
+*echo "<br />\n";*
+*?>*
+</code>
+**Strings durchsuchen** 
+
+strpos = liefert die Position der 
+<code php>
+*<?php*
+*$satz = "Der Hund hat einen Knochen";*
+*$suche = "noch";*
+*$pos = strpos($satz, $suche);*
+*if ($pos === false) {*
+*    echo "$suche ist nicht in $satz";*
+*} else {*
+*    echo "$suche befindet sich an Position $pos in '$satz'";*
+*}*
+*?>*
+</code>
+substr können Teile aus einem String deklariert werden Beispiel :
+<code php>
+*<?php*
+*$satz = "Der Hund hat einen Knochen";*
+*$ausschnitt = substr($satz, 4, 8);*
+*echo $ausschnitt;*
+*?>*
+</code>
+str_replace können Teile eines Strings ersetzt werden :
+<code php>
+*<?php*
+*$satz = "außerhalb der Straße";*
+*$erg  = str_replace("ß", "ss", $satz);*
+*echo "Vorher: $satz, nachher: $erg";*
+*echo "<br />\n";*
+*$text = "Schöne Grüße";*
+*$sonder = array("ö", "ä", "ü", "ß", "Ö", "Ü", "Ä");*
+*$ohne = array("oe", "ae", "ue", "ss", "Oe", "Ue", "Ae");*
+*echo str_replace($sonder, $ohne, $text);*
+*?>*
+</code>
+Reguläre Ausdrücke wie unter Linux :)
+<code php>
+*<?php*
+*$muster = "/und/";*
+*$in = "Der Hund hat einen Knochen";*
+*if(preg_match($muster, $in)) {*
+*  echo "$muster passt auf '$in'";*
+*}*
+*?>*
+</code>
+# Vererbung
+Created Mittwoch 10 Dezember 2014
+
+
+# Zeilenumbrüche
+Created Montag 29 September 2014
+
+**Beispiel mit <br/> und \n**
+<code html>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Zeilenumbruch</title>
+<meta charset="UTF-8" />
+</head>
+<body>
+<?php
+  $name = "Hans";
+  $ort = "Berlin";
+  echo "$name wohnt in **\n** $ort";
+  **echo "<br />";**
+  echo '$name wohnt in $ort';
+   echo "<br />";
+   echo "<img src=\"wiesen.jpg\" width=\"137\" height=\"103\" alt=\"Landschaft\" />";
+  echo "<img src='wiesen.jpg' width='137' height='103' alt='Landschaft' /><br />";
+ echo '<img src="wiesen.jpg" width="137" height="103" alt="Landschaft" />';
+   ?>
+ </body>
+ </html>
+</code>
+# Zufallsbild ausgeben
+Created Freitag 03 Oktober 2014
+
+Mit dem Befehl rand() ist es möglich eine zufällige Zahl ausgeben zulassen in diesem beispiel an der länge eines Arrays
+
+**$zufallszahl = rand(0, $max);**
+
+Hier ein einfaches Beispiel : 
+<code html>
+*<!DOCTYPE html>*
+*<html>*
+* <head>*
+*  <title>Zufallsbilder</title>*
+*  <meta charset="UTF-8" />*
+*</head>*
+*<body>*
+*<?php*
+*$bilder = array( *
+*              array("pfad" => "blumen.jpg",*
+*                    "alt" => "rote Blumen", *
+*                    "titel" => "Strauß aus roten Blumen"),*
+*              array("pfad" => "landschaft.jpg", *
+*                    "alt" => "Landschaft", *
+*                    "titel" => "Landschaft im Nebel"),*
+*              array("pfad" => "stadt_am_meer.jpg", *
+*                    "alt" => "Häuser",*
+*                    "titel" => "Griechische Häuser am Abend"),*
+*              array("pfad" => "strand.jpg", *
+*                    "alt" => "Strand",*
+*                    "titel" => "Strand mit Bergen"), *
+*              array("pfad" => "boot.jpg", *
+*                    "alt" => "Boot", *
+*                    "titel" => "Boot auf einem Felsen")*
+*          );*
+**$max = count($bilder)-1;**
+**$zufallszahl = rand(0, $max); //random sucht sich eine zufällige Zahl von 0-3 aus** 
+
+*echo "<img src='" . $bilder[$zufallszahl]["pfad"] .*
+*      "' height='200' width='150' alt='" . *
+*      $bilder[$zufallszahl]["alt"] . *
+*      "' title='" .*
+*      $bilder[$zufallszahl]["titel"] .*
+*      "' />\n";*
+
+*?>*
+*</body>*
+</html>
+</code>
+
+
+

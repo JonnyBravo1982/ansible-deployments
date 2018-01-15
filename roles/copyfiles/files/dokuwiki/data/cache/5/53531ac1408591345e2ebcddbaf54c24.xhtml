@@ -1,0 +1,176 @@
+
+<h2 class="sectionedit1" id="sendmail_emulationsbefehle">sendmail Emulationsbefehle</h2>
+<div class="level2">
+
+<p>
+Auswahl von sendmail Emulationsbefehlen, die postfix beherrscht.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "sendmail Emulationsbefehle" [1-104] -->
+<h3 class="sectionedit2" id="mail_versenden">Mail versenden</h3>
+<div class="level3">
+
+<p>
+Beispiel: Mail an root@localhost versenden
+</p>
+
+</div>
+
+<h4 id="mit_sendmail">mit sendmail</h4>
+<div class="level4">
+<pre class="code">/usr/sbin/sendmail -bm root@localhost</pre>
+
+<p>
+oder
+</p>
+<pre class="code">/usr/sbin/sendmail root@localhost</pre>
+
+<p>
+<pre class="file">Subject: testmail2
+
+test
+.</pre>
+
+</p>
+
+</div>
+
+<h4 id="mit_mail">mit mail</h4>
+<div class="level4">
+<pre class="code">mail -s &#039;willkommensmail&#039; root@localhost</pre>
+
+<p>
+<pre class="file">test
+.</pre>
+
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Mail versenden" [105-402] -->
+<h3 class="sectionedit3" id="mail_lesen">Mail lesen</h3>
+<div class="level3">
+
+<p>
+Beispiel: Mail an root lesen
+</p>
+<pre class="code">cat /var/spool/mail/root</pre>
+
+<p>
+oder
+</p>
+<pre class="code">mail</pre>
+
+</div>
+<!-- EDIT3 SECTION "Mail lesen" [403-492] -->
+<h3 class="sectionedit4" id="alias_datenbank_aus_etc_aliases_neu_erzeugen">Alias Datenbank aus /etc/aliases neu erzeugen</h3>
+<div class="level3">
+
+<p>
+Beispiel: Mails an admin weiterleiten an nutzer18
+</p>
+
+<p>
+<code>/etc/aliases</code> :
+<pre class="file">admin: nutzer18</pre>
+
+</p>
+<pre class="code">newaliases</pre>
+
+<p>
+oder
+</p>
+<pre class="code">sendmail -bi</pre>
+
+<p>
+oder
+</p>
+<pre class="code">sendmail -I</pre>
+
+</div>
+<!-- EDIT4 SECTION "Alias Datenbank aus /etc/aliases neu erzeugen" [493-704] -->
+<h3 class="sectionedit5" id="mail_weiterleiten">Mail weiterleiten</h3>
+<div class="level3">
+
+<p>
+Beispiel: Mail an den aktuellen Nutzer weiterleiten an nutzer02
+</p>
+
+<p>
+<code>~/.forward</code> :
+<pre class="file">nutzer02</pre>
+
+</p>
+<pre class="code">chmod 600 .forward</pre>
+
+</div>
+<!-- EDIT5 SECTION "Mail weiterleiten" [705-860] -->
+<h3 class="sectionedit6" id="testmail">Testmail</h3>
+<div class="level3">
+
+<p>
+Beispiel: Testmail erzeugen die anzeigt, an welche Empfänger eine Mail wirklich gehen würde: 
+</p>
+<pre class="code">sendmail -bv admin@localhost</pre>
+
+<p>
+Z.B. in Kombination mit <code>/etc/aliases</code> sinnvoll.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Testmail" [861-1059] -->
+<h3 class="sectionedit7" id="mta_starten">MTA starten</h3>
+<div class="level3">
+
+<p>
+Macht man in der Praxis eher mit dem Startskript, aber es geht auch so:
+</p>
+<pre class="code">sendmail -bd</pre>
+
+</div>
+<!-- EDIT7 SECTION "MTA starten" [1060-1169] -->
+<h3 class="sectionedit8" id="mail_server_chat">Mail Server Chat</h3>
+<div class="level3">
+
+<p>
+Mit dem MTA über SMTP Befehle kommunizieren:
+</p>
+<pre class="code">sendmail -bs</pre>
+
+</div>
+<!-- EDIT8 SECTION "Mail Server Chat" [1170-1258] -->
+<h3 class="sectionedit9" id="mail_warteschlange_anzeigen">Mail Warteschlange anzeigen</h3>
+<div class="level3">
+<pre class="code">sendmail -bp</pre>
+
+<p>
+oder 
+</p>
+<pre class="code">mailq</pre>
+
+</div>
+<!-- EDIT9 SECTION "Mail Warteschlange anzeigen" [1259-1326] -->
+<h3 class="sectionedit10" id="mails_aus_warteschlange_versenden">Mails aus Warteschlange versenden</h3>
+<div class="level3">
+<pre class="code">sendmail -q</pre>
+
+</div>
+<!-- EDIT10 SECTION "Mails aus Warteschlange versenden" [1327-1385] -->
+<h3 class="sectionedit11" id="bestimmte_mail_aus_warteschlange_versenden">Bestimmte Mail aus Warteschlange versenden</h3>
+<div class="level3">
+<pre class="code">sendmail -qI23</pre>
+
+</div>
+<!-- EDIT11 SECTION "Bestimmte Mail aus Warteschlange versenden" [1386-1456] -->
+<h3 class="sectionedit12" id="mail_an_domain_aus_warteschlange_versenden">Mail an Domain aus Warteschlange versenden</h3>
+<div class="level3">
+<pre class="code">sendmail -qRlinuxhotel.de</pre>
+
+</div>
+<!-- EDIT12 SECTION "Mail an Domain aus Warteschlange versenden" [1457-1538] -->
+<h3 class="sectionedit13" id="weitere_optionen">Weitere Optionen</h3>
+<div class="level3">
+<pre class="code">man sendmail</pre>
+
+</div>
+<!-- EDIT13 SECTION "Weitere Optionen" [1539-] -->

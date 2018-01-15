@@ -1,0 +1,76 @@
+
+<p>
+Get-DscResource zeigt die Resourcen an die DSC nutzen kann. 
+</p>
+
+<p>
+Install Beispiel von der <a href="https://www.powershellgallery.com" class="urlextern" title="https://www.powershellgallery.com" rel="nofollow">https://www.powershellgallery.com</a>
+</p>
+
+<p>
+<pre class="code powershell">Install<span class="sy0">-</span>Module <span class="kw5">-Name</span> xRobocopy </pre>
+
+</p>
+
+<p>
+das folgende Beispiel erstellt eine DSC-Konfiguration. 
+</p>
+
+<p>
+<pre class="code powershell">Configuration InstallApplication <span class="br0">&#123;</span>
+Import<span class="sy0">-</span>DscResource <span class="sy0">-</span>ModuleName <span class="st0">'PSDesiredStateConfiguration'</span>
+node <span class="st0">'localhost'</span> <span class="br0">&#123;</span>
+            file MyConfig <span class="br0">&#123;</span>
+                DestinationPath <span class="sy0">=</span> <span class="st0">'C:\Test\test.txt'</span>
+                <span class="kw2">Type</span> <span class="sy0">=</span> <span class="st0">'File'</span>
+                contents <span class="sy0">=</span> <span class="st0">'write-host works fine'</span>
+            <span class="br0">&#125;</span>
+&nbsp;
+            Package Install7Zip <span class="br0">&#123;</span>
+&nbsp;
+                Ensure <span class="sy0">=</span> <span class="st0">'Present'</span>
+                Name <span class="sy0">=</span> <span class="st0">'7-Zip 16.02'</span>
+                Path <span class="sy0">=</span> <span class="st0">'C:\temp\7z1602.msi'</span>
+                ProductId <span class="sy0">=</span> <span class="st0">'{23170F69-40C1-2701-1602-000001000000}'</span>
+                LogPath <span class="sy0">=</span> <span class="st0">'C:\Install_7zip.log'</span>
+                                <span class="br0">&#125;</span>
+           Package Python27 <span class="br0">&#123;</span>
+                Ensure <span class="sy0">=</span> <span class="st0">'Present'</span>
+                Name <span class="sy0">=</span> <span class="st0">'Python 2.7.11'</span>
+                Path <span class="sy0">=</span> <span class="st0">'C:\temp\python-2.7.11.msi'</span>
+                ProductId <span class="sy0">=</span> <span class="st0">'{16E52445-1392-469F-9ADB-FC03AF00CD61}'</span>
+                LogPath <span class="sy0">=</span> <span class="st0">'C:\Python2711.log'</span>
+                               <span class="br0">&#125;</span>
+   <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+</p>
+
+<p>
+Der Befehl 
+<pre class="code powershell">InstallApplication <span class="sy0">-</span>OutputPath C:\temp\</pre>
+
+erstellt eine MOF File anhand der Konfiguration. 
+</p>
+
+<p>
+Die MOF-File kann nun auf dem Zielsystem angewendet werden. 
+<pre class="code powershell">start<span class="sy0">-</span>dscconfiguration <span class="kw5">-Path</span> <span class="sy0">&lt;</span>Pfad_der_Mofauchnetwork<span class="sy0">&gt;</span> <span class="kw5">-wait</span> <span class="sy0">-</span>verbos</pre>
+
+</p>
+
+<p>
+Das ganze kann auch Remote gestartet werden 
+<pre class="code powershell">&nbsp;</pre>
+
+</p>
+
+<p>
+Netzlaufwerk waren bei meinem Test 21.07.2016 nicht funktional ich musste mir vorher ein Laufwerk auf den Client mounten. 
+<pre class="code powershell"> <span class="kw1">New-PSDrive</span> <span class="kw5">-Name</span> Mountdir <span class="kw5">-PSProvider</span> FileSystem <span class="kw5">-Root</span> \\t4m<span class="sy0">-</span>apc<span class="sy0">-</span><span class="nu0">255</span>\Packages</pre>
+
+</p>
+
+<p>
+Diese konnte ich dann in der Konfigurationsfile wiefolgt ansprechen. 
+</p>

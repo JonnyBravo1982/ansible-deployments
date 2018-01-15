@@ -1,0 +1,10 @@
+a:2:{s:7:"current";a:8:{s:4:"date";a:2:{s:7:"created";i:1459253438;s:8:"modified";i:1459503115;}s:7:"creator";s:10:"JonnyBravo";s:4:"user";s:10:"jonnybravo";s:11:"last_change";a:7:{s:4:"date";i:1459503115;s:2:"ip";s:12:"77.179.28.82";s:4:"type";s:1:"E";s:2:"id";s:11:"python_hack";s:4:"user";s:10:"jonnybravo";s:3:"sum";s:0:"";s:5:"extra";s:0:"";}s:11:"contributor";a:1:{s:10:"jonnybravo";s:10:"JonnyBravo";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:11:"description";a:1:{s:8:"abstract";s:279:"Die wichtigsten Pythonmodule für einen hack 
+
+ 
+ easy_install pyPdf python-nmap pygeoip mechanize beautifulSoup4  
+
+Das Tool easy_install kann bei ubuntu über das Paket python-setuptools installiert werden.
+
+Wichtige Module : 
+
+	*  python-nmap : nutzt nmap für einen Port Scan";}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1459253438;s:8:"modified";i:1459503115;}s:7:"creator";s:10:"JonnyBravo";s:4:"user";s:10:"jonnybravo";s:11:"last_change";a:7:{s:4:"date";i:1459503115;s:2:"ip";s:12:"77.179.28.82";s:4:"type";s:1:"E";s:2:"id";s:11:"python_hack";s:4:"user";s:10:"jonnybravo";s:3:"sum";s:0:"";s:5:"extra";s:0:"";}s:11:"contributor";a:1:{s:10:"jonnybravo";s:10:"JonnyBravo";}}}

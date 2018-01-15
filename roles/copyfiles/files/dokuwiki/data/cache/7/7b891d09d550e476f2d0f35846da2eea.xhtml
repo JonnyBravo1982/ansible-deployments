@@ -1,0 +1,45 @@
+
+<h1 class="sectionedit1" id="python_gui">Python GUI</h1>
+<div class="level1">
+
+<p>
+Mit Python3 können GUI´s mit tkinter erstellt werden. 
+</p>
+
+<p>
+Ihr ein Beispiel für eine einfache <abbr title="Graphical User Interface">GUI</abbr> : 
+<pre class="code python"><span class="co1">#!/usr/bin/python3</span>
+<span class="kw1">from</span> tkinter <span class="kw1">import</span> *
+fields <span class="sy0">=</span> <span class="st0">'Filmname'</span><span class="sy0">,</span> <span class="st0">'Genre'</span>
+<span class="kw1">def</span> fetch<span class="br0">&#40;</span>entries<span class="br0">&#41;</span>:
+   <span class="kw1">for</span> entry <span class="kw1">in</span> entries:
+      field <span class="sy0">=</span> entry<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>
+      text  <span class="sy0">=</span> entry<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">get</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+      <span class="kw1">print</span><span class="br0">&#40;</span>field<span class="sy0">,</span> text<span class="br0">&#41;</span>
+<span class="kw1">def</span> makeform<span class="br0">&#40;</span>root<span class="sy0">,</span> fields<span class="br0">&#41;</span>:
+   entries <span class="sy0">=</span> <span class="br0">&#91;</span><span class="br0">&#93;</span>
+   <span class="kw1">for</span> field <span class="kw1">in</span> fields:
+      row <span class="sy0">=</span> Frame<span class="br0">&#40;</span>root<span class="br0">&#41;</span>
+      lab <span class="sy0">=</span> Label<span class="br0">&#40;</span>row<span class="sy0">,</span> width<span class="sy0">=</span><span class="nu0">15</span><span class="sy0">,</span> text<span class="sy0">=</span>field<span class="sy0">,</span> anchor<span class="sy0">=</span><span class="st0">'w'</span><span class="br0">&#41;</span>
+      ent <span class="sy0">=</span> Entry<span class="br0">&#40;</span>row<span class="br0">&#41;</span>
+      row.<span class="me1">pack</span><span class="br0">&#40;</span>side<span class="sy0">=</span>TOP<span class="sy0">,</span> fill<span class="sy0">=</span>X<span class="sy0">,</span> padx<span class="sy0">=</span><span class="nu0">5</span><span class="sy0">,</span> pady<span class="sy0">=</span><span class="nu0">5</span><span class="br0">&#41;</span>
+      lab.<span class="me1">pack</span><span class="br0">&#40;</span>side<span class="sy0">=</span>LEFT<span class="br0">&#41;</span>
+      ent.<span class="me1">pack</span><span class="br0">&#40;</span>side<span class="sy0">=</span>RIGHT<span class="sy0">,</span> expand<span class="sy0">=</span>YES<span class="sy0">,</span> fill<span class="sy0">=</span>X<span class="br0">&#41;</span>
+      entries.<span class="me1">append</span><span class="br0">&#40;</span><span class="br0">&#40;</span>field<span class="sy0">,</span> ent<span class="br0">&#41;</span><span class="br0">&#41;</span>
+   <span class="kw1">return</span> entries
+<span class="kw1">if</span> __name__ <span class="sy0">==</span> <span class="st0">'__main__'</span>:
+   root <span class="sy0">=</span> Tk<span class="br0">&#40;</span><span class="br0">&#41;</span>
+   ents <span class="sy0">=</span> makeform<span class="br0">&#40;</span>root<span class="sy0">,</span> fields<span class="br0">&#41;</span>
+   root.<span class="me1">bind</span><span class="br0">&#40;</span><span class="st0">'&lt;Return&gt;'</span><span class="sy0">,</span> <span class="br0">&#40;</span><span class="kw1">lambda</span> event<span class="sy0">,</span> e<span class="sy0">=</span>ents: fetch<span class="br0">&#40;</span>e<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>   
+   b1 <span class="sy0">=</span> Button<span class="br0">&#40;</span>root<span class="sy0">,</span> text<span class="sy0">=</span><span class="st0">'Show'</span><span class="sy0">,</span>
+          command<span class="sy0">=</span><span class="br0">&#40;</span><span class="kw1">lambda</span> e<span class="sy0">=</span>ents: fetch<span class="br0">&#40;</span>e<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+   b1.<span class="me1">pack</span><span class="br0">&#40;</span>side<span class="sy0">=</span>LEFT<span class="sy0">,</span> padx<span class="sy0">=</span><span class="nu0">5</span><span class="sy0">,</span> pady<span class="sy0">=</span><span class="nu0">5</span><span class="br0">&#41;</span>
+   b2 <span class="sy0">=</span> Button<span class="br0">&#40;</span>root<span class="sy0">,</span> text<span class="sy0">=</span><span class="st0">'Quit'</span><span class="sy0">,</span> command<span class="sy0">=</span>root.<span class="me1">quit</span><span class="br0">&#41;</span>
+   b2.<span class="me1">pack</span><span class="br0">&#40;</span>side<span class="sy0">=</span>LEFT<span class="sy0">,</span> padx<span class="sy0">=</span><span class="nu0">5</span><span class="sy0">,</span> pady<span class="sy0">=</span><span class="nu0">5</span><span class="br0">&#41;</span>
+   root.<span class="me1">mainloop</span><span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+
+Ausgabe : 
+<a href="/lib/exe/detail.php?id=python_gui&amp;media=ausgabe.png" class="media" title="ausgabe.png"><img src="/lib/exe/fetch.php?w=200&amp;tok=24ee83&amp;media=ausgabe.png" class="media" alt="" width="200" /></a>
+</p>
+
+</div>

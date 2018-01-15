@@ -1,0 +1,540 @@
+
+<p>
+systemd ist ein Hintergrundprogramm (Daemon) für Linux-Systeme, das als init-Prozess als erster Prozess (Prozess-ID 1) zum Starten, Überwachen und Beenden weiterer Prozesse dient. Es wurde von Lennart Poettering, Kay Sievers (Red Hat Inc.) und Anderen in C[3] geschrieben und wird als freie Software unter der GNU Lesser General Public License (<abbr title="GNU Lesser General Public License">LGPL</abbr>) veröffentlicht.[4]
+</p>
+
+<p>
+Der Name entspricht mit dem abschließenden „d“ dem für Daemons üblichen Namensschema: systemd ist der Daemon, der das System startet und betreut.
+</p>
+
+<h2 class="sectionedit1" id="systemd_und_die_prozesse">Systemd und die Prozesse</h2>
+<div class="level2">
+
+<p>
+Systemd steuerten den gesamten Bootvorgang und organisiert zum anderen, indem es später Auskunft gibt,wie es den gestarteten Prozess geht. Dabei st Systemd der Nachfolger von System-V-Init-Systems.
+</p>
+
+<p>
+Systemd managt nicht nur Dienste, sondern auch Geräte oder Mountpoints. Diese werden als Unit bezeichnet Die Unitfiles liegen in den Verzeichnissen :
+</p>
+<ol>
+<li class="level1"><div class="li"> /ect/systemd/system/*</div>
+</li>
+<li class="level1"><div class="li"> /run/systemd/system/*</div>
+</li>
+<li class="level1"><div class="li"> /usr/lib/systemd/system/*</div>
+</li>
+</ol>
+
+<p>
+Unitfiles sind keine ausführbaren Datein, sonderen Konfigurationsfiles.
+</p>
+
+<p>
+Die folgenden Beispiele wie mit Systemd Dienste überwacht werden können. 
+</p>
+
+<p>
+Auflistung der Dienste 
+<pre class="code bash">systemctl</pre>
+
+</p>
+
+<p>
+Auflistung der fehlerhaften Dienste 
+<pre class="code bash"> systemctl --state_failed </pre>
+
+</p>
+
+<p>
+Status eines Dienstes anzeigen lassen 
+<pre class="code bash"> systemctl status mysql.service </pre>
+
+</p>
+
+<p>
+Starten und Stoppen eines Dienstes
+<pre class="code bash">systemctl stop<span class="sy0">/</span>start mysqld</pre>
+
+</p>
+
+<p>
+Dienst _SIGKILL
+<pre class="code bash">systemctl <span class="kw2">kill</span> Unitname</pre>
+
+</p>
+
+<p>
+Dienst dauerhaft deaktiveren oder aktivieren  
+<pre class="code bash">systemctl disable<span class="sy0">/</span><span class="kw3">enable</span> UnitName</pre>
+
+</p>
+
+<p>
+Das folgende Kommando analysiert den Zeitbedarf der Dienste (wie lange) 
+<pre class="code bash">systemd-analyze blame</pre>
+
+</p>
+
+<p>
+Eine zeitliche analysiere kann auch grafisch dargestellt
+<pre class="code bash">systemd-analyze plot <span class="sy0">&gt;</span> plot.svg <span class="sy0">&amp;&amp;</span> eog plot.svg</pre>
+
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Systemd und die Prozesse" [529-1863] -->
+<h3 class="sectionedit2" id="logging">Logging</h3>
+<div class="level3">
+
+<p>
+Journald ist die Logging-Komponente von systemd. Das Kommando journalctl ruft die Logging-Komponente auf. Ein einfacher Aufruf mit Root enthält eine Liste aller aufgelaufenen Syslog-Nachrichten. 
+</p>
+
+<p>
+Hier ein paar wichtige Beispiele für das Arbeiten mit journald : 
+</p>
+
+<p>
+Das folgende Beispiel zeigt alle Einträge seit dem letzten Boot an 
+<pre class="code bash">journalctl <span class="re5">-b</span></pre>
+
+</p>
+
+<p>
+Zeigt alle Einträge seit dem letzten Boot an mit der Priorität err
+<pre class="code bash">journalctl <span class="re5">-b</span> <span class="re5">-p</span> err</pre>
+
+</p>
+
+<p>
+Der Parameter since und until definieren einen Zeitraum
+<pre class="code bash">journalctl <span class="re5">--since</span>=<span class="st0">&quot;2016-01-11 22:00:00&quot;</span> <span class="re5">--until</span>=<span class="st0">&quot;2016-01-11 23:00:00&quot;</span></pre>
+
+</p>
+
+<p>
+Es können auch Dienste abgefragt werden. 
+<pre class="code bash">journalctl <span class="re5">-u</span> smartd</pre>
+
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Logging" [1864-2593] -->
+<h2 class="sectionedit3" id="grafischeoberflaeche">Grafischeoberfläche</h2>
+<div class="level2">
+
+<p>
+Eine Grafischeoberfläche kann mit
+<pre class="code bash"> <span class="kw2">sudo</span> <span class="kw2">apt-get install</span> systemd-ui </pre>
+
+installiert werden.  
+</p>
+
+<p>
+Gestartet wird die <abbr title="Graphical User Interface">GUI</abbr> mit dem Kommando 
+<pre class="code bash">systemadm</pre>
+
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Grafischeoberfläche" [2594-2806] -->
+<h1 class="sectionedit4" id="systemd">systemd</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT4 SECTION "systemd" [2807-2828] -->
+<h2 class="sectionedit5" id="erste_init-skripte">erste init-Skripte</h2>
+<div class="level2">
+
+<p>
+Durch Konfigurationsdateien ersetzt. Siehe <a href="http://0pointer.de/blog/projects/the-new-configuration-files" class="urlextern" title="http://0pointer.de/blog/projects/the-new-configuration-files" rel="nofollow">http://0pointer.de/blog/projects/the-new-configuration-files</a> und 
+<a href="http://fedoraproject.org/wiki/Systemd" class="urlextern" title="http://fedoraproject.org/wiki/Systemd" rel="nofollow">http://fedoraproject.org/wiki/Systemd</a>
+</p>
+
+</div>
+<!-- EDIT5 SECTION "erste init-Skripte" [2829-3007] -->
+<h2 class="sectionedit6" id="units">Units</h2>
+<div class="level2">
+
+<p>
+3 Ebenen der Konfiguration von Units:
+</p>
+<ol>
+<li class="level1"><div class="li"> <code>/etc/systemd/system/…</code> ← (höchste Priorität) Hier dürfen sich Admins austoben</div>
+</li>
+<li class="level1"><div class="li"> <code>/run/systemd/…</code> ← dynamisch aus systemd</div>
+</li>
+<li class="level1"><div class="li"> <code>{/usr}/lib/systemd/system/…</code>: aus der Paketverwaltung, nicht anfassen.</div>
+</li>
+</ol>
+
+<p>
+systemd ist aber auch weiterhin kompatibel zu den aus <a href="/doku.php?id=init" class="wikilink2" title="init" rel="nofollow">sysVinit</a> bekannten Startskripten in
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>/etc/init.d/</code></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Units" [3008-3407] -->
+<h2 class="sectionedit7" id="units_timer">Units Timer</h2>
+<div class="level2">
+
+<p>
+Unter den Units können auch Timer konfiguriert werden das folgte Beispiel startet ein Shellskript jeden Tag 20:00 Uhr.
+</p>
+
+<p>
+Zu erst muss der service erstellt werden in /etc/systemd/system/rsync-media.service
+<pre class="code">[UNIT]
+Description=Sync Dokuwiki from website
+[Service]
+ExecStart=/srv/mediawiki_sync.sh</pre>
+
+</p>
+
+<p>
+Im nächsten Schritt wird der Timer konfiguriert mit der Datei rsync-timer.timer. 
+<pre class="code">[Unit]
+Description=Run rsynfrom website Timer
+[Timer]
+OnCalendar=20:00
+OnUnitActiveSec=24h
+Persistent=true
+Unit=rsync-media.service
+[Install]
+WantedBy=timers.target</pre>
+
+</p>
+
+<p>
+Die letzten beiden Schritte aktivieren und starten den Timer und service.
+<pre class="code">systemctl enable rsync-timer.timer
+systemctl start rsync-timer.timer</pre>
+
+</p>
+
+<p>
+Das folgende Kommando gibt die aktiven Timer aus 
+<pre class="code">systemctl list-timers</pre>
+
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Units Timer" [3408-4252] -->
+<h3 class="sectionedit8" id="systemd_architektur">Systemd Architektur</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <code>systemd-hostnamed</code> –&gt; <code>hostnamectl</code></div>
+</li>
+<li class="level1"><div class="li"> <code>systemd-machined</code> –&gt; <code>machinectl</code></div>
+</li>
+<li class="level1"><div class="li"> <code>systemd-journald</code> –&gt; <code>journalctl</code></div>
+</li>
+<li class="level1"><div class="li"> <code>systemd-localed</code> –&gt; <code>localectl</code></div>
+</li>
+<li class="level1"><div class="li"> <code>systemd-logind</code> –&gt; <code>loginctl</code></div>
+</li>
+<li class="level1"><div class="li"> <code>systemd-shutdownd</code> –&gt; <code>shutdown</code></div>
+</li>
+<li class="level1"><div class="li"> <code>systemd-timedated</code> –&gt; <code>timedatectl</code></div>
+</li>
+<li class="level1 node"><div class="li"> Systemd Unit Arten</div>
+<ul>
+<li class="level2"><div class="li"> service: von Systemd gestartete Anwendungen</div>
+</li>
+<li class="level2"><div class="li"> socket: Socket Aktivierung</div>
+</li>
+<li class="level2"><div class="li"> scopes: ausserhalb von systemd gestartete Anwendungen</div>
+</li>
+<li class="level2"><div class="li"> slice: Resourcen für Prozessgruppen</div>
+</li>
+<li class="level2"><div class="li"> path: Pfad Aktivierung</div>
+</li>
+<li class="level2"><div class="li"> mount: Mountpoints (teilweise aus <code>/etc/fstab</code>)</div>
+</li>
+<li class="level2"><div class="li"> automount: automatische Mountpoints</div>
+</li>
+<li class="level2"><div class="li"> target: Gruppen von Units</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<h4 id="standard_target">Standard Target</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="das_standard-boot-target_aendern">Das Standard-Boot-Target ändern</h5>
+<div class="level5">
+<pre class="code">systemctl set-default graphical.target</pre>
+
+</div>
+
+<h5 id="das_standard-boot-target_anzeigen">Das Standard-Boot-Target anzeigen</h5>
+<div class="level5">
+<pre class="code">systemctl get-default</pre>
+
+<p>
+oder
+</p>
+<pre class="code">readlink /etc/systemd/system/default.target</pre>
+
+</div>
+<!-- EDIT8 SECTION "Systemd Architektur" [4253-5177] -->
+<h3 class="sectionedit9" id="dienste_starten_und_eintragen">Dienste starten und eintragen</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="dienst_sofort_einmalig_starten">Dienst sofort, einmalig starten</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="systemd_nativ">systemd nativ</h5>
+<div class="level5">
+<pre class="code">systemctl start dienst.service</pre>
+
+</div>
+
+<h5 id="sysvinit_kompatibel">sysVinit kompatibel</h5>
+<div class="level5">
+<pre class="code">service dienst start</pre>
+
+</div>
+
+<h4 id="dienst_immer_beim_booten_starten">Dienst immer beim Booten starten</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="systemd_nativ1">systemd nativ</h5>
+<div class="level5">
+<pre class="code">systemctl enable dienst.service
+systemctl reenable dienst.service</pre>
+
+</div>
+
+<h5 id="sysvinit_kompatibel1">sysVinit kompatibel</h5>
+<div class="level5">
+<pre class="code">chkconfig dienst on</pre>
+
+</div>
+
+<h4 id="dienst_sofort_einmalig_beenden">Dienst sofort, einmalig beenden</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="systemd_nativ2">systemd nativ</h5>
+<div class="level5">
+<pre class="code">systemctl stop dienst.service</pre>
+
+</div>
+
+<h5 id="sysvinit_kompatibel2">sysVinit kompatibel</h5>
+<div class="level5">
+<pre class="code">service dienst stop</pre>
+
+</div>
+
+<h4 id="dienst_restart">Dienst restart</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="systemd_nativ3">systemd nativ</h5>
+<div class="level5">
+<pre class="code">systemctl restart dienst.service</pre>
+
+</div>
+
+<h5 id="nur_starten_wenn_der_dienst_bereits_aktiv_ist">Nur starten, wenn der Dienst bereits aktiv ist</h5>
+<div class="level5">
+<pre class="code">systemctl try-restart dienst.service</pre>
+
+</div>
+
+<h5 id="sysvinit_kompatibel3">sysVinit kompatibel</h5>
+<div class="level5">
+<pre class="code">service dienst restart</pre>
+
+</div>
+
+<h4 id="dienst_neu_laden">Dienst neu laden</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="systemd_nativ4">systemd nativ</h5>
+<div class="level5">
+<pre class="code">systemctl reload dienst.service
+systemctl reload-or-restart dienst.service
+systemctl reload-or-try-restart dienst.service</pre>
+
+</div>
+
+<h5 id="sysvinit_kompatibel4">sysVinit kompatibel</h5>
+<div class="level5">
+<pre class="code">service dienst reload</pre>
+
+</div>
+
+<h4 id="dienst_beim_booten_nicht_starten">Dienst beim Booten nicht starten</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="systemd_nativ5">systemd nativ</h5>
+<div class="level5">
+<pre class="code">systemctl disable dienst.service</pre>
+
+</div>
+
+<h5 id="sysvinit_kompatibel5">sysVinit kompatibel</h5>
+<div class="level5">
+<pre class="code">chkconfig dienst off</pre>
+
+</div>
+
+<h4 id="dienst_maskieren">Dienst maskieren</h4>
+<div class="level4">
+
+<p>
+dann kann er überhaupt nicht mehr gestartet werden
+</p>
+<pre class="code">systemctl mask dienst.service
+systemctl unmask dienst.service</pre>
+
+</div>
+
+<h4 id="dienste_anzeigen">Dienste anzeigen</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="systemd_nativ6">systemd nativ</h5>
+<div class="level5">
+<pre class="code">systemctl list-units -t service
+systemctl list-units -t service --all
+systemctl list-unit-files -t service
+systemctl is-enable service
+systemctl is-active service</pre>
+
+</div>
+
+<h5 id="sysvinit_kompatibel6">sysVinit kompatibel</h5>
+<div class="level5">
+<pre class="code">service --status-all</pre>
+
+</div>
+
+<h4 id="targets">Targets</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="auflisten">auflisten</h5>
+<div class="level5">
+<pre class="code">systemctl --type=target</pre>
+
+</div>
+
+<h5 id="isolieren">isolieren</h5>
+<div class="level5">
+
+<p>
+alle anderen Targets beenden
+</p>
+<pre class="code">systemctl isolate rescue.target
+systemctl rescue
+systemctl emergency
+systemctl single
+systemctl halt
+systemctl poweroff
+systemctl reboot
+systemctl suspend
+systemctl hibernate
+systemctl hybrid-sleep</pre>
+
+</div>
+<!-- EDIT9 SECTION "Dienste starten und eintragen" [5178-7017] -->
+<h2 class="sectionedit10" id="startoptionen_eines_dienstes_aendern">Startoptionen eines Dienstes ändern</h2>
+<div class="level2">
+<pre class="code">cp -a /lib/systemd/system/dienst.service /etc/systemd/system/
+vim /etc/systemd/system/dienst.service</pre>
+
+<p>
+Änderungen anzeigen:
+</p>
+<pre class="code">systemd-delta</pre>
+
+<p>
+Änderungen aktivieren:
+</p>
+<pre class="code">systemctl daemon-reload</pre>
+
+<p>
+Dienst neu starten:
+</p>
+<pre class="code">systemctl restart dienst</pre>
+
+</div>
+<!-- EDIT10 SECTION "Startoptionen eines Dienstes ändern" [7018-7310] -->
+<h2 class="sectionedit11" id="journalc">Journalc</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/doku.php?id=journald" class="wikilink1" title="journald">journald</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT11 SECTION "Journalc" [7311-7349] -->
+<h2 class="sectionedit12" id="weitere_befehle_und_subsysteme">Weitere Befehle und Subsysteme</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/doku.php?id=analyse" class="wikilink2" title="analyse" rel="nofollow">Analyse</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=snapshots" class="wikilink2" title="snapshots" rel="nofollow">Snapshots</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=systemd-prozesse" class="wikilink2" title="systemd-prozesse" rel="nofollow">Systemd-Prozesse</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=systemd-resourcenkontrolle" class="wikilink2" title="systemd-resourcenkontrolle" rel="nofollow">Systemd-Resourcenkontrolle</a></div>
+</li>
+</ul>
+
+</div>
+
+<h5 id="powersave_verhindern">Powersave verhindern</h5>
+<div class="level5">
+<pre class="code">systemd-inhibit &lt;cmd&gt;</pre>
+
+</div>
+
+<h5 id="virtualisierung_erkennen">Virtualisierung erkennen</h5>
+<div class="level5">
+<pre class="code">systemd-detect-virt</pre>
+
+</div>
+<!-- EDIT12 SECTION "Weitere Befehle und Subsysteme" [7350-7593] -->
+<h3 class="sectionedit13" id="ctl">*.ctl</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <a href="/doku.php?id=loginctl" class="wikilink2" title="loginctl" rel="nofollow">loginctl</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=localectl" class="wikilink2" title="localectl" rel="nofollow">localectl</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=hostnamectl" class="wikilink2" title="hostnamectl" rel="nofollow">hostnamectl</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=timedatectl" class="wikilink2" title="timedatectl" rel="nofollow">timedatectl</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT13 SECTION "*.ctl" [7594-] -->

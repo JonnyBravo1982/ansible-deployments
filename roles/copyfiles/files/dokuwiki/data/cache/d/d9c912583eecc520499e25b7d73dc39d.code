@@ -1,0 +1,9 @@
+*<span class="kw2">&lt;?php</span><span class="sy0">*</span>
+<span class="sy0">*</span><span class="re0">$name</span> <span class="sy0">=</span> <span class="st0">&quot;Ben&quot;</span><span class="sy0">;</span> <span class="sy0">*</span>
+<span class="sy0">*</span><span class="re0">$alter</span>  <span class="sy0">=</span> <span class="nu0">4</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="re0">$format</span> <span class="sy0">=</span> <span class="st0">&quot;<span class="es6">%s</span> ist <span class="es6">%d</span> Jahre alt&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><a href="http://php.net/printf"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="re0">$format</span><span class="sy0">,</span> <span class="re0">$name</span><span class="sy0">,</span> <span class="re0">$alter</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;&lt;br /&gt;<span class="es1">\n</span>&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><a href="http://php.net/printf"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;<span class="es6">%d</span>&quot;</span><span class="sy0">,</span> <span class="nu19">2.567</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;&lt;br /&gt;<span class="es1">\n</span>&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="sy1">?&gt;</span>*

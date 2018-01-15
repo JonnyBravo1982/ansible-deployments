@@ -1,0 +1,653 @@
+
+<p>
+<pre class="code bash"> lsof <span class="re5">-i</span> tcp:<span class="nu0">443</span> </pre>
+ prüft welcher service den Port 443 nutzt
+</p>
+
+<p>
+Eine Adresse mit ip vergeben 
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">ip addr</span> add 10.1.1.31<span class="sy0">/</span><span class="nu0">24</span> dev enp0s25</pre>
+
+</p>
+
+<p>
+<code>traceroute</code> verfolgt den Weg von Netzwerk-Paketen hin zu einem bestimmten Host. Dazu verändert <code>traceroute</code> das  <a href="https://de.wikipedia.org/wiki/Time_to_Live" class="interwiki iw_wpde" title="https://de.wikipedia.org/wiki/Time_to_Live">Time to live (TTL)</a> Feld des <a href="https://de.wikipedia.org/wiki/Internet_Protocol" class="interwiki iw_wpde" title="https://de.wikipedia.org/wiki/Internet_Protocol">IP</a> Protokolls. Durch kleine TTL Werte versucht <code>traceroute</code> ICMP TIME_EXCEEDED Antworten der einzelnen Router zu bekommen. Der einzige notwendige Parameter von <code>traceroute</code> ist der Host zu dem der Weg aufgezeigt werden soll:
+</p>
+<pre class="code">traceroute www.tuxclouds.org</pre>
+
+<p>
+Für das Erfassen der einzelnen Hops (Router) am Weg vom aktuellen Rechner hin zum gewünschten Host geht traceroute folgendermaßen vor:
+</p>
+<ol>
+<li class="level1"><div class="li"> 1 Ein IP Paket mit TTL=1 wird verschickt, das Paket verwirft bereits der erste Router und schickt uns eine <strong>ICMP TIME_EXCEEDED</strong> Antwort zurück.</div>
+</li>
+<li class="level1"><div class="li"> 2 Nun verschickt unser einmal gestartetes <code>traceroute</code> weitere Pakete und erhöht dabei die TTL immer um jeweils 1. Beim zweiten Paket (TTL=2) gelangt das Paket über den ersten Router weiter zum nächsten Router am Weg zum Host. Da das Default Gateway beim Weiterleiten des Pakets die TTL um 1 verringert, kommt das Paket mit TTL=1 am zweiten Router an. Dieser verwirft das Paket und schickt eine ICMP TIME_EXCEEDED Antwort an den ursprünglichen Rechner zurück. Analog funktioniert es dann mit TTL=3 beim dritten Router, TTL=4 beim vierten Router, usw. </div>
+</li>
+</ol>
+
+<p>
+Erreicht ein IP Paket mit ausreichend hoher TTL letztendlich den Ziel-Host, antwortet er mit einer ICMP „port unreachable“ Meldung. Juhu <br/>
+
+</p>
+
+<p>
+<strong>Hinweis</strong> Im Default verwendet das Linux traceroute UDP, hingegen Windows ICMP verwendet.
+Wollen wir auch ICMP so erledigen wir das mit dem Schalter -I
+</p>
+<pre class="code">traceroute -I www.tuxclouds.org</pre>
+
+<p>
+Oder den Weg zum Mailserver prüfen auf Port 25 ist möglich mit dem Schalter -T und -p.
+</p>
+<pre class="code">root@twink:~# traceroute -T -p 25 www.tuxclouds.org
+ traceroute to www.tuxclouds.org (46.30.212.35), 30 hops max, 60 byte packets
+ 1  fritz.box (192.168.2.1)  3.794 ms  3.599 ms  7.921 ms
+ 2  * * *
+ 3  de-fra01b-rc1-ae28.fra.unity-media.net (81.210.141.33)  22.364 ms  19.576 ms  23.242 ms
+ 4  84.116.132.149 (84.116.132.149)  23.142 ms  21.020 ms 84.116.132.145 (84.116.132.145)  20.958 ms
+ 5  lag-10.ear1.Frankfurt.Level3.net (4.68.62.237)  25.061 ms  22.795 ms  44.796 ms
+ 6  ae-0-10.bar1.Copenhagen2.Level3.net (4.69.137.154)  64.000 ms  32.823 ms  36.196 ms
+ 7  * * *
+ 8  * * *</pre>
+
+<p>
+Nur mit -T wird per Default der Port 80 verwendet.
+</p>
+
+<h1 class="sectionedit1" id="networkmanager_ausschalten">NetworkManager ausschalten</h1>
+<div class="level1">
+
+<p>
+<sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup>
+</p>
+
+</div>
+
+<h4 id="suse_111">SuSE 11.1</h4>
+<div class="level4">
+
+<p>
+<code>/etc/sysconfig/network/config</code> :
+<pre class="file">NETWORKMANAGER=&quot;no&quot;</pre>
+
+</p>
+<pre class="code">SuSEconfig
+/etc/init.d/network restart</pre>
+
+</div>
+
+<h4 id="suse_123">SuSE 12.3</h4>
+<div class="level4">
+<pre class="code">systemctl stop    network.service
+systemctl disable NetworkManager.service
+systemctl start   network.service</pre>
+
+<p>
+<sup><a href="#fn__2" id="fnt__2" class="fn_top">2)</a></sup>
+</p>
+
+</div>
+
+<h4 id="debian_60_ubuntu_1204">Debian 6.0 / Ubuntu 12.04</h4>
+<div class="level4">
+<pre class="code">apt-get --purge remove network-manager</pre>
+
+<p>
+… und wenn nötig verbleibende dhcp client Prozesse beenden. <sup><a href="#fn__3" id="fnt__3" class="fn_top">3)</a></sup>
+</p>
+
+</div>
+
+<h4 id="centos_60">Centos 6.0</h4>
+<div class="level4">
+<pre class="code">chkconfig NetworkManager off
+service NetworkManager stop</pre>
+
+<p>
+… und wenn nötig verbleibende dhcp client Prozesse beenden. <sup><a href="#fn__4" id="fnt__4" class="fn_top">4)</a></sup>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "NetworkManager ausschalten" [2561-3342] -->
+<h1 class="sectionedit2" id="netzwerk_temporaer_einrichten">Netzwerk (temporär) einrichten</h1>
+<div class="level1">
+
+<p>
+<sup><a href="#fn__5" id="fnt__5" class="fn_top">5)</a></sup>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Netzwerk (temporär) einrichten" [3343-3771] -->
+<h3 class="sectionedit3" id="host">Host</h3>
+<div class="level3">
+<pre class="code">ip link set dev eth0 up
+ip addr add 192.168.1.224/24 dev eth0
+ip route add default via 192.168.1.1 </pre>
+
+</div>
+<!-- EDIT3 SECTION "Host" [3772-3893] -->
+<h3 class="sectionedit4" id="router">Router</h3>
+<div class="level3">
+<pre class="code">ip addr add 10.0.1.224/24 dev eth0
+ip link set dev eth0 up
+ip addr add 192.168.1.224/24 dev eth2
+ip link set dev eth2 up
+ip route add default via 192.168.1.1 dev eth2
+iptables -t nat -A POSTROUTING -o eth2 -j MASQUERADE
+sysctl -w net.ipv4.ip_forward=1</pre>
+
+</div>
+<!-- EDIT4 SECTION "Router" [3894-4177] -->
+<h1 class="sectionedit5" id="checkliste_netzwerk">Checkliste Netzwerk</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT5 SECTION "Checkliste Netzwerk" [4178-4211] -->
+<h2 class="sectionedit6" id="ist_das_kabel_eingesteckt">Ist das Kabel eingesteckt?</h2>
+<div class="level2">
+<pre class="code">mii-tool</pre>
+
+<p>
+oder
+</p>
+<pre class="code">ethtool</pre>
+
+</div>
+<!-- EDIT6 SECTION "Ist das Kabel eingesteckt?" [4212-4277] -->
+<h3 class="sectionedit7" id="speed_einstellen">Speed einstellen</h3>
+<div class="level3">
+<pre class="code">mii-diag -F 100baseTx eth0
+ethtool -s eth0 speed 100 duplex full</pre>
+
+</div>
+<!-- EDIT7 SECTION "Speed einstellen" [4278-4373] -->
+<h2 class="sectionedit8" id="welches_ist_die_richtige_netzwerkkarte">Welches ist die richtige Netzwerkkarte?</h2>
+<div class="level2">
+
+<p>
+… bzw. ist das Kabel in der richtigen Netzwerkkarte
+</p>
+<pre class="code">ethtool -p eth0</pre>
+
+<p>
+Wenn die Netzwerkkarte Lämpchen hat und der Treiber die Funktion unterstützt, dann blinken ein paar Sekunden lang die Lämpchen der gesuchten Netzwerkkarte.
+</p>
+
+<p>
+Achtung OpenSuSE 11.1 bitte nicht während des Tests das Kabel ziehen –&gt; Tastaturtod<br/>
+
+(auch Debian und generell 2.6er Kernel reagieren so. Man muss dazu noch nicht mal das Kabel ziehen <img src="/lib/images/smileys/icon_wink.gif" class="icon" alt=";-)" /> )
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Welches ist die richtige Netzwerkkarte?" [4374-4853] -->
+<h2 class="sectionedit9" id="welcher_treiber_wird_von_der_netzwerkkarte_genutzt">Welcher Treiber wird von der Netzwerkkarte genutzt</h2>
+<div class="level2">
+<pre class="code">ethtool -i eth0</pre>
+
+</div>
+<!-- EDIT9 SECTION "Welcher Treiber wird von der Netzwerkkarte genutzt" [4854-4935] -->
+<h2 class="sectionedit10" id="ist_die_ip-adresse_richtig_eingestellt">Ist die IP-Adresse richtig eingestellt</h2>
+<div class="level2">
+
+<p>
+… bzw. gibt es übermäßig viele Übertragungsfehler, Kollisionen?
+</p>
+<pre class="code">ifconfig
+ip -s link
+ip addr show</pre>
+
+</div>
+<!-- EDIT10 SECTION "Ist die IP-Adresse richtig eingestellt" [4936-5095] -->
+<h2 class="sectionedit11" id="ist_das_routing_der_gateway_richtig_eingestellt">Ist das Routing / der Gateway richtig eingestellt?</h2>
+<div class="level2">
+<pre class="code">ip route</pre>
+
+</div>
+<!-- EDIT11 SECTION "Ist das Routing / der Gateway richtig eingestellt?" [5096-5170] -->
+<h2 class="sectionedit12" id="ist_der_andere_rechner_erreichbar">Ist der andere Rechner erreichbar?</h2>
+<div class="level2">
+<pre class="code">ping 10.0.1.214</pre>
+
+</div>
+<!-- EDIT12 SECTION "Ist der andere Rechner erreichbar?" [5171-5236] -->
+<h2 class="sectionedit13" id="ist_das_gateway_erreichbar">Ist das Gateway erreichbar?</h2>
+<div class="level2">
+<pre class="code">ip neigh show</pre>
+
+</div>
+<!-- EDIT13 SECTION "Ist das Gateway erreichbar?" [5237-5293] -->
+<h2 class="sectionedit14" id="gehen_pakete_verloren">Gehen Pakete verloren?</h2>
+<div class="level2">
+<pre class="code">ping -f -s 1472 10.0.1.214</pre>
+
+<p>
+Erzwingen des DONT-FRAGMENT Bits:<sup><a href="#fn__6" id="fnt__6" class="fn_top">6)</a></sup>
+</p>
+<pre class="code">ping -s 1472 -M do 10.0.1.214</pre>
+
+<p>
+Eine ausführliche Übersicht über Übertragungsprobleme gibt auch:
+</p>
+<pre class="code">netstat -ni</pre>
+
+</div>
+<!-- EDIT14 SECTION "Gehen Pakete verloren?" [5294-5557] -->
+<h2 class="sectionedit15" id="welches_kabel_ist_das_richtige">Welches Kabel ist das Richtige?</h2>
+<div class="level2">
+<pre class="code">ping -a 10.0.1.214</pre>
+
+<p>
+oder
+</p>
+<pre class="code">ping 10.0.1.214 | while read; do echo -e -n &quot;\007&quot;; done</pre>
+
+<p>
+oder
+</p>
+<pre class="code">ping 10.0.1.214 | while read; do echo -e &quot;\007 $REPLY&quot;; done</pre>
+
+</div>
+<!-- EDIT15 SECTION "Welches Kabel ist das Richtige?" [5558-5755] -->
+<h2 class="sectionedit16" id="bis_zu_welchem_router_laufen_die_pakete">Bis zu welchem Router laufen die Pakete</h2>
+<div class="level2">
+<pre class="code">traceroute 81.169.176.98
+traceroute -T -p 80 81.169.176.98</pre>
+
+</div>
+<!-- EDIT16 SECTION "Bis zu welchem Router laufen die Pakete" [5756-5871] -->
+<h3 class="sectionedit17" id="packet_lost">packet lost?</h3>
+<div class="level3">
+<pre class="code">mtr 81.169.176.98</pre>
+
+</div>
+<!-- EDIT17 SECTION "packet lost?" [5872-5915] -->
+<h2 class="sectionedit18" id="sind_firewall-regeln_aktiv">Sind Firewall-Regeln aktiv?</h2>
+<div class="level2">
+<pre class="code">iptables -L -n
+iptables -t nat -L -n</pre>
+
+<p>
+Ausgabe von iptables:
+</p>
+
+<p>
+<pre class="file">Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination</pre>
+
+</p>
+
+<p>
+iptables abschalten
+</p>
+<pre class="code">iptables-restore &lt;&lt;LEER</pre>
+
+<p>
+<pre class="file">*mangle
+:PREROUTING ACCEPT
+:INPUT ACCEPT
+:FORWARD ACCEPT
+:OUTPUT ACCEPT
+:POSTROUTING ACCEPT
+COMMIT
+*nat
+:PREROUTING ACCEPT
+:POSTROUTING ACCEPT
+:OUTPUT ACCEPT
+COMMIT
+*filter
+:INPUT ACCEPT
+:FORWARD ACCEPT
+:OUTPUT ACCEPT
+COMMIT</pre>
+
+</p>
+<pre class="code">LEER</pre>
+
+</div>
+<!-- EDIT18 SECTION "Sind Firewall-Regeln aktiv?" [5916-6579] -->
+<h3 class="sectionedit19" id="suse_firewall_abschalten">SuSE Firewall abschalten</h3>
+<div class="level3">
+<pre class="code">systemctl stop SuSEfirewall2_setup.service
+systemctl stop SuSEfirewall2_init.service  
+systemctl disable SuSEfirewall2_setup.service
+systemctl disable SuSEfirewall2_init.service  </pre>
+
+</div>
+
+<h4 id="ab_opensuse_12">ab OpenSUSE 12</h4>
+<div class="level4">
+<pre class="code">systemctl stop SuSEfirewall2.service  
+systemctl disable SuSEfirewall2.service</pre>
+
+<p>
+Prüfen:
+</p>
+<pre class="code">chkconfig --list</pre>
+
+</div>
+<!-- EDIT19 SECTION "SuSE Firewall abschalten" [6580-6939] -->
+<h3 class="sectionedit20" id="fedora_redhat_firewall_abschalten">Fedora / RedHat Firewall abschalten</h3>
+<div class="level3">
+<pre class="code">/etc/init.d/iptables stop
+chkconfig iptables off</pre>
+
+<p>
+Prüfen:
+</p>
+<pre class="code">chkconfig --list</pre>
+
+</div>
+<!-- EDIT20 SECTION "Fedora / RedHat Firewall abschalten" [6940-7070] -->
+<h1 class="sectionedit21" id="netzwerk_dauerhaft_einrichten">Netzwerk (dauerhaft) einrichten</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT21 SECTION "Netzwerk (dauerhaft) einrichten" [7071-7116] -->
+<h2 class="sectionedit22" id="server_host">Server / Host</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT22 SECTION "Server / Host" [7117-7142] -->
+<h3 class="sectionedit23" id="debian">Debian</h3>
+<div class="level3">
+
+<p>
+<code>/etc/network/interfaces</code> :
+<pre class="file">auto eth0
+
+iface eth0 inet static
+  address 10.0.1.217
+  netmask 255.255.255.0
+  gateway 10.0.1.1</pre>
+
+</p>
+<pre class="code">/etc/init.d/networking restart</pre>
+
+</div>
+<!-- EDIT23 SECTION "Debian" [7143-7339] -->
+<h3 class="sectionedit24" id="ubuntu_1204">Ubuntu 12.04</h3>
+<div class="level3">
+
+<p>
+<code>/etc/network/interfaces</code> :
+<pre class="file">auto eth0
+
+iface eth0 inet static
+  address 10.0.1.217
+  netmask 255.255.255.0
+  gateway 10.0.1.1
+  dns-nameservers 192.168.1.6
+  dns-search linuxhotel.de</pre>
+
+</p>
+<pre class="code">/etc/init.d/networking restart</pre>
+
+</div>
+<!-- EDIT24 SECTION "Ubuntu 12.04" [7340-7600] -->
+<h3 class="sectionedit25" id="suse">SuSE</h3>
+<div class="level3">
+
+<p>
+<code>/etc/sysconfig/network/config</code> :
+<pre class="file">NETWORKMANAGER=&quot;no&quot;</pre>
+
+</p>
+
+<p>
+<code>/etc/sysconfig/network/ifcfg-eth-id-00:a0:cc:d5:57:98</code> :
+</p>
+
+<p>
+<code>/etc/sysconfig/network/ifcfg-eth0</code> : ( openSuSE 11.4 )
+<pre class="file">BOOTPROTO=&#039;static&#039;
+BROADCAST=&#039;&#039;
+IPADDR=&#039;192.168.1.202&#039;
+MTU=&#039;&#039;
+NAME=&#039;Uniwill VT6102 [Rhine-II]&#039;
+NETMASK=&#039;255.255.255.0&#039;
+NETWORK=&#039;&#039;
+REMOTE_IPADDR=&#039;&#039;
+STARTMODE=&#039;auto&#039;
+UNIQUE=&#039;rBUF.weGuQ9ywYPF&#039;
+USERCONTROL=&#039;no&#039;
+_nm_name=&#039;bus-pci-0000:00:12.0&#039;</pre>
+
+</p>
+
+<p>
+Diese Dateien werden i.d.R. mit YaST erstellt ( siehe <code>/etc/sysconfig/network/ifcfg.template</code> )
+</p>
+
+</div>
+<!-- EDIT25 SECTION "SuSE" [7601-8158] -->
+<h3 class="sectionedit26" id="redhat">RedHat</h3>
+<div class="level3">
+
+<p>
+<code>/etc/sysconfig/network-scripts/ifcfg-eth0</code>
+<pre class="file">DEVICE=eth0
+BOOTPROTO=static
+BROADCAST=192.168.1.255
+HWADDR=00:A0:CC:DE:13:A6
+IPADDR=192.168.1.214
+NETMASK=255.255.255.0
+NETWORK=192.168.1.0
+GATEWAY=192.168.1.1
+DNS1=192.168.1.6
+ONBOOT=yes
+TYPE=Ethernet</pre>
+
+</p>
+
+<p>
+Die Netzwerkkonfigurationsdateien kann man mit dem Tool <code>system-config-network</code> erstellen
+</p>
+
+<p>
+Doku siehe <code>/usr/share/doc/initscripts-*/sysconfig.txt</code>
+</p>
+
+</div>
+<!-- EDIT26 SECTION "RedHat" [8159-8593] -->
+<h2 class="sectionedit27" id="router1">Router</h2>
+<div class="level2">
+
+<p>
+<code>/etc/sysctl.conf</code> :
+<pre class="file">net.ipv4.ip_forward = 1</pre>
+
+Unter SuSE besser Datei <code>/etc/sysconfig/sysctl</code> nutzen
+</p>
+
+</div>
+<!-- EDIT27 SECTION "Router" [8594-8731] -->
+<h3 class="sectionedit28" id="debian1">Debian</h3>
+<div class="level3">
+
+<p>
+<code>/etc/network/interfaces</code> mit mehreren Netzwerkkarten:
+( veraltet, heute mit <a href="/doku.php?id=udev" class="wikilink2" title="udev" rel="nofollow">udev</a> besser lösbar )
+<pre class="file">   auto eth0 eth1
+mapping eth0 eth1
+        script /usr/local/bin/get-mac-address.sh
+        map 00:0A:E6:5A:75:A5 extern
+        map 00:11:6B:31:4F:59 intern
+
+iface extern inet static
+        address   212.202.245.174
+        broadcast 212.202.245.175
+        netmask   255.255.255.252
+        gateway   212.202.245.173
+        pre-up iptables -t nat -I POSTROUTING -o eth1 -j MASQUERADE
+
+iface intern inet static
+        address 192.168.1.7
+        netmask 255.255.255.0
+        network 192.168.1.0
+        broadcast 192.168.1.255</pre>
+
+</p>
+
+<p>
+Eine andere ( bessere? ) Möglichkeit zur eindeutigen Benennung von Netzwerkkarten bietet das Paket <code>ifrename</code>
+</p>
+
+</div>
+<!-- EDIT28 SECTION "Debian" [8732-9517] -->
+<h3 class="sectionedit29" id="centos">CentOS</h3>
+<div class="level3">
+
+<p>
+<code>/etc/sysconfig/network-scripts/route-eth0</code>
+<pre class="file">X.X.X.X/Y via X.X.X.X dev interface</pre>
+
+</p>
+
+</div>
+<!-- EDIT29 SECTION "CentOS" [9518-9636] -->
+<h1 class="sectionedit30" id="rechenhilfe_fuer_ip-adressen_und_netzmasken">Rechenhilfe für IP-Adressen und Netzmasken</h1>
+<div class="level1">
+
+<p>
+Debian
+</p>
+<pre class="code">ipcalc 212.202.245.174/30</pre>
+
+<p>
+SuSE
+</p>
+<pre class="code">iptab</pre>
+
+<p>
+… oder übers Web <a href="http://jodies.de/ipcalc" class="urlextern" title="http://jodies.de/ipcalc"  rel="nofollow">http://jodies.de/ipcalc</a>
+</p>
+
+</div>
+<!-- EDIT30 SECTION "Rechenhilfe für IP-Adressen und Netzmasken" [9637-9787] -->
+<h1 class="sectionedit31" id="ipv6_abschalten">IPv6 abschalten</h1>
+<div class="level1">
+
+<p>
+<em>Todo: testen ob das noch geht.</em>
+<sup><a href="#fn__7" id="fnt__7" class="fn_top">7)</a></sup>
+</p>
+
+<p>
+Man erkennt aktiviertes IPv6 daran, dass das Modul ipv6 geladen ist.
+</p>
+<pre class="code">lsmod | grep ipv6 </pre>
+
+<p>
+<code>/etc/modprobe.d/aliases.conf</code> : ( Debian 6 )
+</p>
+
+<p>
+<code>/etc/modprobe.d/99-local.conf</code> : ( openSuSE 12.3 )
+<pre class="file">alias net-pf-10 off          # IPv6</pre>
+
+</p>
+
+<p>
+Soll auch das manuelle Laden des Modules verhindert werden, kann auch noch folgende Zeile eingetragen werden:
+<pre class="file">alias ipv6 off </pre>
+
+</p>
+<pre class="code">depmod -a</pre>
+
+</div>
+
+<h4 id="testen">Testen</h4>
+<div class="level4">
+
+<p>
+Zeigt <code>modprobe</code> die Einstellungen richtig an:
+</p>
+<pre class="code">modprobe -c | grep -i ipv6</pre>
+
+<p>
+Wird nach einem reboot das IPv6-Modul automatisch geladen:
+</p>
+<pre class="code">reboot
+lsmod | grep ipv6</pre>
+
+</div>
+<!-- EDIT31 SECTION "IPv6 abschalten" [9788-10547] -->
+<h1 class="sectionedit32" id="wireless_lan">Wireless LAN</h1>
+<div class="level1">
+<pre class="code">ifconfig wlan0
+iwconfig wlan0
+iwlist wlan0 scan
+ifconfig wlan0 up
+iwlist wlan0 scan
+iwconfig wlan0
+iwconfig wlan0 essid linuxhotel
+iwconfig wlan0
+man dhclient3 
+dhclient wlan0</pre>
+
+</div>
+<!-- EDIT32 SECTION "Wireless LAN" [10548-10772] -->
+<h1 class="sectionedit33" id="dokumentation">Dokumentation</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.centos.org/docs/5/html/Deployment_Guide-en-US/s1-networkscripts-interfaces.html" class="urlextern" title="http://www.centos.org/docs/5/html/Deployment_Guide-en-US/s1-networkscripts-interfaces.html"  rel="nofollow"> centos 5 </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.novell.com/documentation/opensuse103/opensuse103_reference/data/sec_basicnet_manconf.html" class="urlextern" title="http://www.novell.com/documentation/opensuse103/opensuse103_reference/data/sec_basicnet_manconf.html"  rel="nofollow"> openSuSE 10.3 </a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.lug-erding.de/vortrag/ng.html" class="urlextern" title="http://www.lug-erding.de/vortrag/ng.html"  rel="nofollow"> Netzwerk Grundlagen für Linux </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.netzmafia.de/skripten/netze/" class="urlextern" title="http://www.netzmafia.de/skripten/netze/"  rel="nofollow"> Netzwerk Protokolle im Detail </a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="http://ipsysctl-tutorial.frozentux.net/ipsysctl-tutorial.html" class="urlextern" title="http://ipsysctl-tutorial.frozentux.net/ipsysctl-tutorial.html"  rel="nofollow"> Sysctl Tutorial </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://de.opensuse.org/SDB:IPv6_dauerhaft_ausschalten" class="urlextern" title="http://de.opensuse.org/SDB:IPv6_dauerhaft_ausschalten"  rel="nofollow"> SuSE / IPv6 ausschalten </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lartc.org/howto/" class="urlextern" title="http://lartc.org/howto/"  rel="nofollow"> routing für Fortgeschrittene</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT33 SECTION "Dokumentation" [10773-] --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+erste Anfänge einer Doku für <a href="/doku.php?id=networkmanager" class="wikilink2" title="networkmanager" rel="nofollow">NetworkManager</a></div>
+<div class="fn"><sup><a href="#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+<pre class="code">export SYSTEMD_PAGER=&#039;&#039;
+systemctl -p Id show network.service</pre>
+sollte nun 
+</div>
+<div class="fn"><sup><a href="#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+, <sup><a href="#fnt__4" id="fn__4" class="fn_bot">4)</a></sup> 
+ <pre class="code">pkill -x dhclient</pre>
+</div>
+<div class="fn"><sup><a href="#fnt__5" id="fn__5" class="fn_bot">5)</a></sup> 
+
+===== Traditionelle Methode mit ifconfig &amp; route =====
+==== Arbeitsplatzrechner / Host ====<pre class="code">ifconfig eth0 10.0.1.217/24  
+route add default gw 10.0.1.1 eth0 </pre>
+
+==== Router ====<pre class="code">ifconfig eth0 10.0.1.1/24
+ifconfig eth1 212.202.245.174/30
+route add default gw 212.202.245.173 eth1
+iptables -t nat -I POSTROUTING -o eth1 -j MASQUERADE
+sysctl -w net.ipv4.ip_forward=1</pre>
+</div>
+<div class="fn"><sup><a href="#fnt__6" id="fn__6" class="fn_bot">6)</a></sup> 
+ping-Header 28 bytes. Deshalb 1500-28=1472</div>
+<div class="fn"><sup><a href="#fnt__7" id="fn__7" class="fn_bot">7)</a></sup> 
+ Bei openSuSE 12.3 und debian 6 z.B. ist ipv6 nicht als Modul kompiliert:<pre class="code">grep CONFIG_IPV6= /boot/config-*</pre>
+</div>
+</div>

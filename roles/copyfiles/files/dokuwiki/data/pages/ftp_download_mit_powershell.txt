@@ -1,0 +1,45 @@
+Das folgende PowerShell Skript liest die DLL vom WINSCP ein und lädt alles aus dem Verzeichnis /Test/ herunter in das Verzeichnis C:\temp\Test\.
+Die DLL kann von folgender Webseite heruntergeladen werden http://winscp.net/download/winscp577automation.zip  
+
+<code powershell>
+  try
+{
+  Add-Type -Path "$PSScriptRoot\WinSCPnet.dll" 
+    # Setup session options
+    $sessionOptions = New-Object WinSCP.SessionOptions -Property @{
+        Protocol = [WinSCP.Protocol]::ftp
+        HostName = 'ftp.t4m.de'
+        UserName = 'swm_transfer@192.168.3.17'
+        Password = '6#MkzDMefAu'
+    #    SshHostKeyFingerprint = "ssh-rsa 2048 xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx"
+    } 
+    $session = New-Object WinSCP.Session
+    try
+    {
+        # Connect
+        $session.Open($sessionOptions) 
+        # Download files
+        $transferOptions = New-Object WinSCP.TransferOptions
+        $transferOptions.TransferMode = [WinSCP.TransferMode]::Binary
+        $transferResult = $session.GetFiles('/Test/*', 'C:\temp\Test\*', $False, $transferOptions)
+        # Throw on any error
+        $transferResult.Check()
+        # Print results
+        foreach ($transfer in $transferResult.Transfers)
+        {
+            Write-Host ("Download of {0} succeeded" -f $transfer.FileName)
+        }
+    }
+    finally
+    {
+        # Disconnect, clean up
+        $session.Dispose()
+    } 
+    exit 0
+}
+catch [Exception]
+{
+    Write-Host ("Error: {0}" -f $_.Exception.Message)
+    exit 1
+}
+</code>

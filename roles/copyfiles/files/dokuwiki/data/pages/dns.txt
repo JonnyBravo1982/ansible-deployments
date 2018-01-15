@@ -1,0 +1,83 @@
+====== Namensauflösung ======
+===== mdns abschalten =====
+Ubuntu 14.04:
+  apt-get --purge remove avahi-daemon
+
+===== resolvconf abschalten =====
+Ubuntu 14.04:
+  apt-get --purge remove resolvconf
+
+===== Eigenen Rechnernamen einstellen =====
+==== Temporär ====
+  hostname <name>
+
+==== Dauerhaft ====
+''/etc/HOSTNAME'' ( SuSE )
+(( TODO: SuSE Versionen, die systemd nutzen, verwenden möglicherweise auch ''/etc/hostname'': http://0pointer.de/blog/projects/the-new-configuration-files.html ))
+
+''/etc/hostname'' ( Debian )
+<file>
+notebook13
+</file>
+(( FQDN wird aus ''hostname'' und ''/etc/hosts'' bzw. ''/etc/resolv.conf'' gebildet ))
+
+''/etc/sysconfig/network'' : ( RedHat )
+(( TODO: RedHat Versionen, die systemd nutzen, verwenden möglicherweise auch ''/etc/hostname'': http://0pointer.de/blog/projects/the-new-configuration-files.html ))
+<file>
+HOSTNAME=notebook13.linuxhotel.de
+</file>
+
+===== DNS Client =====
+Wie und in welcher Reihenfolge sollen Netzwerknamen aufgelöst werden? 
+Mit Hilfe der Datei ''/etc/hosts'' und/oder eines Nameservers ?
+
+''/etc/nsswitch.conf''
+<file>hosts:      files dns</file>
+
+Netzwerknamen fest einstellen:
+
+''/etc/hosts'' :
+<file>
+127.0.0.1       localhost.localdomain localhost
+::1             localhost6.localdomain6 localhost6
+192.168.1.225   notebook25
+</file>
+
+DNS Client Einstellungen:
+
+''/etc/resolv.conf''
+<file>
+search linuxhotel.de
+nameserver 192.168.1.7
+nameserver 192.168.1.6
+</file>
+
+==== Ubuntu 12.04 ====
+DNS Client Einstellungen:
+
+''/etc/resolv.conf'' nicht anfassen
+
+<file text /etc/network/interfaces>
+auto eth0
+iface eth0 inet static
+    address 192.168.1.201
+    netmask 255.255.255.0
+    gateway 192.168.1.5
+    dns-nameservers 192.168.1.17
+    dns-search linuxhotel.de
+</file>
+
+''/etc/dhcp/dhclient-enter-hooks.d/resolvconf''
+
+siehe
+  man resolvconf
+===== Testen =====
+Clientseitig Namensauflösung testen:
+  getent hosts $(hostname)
+  getent hosts $(hostname -f)
+  getent hosts 192.168.1.219
+
+Nameserver abfragen:
+  host <name> <dns-server>
+
+

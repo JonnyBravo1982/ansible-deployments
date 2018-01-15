@@ -1,0 +1,11 @@
+  <span class="sy0">**</span><span class="kw1">if</span> <span class="br0">&#40;</span><span class="re0">$uhrzeit</span> <span class="sy0">&lt;</span> <span class="nu0">5</span> <span class="sy0">||</span> <span class="re0">$uhrzeit</span> <span class="sy0">&gt;</span> <span class="nu0">20</span><span class="br0">&#41;</span> <span class="br0">&#123;</span><span class="sy0">**</span>
+<span class="sy0">*</span>     <span class="re0">$gruss</span> <span class="sy0">=</span> <span class="st0">&quot;Gute Nacht&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span>  <span class="br0">&#125;</span> <span class="kw1">elseif</span> <span class="br0">&#40;</span><span class="re0">$uhrzeit</span> <span class="sy0">&lt;</span> <span class="nu0">11</span><span class="br0">&#41;</span> <span class="br0">&#123;</span><span class="sy0">*</span>
+<span class="sy0">*</span>     <span class="re0">$gruss</span> <span class="sy0">=</span> <span class="st0">&quot;Guten Morgen&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span>  <span class="br0">&#125;</span> <span class="kw1">elseif</span> <span class="br0">&#40;</span><span class="re0">$uhrzeit</span> <span class="sy0">&lt;</span> <span class="nu0">15</span><span class="br0">&#41;</span> <span class="br0">&#123;</span><span class="sy0">*</span>
+<span class="sy0">*</span>     <span class="re0">$gruss</span> <span class="sy0">=</span> <span class="st0">&quot;Guten Mittag&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span>  <span class="br0">&#125;</span> <span class="kw1">elseif</span> <span class="br0">&#40;</span><span class="re0">$uhrzeit</span> <span class="sy0">&lt;</span> <span class="nu0">18</span><span class="br0">&#41;</span> <span class="br0">&#123;</span><span class="sy0">*</span>
+<span class="sy0">*</span>     <span class="re0">$gruss</span> <span class="sy0">=</span> <span class="st0">&quot;Guten Nachmittag&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span>  <span class="br0">&#125;</span> <span class="kw1">else</span>  <span class="br0">&#123;</span><span class="sy0">*</span>
+<span class="sy0">*</span>     <span class="re0">$gruss</span> <span class="sy0">=</span> <span class="st0">&quot;Guten Abend&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span>  <span class="br0">&#125;</span><span class="sy0">*</span> 

@@ -1,0 +1,13 @@
+a:2:{s:7:"current";a:7:{s:4:"date";a:2:{s:7:"created";i:1465312738;s:8:"modified";i:1465312738;}s:7:"creator";s:10:"JonnyBravo";s:4:"user";s:10:"jonnybravo";s:11:"last_change";a:7:{s:4:"date";i:1465312738;s:2:"ip";s:14:"176.52.200.252";s:4:"type";s:1:"C";s:2:"id";s:4:"xaml";s:4:"user";s:10:"jonnybravo";s:3:"sum";s:8:"angelegt";s:5:"extra";s:0:"";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:11:"description";a:1:{s:8:"abstract";s:505:"Um im PowerShell eine GUI zu erstellen ist XAML die beste Möglichkeit. Der XAML Code kann über Visual Studio einfach erstellt werden muss leicht angepasst werden. 
+
+Ein einfaches Beispiel was man problemlos erweitern kann 
+
+
+
+#XAML Testing
+[void][System.Reflection.Assembly]::LoadWithPartialName('presentationframework')
+[xml]$XAML = @'
+<Window 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Ma…";}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:4:{s:4:"date";a:1:{s:7:"created";i:1465312738;}s:7:"creator";s:10:"JonnyBravo";s:4:"user";s:10:"jonnybravo";s:11:"last_change";a:7:{s:4:"date";i:1465312738;s:2:"ip";s:14:"176.52.200.252";s:4:"type";s:1:"C";s:2:"id";s:4:"xaml";s:4:"user";s:10:"jonnybravo";s:3:"sum";s:8:"angelegt";s:5:"extra";s:0:"";}}}

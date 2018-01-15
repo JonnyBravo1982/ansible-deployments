@@ -1,0 +1,95 @@
+
+<p>
+SoftEther ist eine Open Source Software die OpenVPN, IPsec, L2TP, MS-SSTP, L2TPv3 und EtherIP beherrscht und eignet sich perfekt für einen VPN Server. 
+</p>
+
+<p>
+Installation : 
+Voraussetzungen installieren  
+<pre class="code">apt-get install gcc gcc-multilib  </pre>
+
+Software Downloaden <a href="http://www.softether-download.com/en.aspx?product=softether" class="urlextern" title="http://www.softether-download.com/en.aspx?product=softether"  rel="nofollow">http://www.softether-download.com/en.aspx?product=softether</a>
+</p>
+
+<p>
+Installation 
+<pre class="code">tar zxf softether-vpnserver-v1.00-9029-rc2-2013.03.16-linux-x64-64bit.tar.gz
+cd vpnserver
+make
+cd ..
+mv vpnserver /usr/local
+cd /usr/local/vpnserver/
+chmod 600 *
+chmod 700 vpncmd
+chmod 700 vpnserver
+nano /etc/init.d/vpnserver</pre>
+
+</p>
+
+<p>
+init Start erstellen 
+</p>
+
+<p>
+<pre class="code">#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          vpnserver
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon at boot time
+# Description:       Enable Softether by daemon.
+### END INIT INFO
+DAEMON=/usr/local/vpnserver/vpnserver
+LOCK=/var/lock/subsys/vpnserver
+test -x $DAEMON || exit 0
+case &quot;$1&quot; in
+start)
+$DAEMON start
+touch $LOCK
+;;
+stop)
+$DAEMON stop
+rm $LOCK
+;;
+restart)
+$DAEMON stop
+sleep 3
+$DAEMON start
+;;
+*)
+echo &quot;Usage: $0 {start|stop|restart}&quot;
+exit 1
+esac
+exit 0</pre>
+
+</p>
+
+<p>
+Service aktivieren : 
+<pre class="code">chmod 755 /etc/init.d/vpnserver
+mkdir /var/lock/subsys
+update-rc.d vpnserver defaults
+/etc/init.d/vpnserver start
+cd /usr/local/vpnserver/</pre>
+
+</p>
+
+<p>
+Checken 
+<pre class="code">./vpncmd
+3
+check</pre>
+
+</p>
+
+<p>
+Password setzen 
+<pre class="code">./vpncmd
+1
+ret
+ret
+VPN Server&gt;ServerPasswordSet</pre>
+
+</p>

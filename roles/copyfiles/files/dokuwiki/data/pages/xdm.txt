@@ -1,0 +1,161 @@
+====== X Display Manager ======
+===== XDMCP Server =====
+==== gdm ====
+=== Ubuntu ===
+''/etc/gdm/gdm.conf-custom'' :
+<file>
+[xdmcp]
+Enable=true
+</file>
+
+  /etc/init.d/gdm restart
+
+=== Debian 5.0 ===
+''/etc/gdm/gdm.conf'' :
+<file>
+[xdmcp]
+Enable=true
+</file>
+
+  /etc/init.d/gdm restart
+
+=== Debian 6.0 ===
+''/etc/gdm3/daemon.conf'' :
+<file>
+[xdmcp]
+Enable=true
+</file>
+
+  /etc/init.d/gdm3 restart
+
+=== Centos / RedHat ===
+  gdmsetup
+oder
+''/etc/gdm/custom.conf'' :
+<file>
+[xdmcp]
+Enable=true
+
+[Security]
+DisallowTCP=false
+</file>
+
+  pkill gdm-binary
+
+== Begrüßungsmeldung ändern ==
+  gdmsetup
+oder
+''/etc/gdm/custom.conf'' :
+<file>
+[greeter]
+DefaultWelcome=false
+Welcome=Hallo %n
+</file>
+
+  pkill gdm-binary
+
+==== kdm ====
+=== Debian ===
+''/etc/kde3/kdm/kdmrc'' :
+<file>
+[xdmcp]
+Enable=true
+</file>
+
+''/etc/kde3/kdm/Xaccess'' :
+<file>
+*                    #any host can get a login window
+</file>
+
+  /etc/init.d/kdm restart
+
+== Begrüßungsmeldung ändern ==
+''/etc/default/kdm.d/10_desktop-base'' : ( Debian 5.0 )
+<file>
+USETHEME="false"
+</file>
+
+''/etc/kde3/kdm/kdmrc'' :
+<file>
+[X-*-Greeter]
+GreetString=Willkommen auf %n
+</file>
+
+  /etc/init.d/kdm restart
+
+=== SuSE 12.1 ===
+''/etc/sysconfig/displaymanager'' :
+<file>DISPLAYMANAGER_REMOTE_ACCESS="yes"</file>
+
+  service xdm reload
+
+(( Beim reload oder restart wird die xdm-Konfigurationsdatei angepasst:
+
+''/var/adm/kdm/kdmrc.sysconfig''
+<file>
+[Xdmcp]
+Enable=true
+</file>
+))
+
+=== Dokumentation ===
+  konqueror help:/kdm
+
+==== xdm ====
+
+''/etc/X11/xdm/xdm-config'' : (( unter SuSE:
+
+''/etc/sysconfig/displaymanager'' : 
+<file>DISPLAYMANAGER_REMOTE_ACCESS="yes"</file>
+  SuSEconfig
+SuSEconfig ändert nun die Datei ''/etc/X11/xdm/xdm-config'': ( openSuSE 11.4 )
+))
+<file>
+  ! DisplayManager.requestPort:   0
+</file>
+
+''/etc/X11/xdm/Xaccess'' :
+<file>
+*                                       #any host can get a login window
+</file>
+
+===== XDMCP Client =====
+==== X als Terminal ====
+  X -query <server> :1 vt8 &
+
+=== mit init automatisch starten ===
+''/etc/inittab'' : 
+<file>xx:5:respawn:/usr/bin/X -query notebook17 :1</file>
+
+  init q
+==== Im Fenster mit Xephyr ====
+Pakete:
+  * openSuSE (11.1): xorg-x11-server-extra
+  * CentOS (5.3): xorg-x11-server-Xephyr
+  * Debian (5.0): xserver-xephyr
+
+  Xephyr -query notebook17 :1 &
+
+==== Links ====
+  * [[http://remmina.sourceforge.net|Remote Desktop Client für RDP, VNC, NX, XDMCP und SSH]]
+===== Display-Manager auswählen =====
+=== CentOS ===
+''/etc/sysconfig/desktop'' : 
+<file>DISPLAYMANAGER=XDM</file>
+
+=== SuSE ===
+''/etc/sysconfig/displaymanager'' : 
+<file>DISPLAYMANAGER=XDM</file>
+
+=== Debian ===
+  dpkg-reconfigure kdm
+oder
+
+''/etc/X11/default-display-manager'' : 
+<file>/usr/bin/kdm -query <server> :1 vt8</file>
+
+====== Terminal-Server Lösungen ======
+  * http://connectivity.opentext.de/products/exceed-ondemand.aspx
+  * http://www.x2go.org
+  * http://www.nomachine.com
+  * http://www.ltsp.org

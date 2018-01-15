@@ -1,0 +1,1 @@
+gluster  volume create gv0 replica <span class="nu0">2</span> transport tcp Server1:<span class="sy0">/</span>data<span class="sy0">/</span>brick1<span class="sy0">/</span>gv0 Server2:<span class="sy0">/</span>data<span class="sy0">/</span>brick1<span class="sy0">/</span>gv0

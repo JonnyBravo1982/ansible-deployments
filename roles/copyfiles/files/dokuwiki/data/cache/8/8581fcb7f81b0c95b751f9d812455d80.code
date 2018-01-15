@@ -1,0 +1,1 @@
+mount.glusterfs server1:<span class="sy0">/</span>gv0 <span class="sy0">/</span>mnt<span class="sy0">/</span>glusterfs

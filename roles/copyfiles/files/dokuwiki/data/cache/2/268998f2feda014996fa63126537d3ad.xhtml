@@ -1,0 +1,243 @@
+
+<h1 class="sectionedit1" id="aufbau_eines_logical_volumes_lv">Aufbau eines logical volumes (LV)</h1>
+<div class="level1">
+
+<p>
+Ein LV besteht aus mehreren Ebenen. Die unterste Ebene bilden die sogenannten <strong>physical volumes</strong> ( PV ).<br/>
+
+Mehrere PVs kann man nun zusammenfassen zu einer logischen Einheit, der sogenannten <strong>volume group</strong> ( VG ).<br/>
+
+Auf der VG kann man nun <strong>logical volumes</strong> ( LV ) erzeugen, die eine beliebige Größe haben können.<br/>
+
+In der Summe können die LVs die Größe der VG natürlich nicht überschreiten.
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=partioniern_lvm&amp;media=admin_grundlagen:lvm.png" class="media wikilink2" title="admin_grundlagen:lvm.png"><img src="/lib/exe/fetch.php?w=200&amp;tok=4088d3&amp;media=admin_grundlagen:lvm.png" class="mediacenter" alt="" width="200" /></a>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Aufbau eines logical volumes (LV)" [2-496] -->
+<h1 class="sectionedit2" id="lvm_einrichten">LVM einrichten</h1>
+<div class="level1">
+
+<p>
+Pakete installieren ( Debian ):
+</p>
+<pre class="code">aptitude install lvm2 parted</pre>
+
+<p>
+Kernel Modul laden (Ubuntu):
+</p>
+<pre class="code">modprobe dm_mod</pre>
+
+<p>
+Boot-Initialisierung einrichten: ( SuSE )
+</p>
+<pre class="code">/etc/init.d/boot.lvm start
+chkconfig boot.lvm on</pre>
+
+<p>
+Boot-Initialisierung einrichten: ( Debian -6)
+</p>
+<pre class="code">service lvm2 start
+/etc/init.d/lvm2 start</pre>
+
+<p>
+LVM-Partition anlegen:
+</p>
+<pre class="code">parted /dev/sda print
+parted /dev/sda set 2 lvm on
+parted /dev/sda set 3 lvm on</pre>
+
+</div>
+<!-- EDIT2 SECTION "LVM einrichten" [497-936] -->
+<h1 class="sectionedit3" id="lv_anlegen">LV anlegen</h1>
+<div class="level1">
+
+<p>
+Physical Volume anlegen:
+</p>
+<pre class="code">pvcreate /dev/sda2
+pvcreate /dev/sda3</pre>
+
+<p>
+Bestehende Physical Volumes anzeigen:
+</p>
+<pre class="code">pvs</pre>
+
+<p>
+Volume Group anlegen ( bestehend aus den zwei physical volumes ):
+<sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup>
+<code>vg_system</code> ist hier der Name der VolumeGroup
+</p>
+<pre class="code">vgcreate vg_system /dev/sda2 /dev/sda3</pre>
+
+<p>
+Volume Group aktivieren:
+</p>
+<pre class="code">vgchange -a y vg_system</pre>
+
+<p>
+Bestehende Volume Groups anzeigen:
+</p>
+<pre class="code">vgs</pre>
+
+<p>
+Logical Volume anlegen: <code>lv_test</code> ist hier der Name des LogicalVolume
+</p>
+<pre class="code">lvcreate --size 5G --name /dev/vg_system/lv_test</pre>
+
+<p>
+Bestehende Logical Volumes anzeigen:
+</p>
+<pre class="code">lvs</pre>
+
+<p>
+Formatieren ( hier mit ext3-FilesSystem ):
+</p>
+<pre class="code">mkfs.ext3 /dev/vg_system/lv_test</pre>
+
+</div>
+
+<h4 id="testen">Testen</h4>
+<div class="level4">
+
+<p>
+Mount-Point erstellen:
+</p>
+<pre class="code">mkdir /mnt/lv_test</pre>
+
+<p>
+logical volume an Mount-Point in Dateisystem einhängen:
+</p>
+<pre class="code">mount /dev/vg_system/lv_test /mnt/lv_test</pre>
+
+<p>
+Testweise bin-Verzeichnis kopieren:
+</p>
+<pre class="code">cp -a /home/. /mnt/lv_test</pre>
+
+</div>
+<!-- EDIT3 SECTION "LV anlegen" [937-1857] -->
+<h1 class="sectionedit4" id="lv_vergroessern_verkleinern">LV vergrößern / verkleinern</h1>
+<div class="level1">
+
+<p>
+Der Vorteil eines LV ist, daß es zur Laufzeit vergrößert und verkleinert werden kann. 
+</p>
+
+</div>
+<!-- EDIT4 SECTION "LV vergrößern / verkleinern" [1858-1992] -->
+<h2 class="sectionedit5" id="volume_group_um_pv_vergroessern">Volume Group um PV vergrößern</h2>
+<div class="level2">
+
+<p>
+nur falls auf Volume Group nicht mehr genug Platz
+</p>
+<pre class="code">vgextend &lt;Name Volume group&gt; &lt;Name physical volume&gt;
+vgextend vg_system /dev/sda5</pre>
+
+</div>
+<!-- EDIT5 SECTION "Volume Group um PV vergrößern" [1993-2172] -->
+<h2 class="sectionedit6" id="logical_volume_dateisystem_vergroessern">Logical Volume &amp; Dateisystem vergrößern</h2>
+<div class="level2">
+<pre class="code">lvresize --size +1g --resizefs /dev/vg_system/LogVol01</pre>
+
+<p>
+oder
+</p>
+<pre class="code">lvextend -L +2g /dev/vg_system/LogVol00</pre>
+
+<p>
+Dateisystem vergrößern:
+</p>
+<ul>
+<li class="level1"><div class="li"> ext3</div>
+</li>
+</ul>
+
+<p>
+  resize2fs /dev/vg_system/LogVol00
+</p>
+<ul>
+<li class="level1"><div class="li"> xfs</div>
+</li>
+</ul>
+
+<p>
+  xfs_growfs /home
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Logical Volume & Dateisystem vergrößern" [2173-2431] -->
+<h1 class="sectionedit7" id="snapshot_erstellen">Snapshot erstellen</h1>
+<div class="level1">
+
+<p>
+<sup><a href="#fn__2" id="fnt__2" class="fn_top">2)</a></sup>
+</p>
+<pre class="code">mount -o remount,ro /dev/vg_system/lv_test
+lvcreate --snapshot --size 100M --name lv_snapshot /dev/vg_system/lv_test
+mount -o ro /dev/vg_system/lv_snapshot /mnt/</pre>
+
+<p>
+<sup><a href="#fn__3" id="fnt__3" class="fn_top">3)</a></sup>
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Snapshot erstellen" [2432-2846] -->
+<h1 class="sectionedit8" id="hinweise">Hinweise</h1>
+<div class="level1">
+
+<p>
+Falls man vergessen hat das LVM in die Fstab einzutragen, sind diese nach einem Neustart verschwunden.
+</p>
+<pre class="code">lvdisplay</pre>
+
+<p>
+listet die LVMs dann als „LV Status              NOT available“ auf.
+</p>
+
+<p>
+Lösung: Vgs von Hand aktivieren:
+</p>
+<pre class="code">lvchange -a y vg_system</pre>
+
+<p>
+Es kann praktisch sein, die <em>extent size</em> zu ändern, z.B. um sie passend für ein RAID-stripe set zu machen
+</p>
+<pre class="code">vgchange -s 1m
+vgs -v</pre>
+
+</div>
+<!-- EDIT8 SECTION "Hinweise" [2847-3256] -->
+<h1 class="sectionedit9" id="links">Links</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="http://tldp.org/HOWTO/LVM-HOWTO" class="urlextern" title="http://tldp.org/HOWTO/LVM-HOWTO" rel="nofollow">http://tldp.org/HOWTO/LVM-HOWTO</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.linux-magazin.de/heft_abo/ausgaben/2005/10/ueber_alle_fallen" class="urlextern" title="http://www.linux-magazin.de/heft_abo/ausgaben/2005/10/ueber_alle_fallen" rel="nofollow">http://www.linux-magazin.de/heft_abo/ausgaben/2005/10/ueber_alle_fallen</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.redhat.com/docs/manuals/enterprise/RHEL-5-manual/Cluster_Logical_Volume_Manager/index.html" class="urlextern" title="https://www.redhat.com/docs/manuals/enterprise/RHEL-5-manual/Cluster_Logical_Volume_Manager/index.html" rel="nofollow">https://www.redhat.com/docs/manuals/enterprise/RHEL-5-manual/Cluster_Logical_Volume_Manager/index.html</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.novell.com/documentation/sles10/sles_admin/data/cha_advdisk.html" class="urlextern" title="http://www.novell.com/documentation/sles10/sles_admin/data/cha_advdisk.html" rel="nofollow">http://www.novell.com/documentation/sles10/sles_admin/data/cha_advdisk.html</a></div>
+</li>
+</ul>
+
+<p>
+partionieren 
+<pre class="code bash">pvcreate <span class="sy0">/</span>dev<span class="sy0">/</span>sda3 <span class="sy0">&amp;&amp;</span> vgcreate system <span class="sy0">/</span>dev<span class="sy0">/</span>sda3 <span class="sy0">&amp;&amp;</span> <span class="kw1">for</span> t <span class="kw1">in</span> vfat xfs ext2 ext3 ext4 btrfs ;<span class="kw1">do</span> lvcreate <span class="re5">-n</span> <span class="re1">$t</span> <span class="re5">-L</span> 1g system <span class="sy0">&amp;&amp;</span> mkfs.<span class="re1">$t</span> <span class="sy0">/</span>dev<span class="sy0">/</span>system<span class="sy0">/</span><span class="re1">$t</span> <span class="sy0">&amp;&amp;</span> <span class="kw2">mkdir</span> <span class="sy0">/</span>mnt<span class="sy0">/</span><span class="re1">$t</span> <span class="sy0">&amp;&amp;</span> <span class="kw2">mount</span> <span class="sy0">/</span>dev<span class="sy0">/</span>system<span class="sy0">/</span><span class="re1">$t</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">echo</span> <span class="st0">&quot;/dev/system/<span class="es2">$t</span> /mnt/<span class="es2">$t</span> <span class="es2">$t</span> rw 0 0&quot;</span> <span class="sy0">&gt;&gt;</span> <span class="sy0">/</span>etc<span class="sy0">/</span>fstab; <span class="kw1">done</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Links" [3257-] --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+<div class="content"> <code>-</code> ( Minus ) in VG und LV Namen besser vermeiden </div></div>
+<div class="fn"><sup><a href="#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+<div class="content"> Falls das Kernel Modul dm-snapshot noch nicht geladen ist:<pre class="code">modprobe dm-snapshot</pre>
+</div></div>
+<div class="fn"><sup><a href="#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+<div class="content"> Vorsicht bei XFS, das Snapshot wird nicht lesbar sein. Generell eine gute Idee, das Volume vorher read-only zu mounten </div></div>
+</div>

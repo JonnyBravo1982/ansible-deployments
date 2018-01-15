@@ -1,0 +1,6 @@
+^Commando^^beschreibung^
+|<code powershell>Get-Command|Sort-Object noun</code>| Sortiert get-command|
+|<code powershell>Get-Command *-Service</code>|zeigt alle Kommandos die Service im Namen haben|
+|<code powershell> $varping = Get-Content .\computers.txt 
+ $varping|Where-Object {if (Test-Connection $_ -Quiet)
+ {write-host "$_ is running"}ELSE {write-host "$_ is not running"} }</code>|Das folgende Beispiel pingt Rechner an |

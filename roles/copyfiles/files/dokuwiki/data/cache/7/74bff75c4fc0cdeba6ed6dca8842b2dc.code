@@ -1,0 +1,20 @@
+<span class="sc0">&lt;!DOCTYPE html&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>Zeilenumbruch<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">charset</span><span class="sy0">=</span><span class="st0">&quot;UTF-8&quot;</span> <span class="sy0">/</span>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>
+<span class="sc2">&lt;?php</span>
+<span class="sc2">  $name <span class="sy0">=</span> <span class="st0">&quot;Hans&quot;</span>;</span>
+<span class="sc2">  $ort <span class="sy0">=</span> <span class="st0">&quot;Berlin&quot;</span>;</span>
+<span class="sc2">  echo <span class="st0">&quot;$name wohnt in **\n** $ort&quot;</span>;</span>
+<span class="sc2">  **echo <span class="st0">&quot;&lt;br /&gt;</span></span>&quot;;**
+  echo '$name wohnt in $ort';
+   echo &quot;<span class="sc2">&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>&quot;;
+   echo &quot;<span class="sc2">&lt;<a href="http://december.com/html/4/element/img.html"><span class="kw2">img</span></a> <span class="kw3">src</span><span class="sy0">=</span>\<span class="st0">&quot;wiesen.jpg\&quot;</span> <span class="kw3">width</span><span class="sy0">=</span>\<span class="st0">&quot;137\&quot;</span> <span class="kw3">height</span><span class="sy0">=</span>\<span class="st0">&quot;103\&quot;</span> <span class="kw3">alt</span><span class="sy0">=</span>\<span class="st0">&quot;Landschaft\&quot;</span> <span class="sy0">/</span>&gt;</span>&quot;;
+  echo &quot;<span class="sc2">&lt;<a href="http://december.com/html/4/element/img.html"><span class="kw2">img</span></a> <span class="kw3">src</span><span class="sy0">=</span><span class="st0">'wiesen.jpg'</span> <span class="kw3">width</span><span class="sy0">=</span><span class="st0">'137'</span> <span class="kw3">height</span><span class="sy0">=</span><span class="st0">'103'</span> <span class="kw3">alt</span><span class="sy0">=</span><span class="st0">'Landschaft'</span> <span class="sy0">/</span>&gt;&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>&quot;;
+ echo '<span class="sc2">&lt;<a href="http://december.com/html/4/element/img.html"><span class="kw2">img</span></a> <span class="kw3">src</span><span class="sy0">=</span><span class="st0">&quot;wiesen.jpg&quot;</span> <span class="kw3">width</span><span class="sy0">=</span><span class="st0">&quot;137&quot;</span> <span class="kw3">height</span><span class="sy0">=</span><span class="st0">&quot;103&quot;</span> <span class="kw3">alt</span><span class="sy0">=</span><span class="st0">&quot;Landschaft&quot;</span> <span class="sy0">/</span>&gt;</span>';
+   ?&gt;
+ <span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>
+ <span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>

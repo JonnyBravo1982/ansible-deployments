@@ -1,0 +1,1 @@
+Register-PSRepository <span class="re5">-Name</span> T4M <span class="re5">-SourceLocation</span> <span class="st0">&quot;\<span class="es1">\T</span>4M-APC-255<span class="es1">\r</span>epo$&quot;</span> <span class="re5">-InstallationPolicy</span> Trusted

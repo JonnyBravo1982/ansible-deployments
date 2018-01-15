@@ -1,0 +1,48 @@
+Tmux ist ein Tool um das arbeiten mit der Shell zu erleichtern. Es ersetzt für mich das alte Programme Screen da es ähnlich Funktionen hat. Ich möchte kurz die wichtigsten Kniffe beschreiben. Jeder Benutzer kann sich eine eigene Steuerdatei mit der Bezeichnung  ~/.tmux.conf anlegen. In dieser Datei können z.B. Tastenkürzel geändert werden und Maus aktiviert werden. In diesem Beispiel wird die Mausoption aktiviert.  
+
+tmux.conf
+<code>
+set-option -g mouse on
+set-windows-option -g mode-keys vi 
+bind-key -t emacs-copy WheelUpPane halfpage-up
+bind-key -t emacs-copy WheelDownPane halfpage-down
+bind-key -t vi-copy WheelDownPane halfpage-down
+bind-key -t vi-copy WheelUpPane halfpage-up 
+</code>
+
+Die zeile "set-windows-option -g mode-keys vi" aktiviert die vim Keys im Tmux-Fenster aktiviert werden mit Str+b und [ kommt man in das visual Menue. 
+
+Die Konfigurationsdatei wird nur beim Start des tmux-serves eingelesen. Bei einem laufenden Betrieb kann die Datei mit folgenden Befehl geladen werden. 
+
+<code>
+tmux source-file ~/.tmux.conf
+</code>
+
+Der foglende Befehle zeigt die bestehenden Sessions
+<code>
+tmux list-sessions
+</code>
+Wenn eine neue Session geöffnet wird kann man diese mit folgenden KOmmando öffen um nicht die Orientierung zu verlieren. 
+
+<code>
+tmux new-session -s testumgebung1
+</code>
+
+zwischen den Sessions kann mit den folgenden Befehle gewechselt und zugegriffen werden. 
+  * tmux attach-session -t <sessionname>
+  * tmux switch-client -t <sessionname>
+  * 
+Im dem Kommando Str+b kommt man in das interne Menü. Im Steuerungsmenue könne folgte Kommandos eingesetzt werden. 
+
+  - Shift + 2 öffnet einen neuen Screen Horizontal 
+  - Shift + 5 öffnet einen neuen Screen Vertikal
+  - Bild Hoch / Bild Runter wird in der Shell Hoch und Runter navigiert 
+  - ] fügt den mit der Maus kopierte Text hinzu 
+  - Shift + 8 zwischen den Session wechseln 
+  - Mit drücken der Shift-taste bei der Maus Benutzung wird die interne Funktion GnomeShell (Copy/Paste) Funktion genutzt 
+  - Str + Shift + C kopiert den Text in die Zwischenablage
+  - c wird ein neues Fenster erstellt 
+  - n wechselt zwischen den Fenstern 
+  - 0 9 wechselt zwischen den Fenstern 
+  - p wechselt zum vorhergehenden Fenster 
+  -  

@@ -1,0 +1,12 @@
+
+<p>
+Beispiel für eine Session und einem ScriptBlock !
+</p>
+
+<p>
+<pre class="code powershell"><span class="re0">$CON</span> <span class="sy0">=</span> New<span class="sy0">-</span>PSSession <span class="kw5">-ComputerName</span> <span class="st0">'T4M-APC-252'</span> <span class="kw5">-Credential</span> <span class="st0">'Trans4mation\adm-dschlaupitz'</span>
+Invoke<span class="sy0">-</span>Command <span class="sy0">-</span>Session <span class="re0">$CON</span> <span class="sy0">-</span>ScriptBlock <span class="br0">&#123;</span>
+Get<span class="sy0">-</span>CimInstance <span class="kw5">-Namespace</span> root<span class="sy0">/</span>StandardCimv2 <span class="sy0">-</span>ClassName MSFT_NetAdapter
+<span class="br0">&#125;</span></pre>
+
+</p>

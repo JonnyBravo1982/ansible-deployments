@@ -1,0 +1,19 @@
+
+<p>
+#Repository anlegen 
+<pre class="code bash">Register-PSRepository <span class="re5">-Name</span> T4M <span class="re5">-SourceLocation</span> <span class="st0">&quot;\<span class="es1">\T</span>4M-APC-255<span class="es1">\r</span>epo$&quot;</span> <span class="re5">-InstallationPolicy</span> Trusted</pre>
+
+#prüfen ob es vorhanden ist
+<pre class="code bash">Get-PSRepository</pre>
+
+<pre class="code bash">New-ModuleManifest <span class="re5">-Path</span> <span class="st0">&quot;C:\Windows\System32\WindowsPowerShell<span class="es1">\v</span>1.0\Modules\MSSQLQuery\MSSQLQuery.psd1&quot;</span> <span class="re5">-Author</span> <span class="st_h">'Daniel Schlaupitz'</span> <span class="re5">-ModuleVersion</span> <span class="st_h">'1.0'</span> <span class="re5">-Description</span> <span class="st_h">'SQL Query function'</span></pre>
+
+#Module veröffentlichen 
+<pre class="code bash">Publish-Module <span class="re5">-Name</span> MSSQLQuery <span class="re5">-Repository</span> <span class="st0">&quot;T4M&quot;</span> <span class="re5">-ReleaseNotes</span> <span class="st0">&quot;First&quot;</span></pre>
+
+#finde Module 
+<pre class="code bash">Find-Module <span class="re5">-Repository</span> T4M</pre>
+
+<pre class="code bash">Install-Module <span class="re5">-Name</span> MSSQLQUERy</pre>
+
+</p>

@@ -1,0 +1,119 @@
+====== Benötigte Pakete ======
+=== Debian(3.1, 4.0) ===
+  foomatic-db-engine cupsys cupsys-client cupsys-bsd
+Pakete mit Drucker-Filtern/Treibern
+  foomatic-filters-ppds foomatic-db-hpijs foomatic-db-gimp-print foo2zjs
+
+=== Debian 5.0 ===
+  cups foomatic-filters-ppds 
+
+=== Centos 4 ===
+  cups foomatic
+
+=== SuSE 9.3 ===
+  cups
+Pakete mit Drucker-Filtern/Treibern
+  cups-drivers cups-drivers-stp manufacturer-PPDs hplip
+ 
+
+===== Weitere mögliche Quellen für ppd-Dateien =====
+  * http://www.openprinting.org
+  * Linux Treiber des Herstellers
+  * Kommerzielle Treiber: 
+    * http://www.turboprint.de/english.html
+  * Windows Treiber des Herstellers
+
+====== Drucken mit CUPS ======
+===== Druckerwarteschlange anlegen =====
+ppd-Datei testen
+  cupstestppd Kyocera_FS-C5020N_de.ppd
+Drucker anzeigen:
+  lpinfo -v
+Druckerwarteschlange anlegen
+  lpadmin -p kyocera2 -E -P Kyocera_FS-C5020N_de.ppd -v socket://kyocera2.villa-vogelsang.de:9100
+
+(''-x kyocera2'' zum Löschen)
+===== Druckerwarteschlangen verwalten =====
+=== Warteschlange abschalten ===
+Warteschlange soll Druckjobs ablehnen
+  reject kyocera2
+== testen ==
+  lpc status kyocera2
+=== Warteschlange einschalten ===
+Warteschlange soll Druckjobs annehmen
+  accept kyocera2
+=== Drucker anhalten ===
+Es sollen keine Druckjobs an den Drucker gesendet werden
+  cupsdisable kyocera2
+=== Drucker fortsetzen ===
+Es sollen Druckjobs an den Drucker gesendet werden
+  cupsenable kyocera2
+
+===== Druckjobs verwalten =====
+==== CUPS bzw. System V style ====
+Drucker anzeigen:
+  lpstat -p -d
+Testseite drucken:
+  lp -d kyocera2 /usr/share/cups/data/testprint.ps
+Warteschlange anzeigen:
+  lpstat -o
+Druckjob aus Warteschlange entfernen:
+  cancel 1
+
+==== BSD style ====
+Drucker anzeigen:
+  lpc status
+oder
+  /usr/sbin/lpc status
+Testseite drucken:
+  lpr -P kyocera2 /usr/share/cups/data/testprint.ps
+Warteschlange anzeigen:
+  lpq -a
+Druckjob aus Warteschlange entfernen:
+  lprm 1
+
+===== PDF-Drucker anlegen =====
+==== Benötigte Pakete ====
+=== Debian 5.0 ===
+  cups-pdf
+
+==== Konfiguration ====
+  lpadmin -p pdf -E -v cups-pdf:/
+
+
+===== Drucker-Klasse anlegen =====
+Drucker-Klasse anlegen:
+  lpadmin -p kyocera2 -c beide
+Drucker zu Klasse hinzufügen:
+  lpadmin -p pdf -c beide
+Druck-Job von Drucker auf Klasse verschieben:
+  /usr/sbin/lpmove 2 beide
+
+
+===== Druckerwarteschlange konfigurieren =====
+Optionen anzeigen:
+  lpoptions -p kyocera
+Optionen ändern:
+  lpoptions -p kyocera -o PageSize=A4
+
+===== CUPS Administration =====
+  * KDE Kontrollzentrum ''kcontrol''
+  * Weboberfläche mit Dokumentation http://localhost:631
+
+Läuft ''cupsd'' nicht als root "lp" ((Einstellbar über die Parameter ''User'' und ''RunAsUser'' in der Datei ''/etc/cups/cupsd.conf'')) ( default bei SuSE ),  dann kann ''cupsd'' nicht gegen die Datei ''/etc/shadow'' authentifizieren. Für den Fall bietet CUPS die Möglichkeit eine CUPS-eigene Passwort-Datei zu nutzen. Bei SuSE ist das wie folgt gelöst:
+''/etc/cups/cups.conf'':
+<file><Location /admin></file>
+..
+<file>
+  AuthType BasicDigest
+  AuthClass Group
+  AuthGroupName sys
+</file>
+Einen CUPS-Benutzer legt man dann mit dem Befehl ''lppasswd -g sys -a   //name//'' an. (( Alternativ kann man auch über den Parameter ''Group'' in der Datei ''/etc/cups/cupsd.conf'' den ''cupsd'' unter der Unix-Gruppe "shadow" laufen lassen, der Unix-Gruppe "shadow" Leserechte für die Datei "/etc/shadow" geben und den Parameter ''AuthType'' auf Basic stellen.  ))
+
+====== Links ======
+  * http://de.wikipedia.org/wiki/Common_Unix_Printing_System
+  * http://en.wikipedia.org/wiki/Common_Unix_Printing_System
+  * http://www.linuxprinting.org/
+  * http://www.linuxprinting.org/kpfeifle/LinuxKongress2002/Tutorial/VII.cups-help/VII.cups-help.html
+  * http://de.opensuse.org/SDB:CUPS_in_aller_K%C3%BCrze

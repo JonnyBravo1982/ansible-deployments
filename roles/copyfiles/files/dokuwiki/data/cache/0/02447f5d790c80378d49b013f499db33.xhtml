@@ -1,0 +1,103 @@
+
+<h1 class="sectionedit1" id="windows_10_tipps_und_tricks">Windows 10 Tipps und Tricks</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Windows 10 Tipps und Tricks" [1-44] -->
+<h2 class="sectionedit2" id="windows_10_image_bearbeiten_mit_dism">Windows 10 Image bearbeiten mit DISM</h2>
+<div class="level2">
+
+<p>
+Um ein Windows 10 zu bearbeiten muss das ADK für Windows 10 installiert werden. Link <a href="https://msdn.microsoft.com/en-us/windows/hardware/dn913721.aspx#adkwin10" class="urlextern" title="https://msdn.microsoft.com/en-us/windows/hardware/dn913721.aspx#adkwin10"  rel="nofollow">https://msdn.microsoft.com/en-us/windows/hardware/dn913721.aspx#adkwin10</a>
+</p>
+
+<p>
+Das dism für Windows 10 liegt nach der Installation im Verzeichnis C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\DeploymentTools\x86\DISM. Das folgende Beispiel Mountet ein WIM File und installiert das Sprachpaket it-it. 
+</p>
+
+<p>
+<pre class="code batch">dism.exe <span class="co101">/mount-Image</span> <span class="co101">/ImageFile:C:\temp\Wacom\Imaging\win10-1511_x64_enterprise_eng.wim</span> <span class="co101">/index:1</span> <span class="co101">/MountDir:&quot;C:\temp\Wacom\Imaging\Mount&quot;</span>
+Dism <span class="co101">/Image:C:\temp\Wacom\Imaging\Mount</span> <span class="co101">/ScratchDir:C:\Scratch</span> <span class="co101">/Add-Package</span> <span class="co101">/PackagePath:C:\temp\Wacom\Imaging\LangPack\it-it\lp.cab</span>
+dism <span class="co101">/unmount-Wim</span> <span class="co101">/MountDir:C:\temp\Wacom\Imaging\Mount</span> <span class="co101">/commit</span>
+Dism <span class="co101">/Image:C:\temp\Wacom\Imaging\Mount</span> <span class="co101">/Get-ProvisionedAppxPackages</span> <span class="sy0">&gt;&gt;</span> C:\temp\Wacom\Porv.txt</pre>
+
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Windows 10 Image bearbeiten mit DISM" [45-955] -->
+<h3 class="sectionedit3" id="applikationen_appx_deinstallieren">Applikationen (APPx) deinstallieren</h3>
+<div class="level3">
+
+<p>
+Alle Anwendungen die in der Metrooberfläche dargestellt werden sind .appx Anwendungen diese liegen im Verzeichnis C:\Program Files\WindowsApps. 
+</p>
+
+<p>
+Das folgende PowerShell Skript deinstalliert mehre Appx Programme. 
+</p>
+
+<p>
+<pre class="code PowerShell">Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;*Solitaire*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>solitaire<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackag
+Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;*xbox*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;*3DBuilder*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>3dbuilder<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackage
+Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;*News*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>News<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackage
+Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;*OneNote*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>OneNote<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackage
+Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;*Sway*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>Sway<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackag
+Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;*Skype*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>Skype<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackag
+Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;*Zune*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>Zunee<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackag
+Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;*People*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>People<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackag
+Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;*Messaging*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>Messaging<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackag
+Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;*OfficeHub*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>Office<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackag
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>Feedback<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackag
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>Cortana<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackag
+Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;*bingfinance*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>bingfinance<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackage
+Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;**bingnews*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>bingnews<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackage
+Get<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="sy0">|</span> <span class="kw1">Select-Object</span> Packagename <span class="sy0">|</span> <span class="kw1">Where-Object</span> <span class="br0">&#123;</span><a href="about:blank"><span class="kw6">$_</span></a>.PackageName <span class="kw4">-like</span> <span class="st0">&quot;*bingsports*&quot;</span><span class="br0">&#125;</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxProvisionedPackage <span class="sy0">-</span>Online <span class="kw5">-ErrorAction</span> SilentlyContinue
+Get<span class="sy0">-</span>AppxPackage <span class="sy0">*</span>bingsports<span class="sy0">*</span> <span class="sy0">|</span> Remove<span class="sy0">-</span>AppxPackage</pre>
+
+</p>
+
+</div>
+
+<h4 id="startmenue_anpassen">Startmenü anpassen</h4>
+<div class="level4">
+
+<p>
+Das Windows Startmenü kann mit den PowerShell-Befehlen Export-StartLayout und Import-StartLayout Import/Exportiert werden. Das Beispiel beschreibt eine Modifizierung der default Einstellungen. 
+</p>
+<ol>
+<li class="level1"><div class="li"> Startmenü manuell anpassen. </div>
+</li>
+<li class="level1"><div class="li"> Startmenü exportieren </div>
+</li>
+</ol>
+
+<p>
+<pre class="code PowerShell">Export<span class="sy0">-</span>StartLayout <span class="kw5">-Path</span> <span class="st0">&quot;C:\temp\myLayout.bin&quot;</span> </pre>
+
+</p>
+<ol>
+<li class="level1"><div class="li"> 3. Importieren </div>
+</li>
+</ol>
+
+<p>
+<pre class="code PowerShell">Import<span class="sy0">-</span>StartLayout <span class="kw5">-Path</span> <span class="st0">&quot;C:\temp\myLayout.bin&quot;</span> </pre>
+
+Der Import überschreibt automatisch die Default einstellung 
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Applikationen (APPx) deinstallieren" [956-] -->

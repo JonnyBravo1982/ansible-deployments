@@ -1,0 +1,13 @@
+- name:  
+  docker:
+     name: tmp_dokuwiki_1
+     image: bitnami/dokuwiki:latest
+     state: stopped
+- name: delete Container 
+  docker: 
+    name: tmp_dokuwiki_1
+    image: bitnami/dokuwiki:latest
+    state: absent
+- name: Remove Folder
+  file: path=/home/jonnybravo/site/dokuwiki state=absent
+  

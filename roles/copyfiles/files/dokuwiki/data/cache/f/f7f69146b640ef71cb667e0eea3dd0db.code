@@ -1,0 +1,7 @@
+<span class="kw2">&lt;?php</span>
+<span class="re0">$min</span> <span class="sy0">=</span> <span class="nu0">3</span><span class="sy0">;</span>
+<span class="re0">$max</span> <span class="sy0">=</span> <span class="nu0">99</span><span class="sy0">;</span>
+<span class="re0">$test</span> <span class="sy0">=</span> <span class="nu0">2</span><span class="sy0">;</span>
+<span class="re0">$optionen</span> <span class="sy0">=</span> <a href="http://php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st0">&quot;options&quot;</span> <span class="sy0">=&gt;</span> <a href="http://php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st0">&quot;min_range&quot;</span><span class="sy0">=&gt;</span><span class="re0">$min</span><span class="sy0">,</span> <span class="st0">&quot;max_range&quot;</span><span class="sy0">=&gt;</span><span class="re0">$max</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<a href="http://php.net/var_dump"><span class="kw3">var_dump</span></a><span class="br0">&#40;</span><a href="http://php.net/filter_var"><span class="kw3">filter_var</span></a><span class="br0">&#40;</span><span class="re0">$test</span><span class="sy0">,</span> FILTER_VALIDATE_INT<span class="sy0">,</span> <span class="re0">$optionen</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="sy1">?&gt;</span>

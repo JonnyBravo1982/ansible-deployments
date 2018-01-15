@@ -1,0 +1,241 @@
+====== rsyslog ======
+Beispiel: Logdaten von einem Rechner auf den nächsten übertragen
+===== Zielrechner: =====
+Zielrechner netzwerkfähig machen:
+Passende Nachrichten in Datei ''/var/log/beispiel'' schreiben:
+
+=== Debian, CentOS ===
+''/etc/rsyslog.conf'': ( debian 5.0, centos 6.0 )
+<file>
+  $ModLoad imudp
+  $UDPServerRun 514
+  local5.info     -/var/log/beispiel
+</file>
+
+Syntax der Konfigurationsdatei überprüfen:
+  rsyslogd -N1
+((http://www.rsyslog.com/how-can-i-check-the-config/ ))
+
+Syslog neu starten:
+  service rsyslog restart
+
+=== SuSE ===
+''/etc/rsyslog.d/remote.conf'': ( sles 11 SP 1 )
+<file>
+  $ModLoad imudp
+  $UDPServerRun 514
+</file>
+''/etc/rsyslog.conf'': ( debian 5.0 )
+
+<file>
+  local5.info     -/var/log/beispiel
+</file>
+
+Syslog neu starten:
+  /etc/init.d/syslog restart
+
+===== Absender-Rechner: =====
+''/etc/rsyslog.d/local5.conf'' :
+<file>
+  local5.info     @zielrechner
+</file>
+
+Syslog neu einlesen:
+  /etc/init.d/rsyslog restart
+
+Testen: Meldung abschicken:
+  logger -p local5.info "Testmeldung"
+
+===== property based filter =====
+Auf dem Zielrechner:
+<file /etc/rsyslog.d/45-remote-filter.conf>
+
+:syslogtag, isequal, "ingo:"          /var/log/ingo.log
+& ~ # in der vorherigen Zeile ausgegebene Meldungen nicht erneut ausgeben
+:source , !isequal , "notebook02"     ~
+</file>
+
+
+
+====== syslog ======
+Beispiel: Logdaten von einem Rechner auf den nächsten übertragen
+
+===== Zielrechner: =====
+Zielrechner netzwerkfähig machen:
+
+''/etc/sysconfig/syslog'' : ( Centos 5 )
+<file>
+SYSLOGD_OPTIONS="-m 0 -r"
+</file>
+
+''/etc/sysconfig/syslog'': ( openSuSE 11.1 )
+<code bash>
+  SYSLOGD_PARAMS="-r"
+</code>
+
+''/etc/default/syslogd'': ( debian 4.0 )
+<code bash>
+  SYSLOGD="-r"
+</code>
+
+Passende Nachrichten in Datei '/var/log/beispiel' schreiben:
+
+''/etc/syslog.conf'' :
+<file>
+local5.info     -/var/log/beispiel
+</file>
+
+Syslog neu starten:
+  /etc/init.d/sysklogd restart
+
+===== Absender-Rechner: =====
+/etc/syslog.conf:
+  local5.info     @zielrechner
+
+Syslog neu einlesen:
+  /etc/init.d/sysklogd restart
+
+Testen: Meldung abschicken:
+  logger -p local5.info "Testmeldung"
+
+====== syslog-ng ======
+Beispiel: Eine eigene log-Regel schreiben:
+
+''/etc/syslog-ng/syslog-ng.conf.in'': (SuSE bis 10.1)
+
+''/etc/syslog-ng/syslog-ng.conf'': (SuSE ab 10.2)
+<file>
+filter f_ingo { 
+  level(warn) and program(logger); 
+};
+destination ingo_log { 
+  file("/var/log/ingo.log"); 
+};
+log { 
+  source(src); 
+  filter(f_ingo); 
+  destination(ingo_log); 
+};
+</file>
+Configdatei überprüfen:
+  syslog-ng -s
+
+Dienst neu starten und evtl. SuSEconfig glücklich machen
+  /sbin/conf.d/SuSEconfig.syslog-ng
+  /etc/init.d/syslog restart
+
+Testen:
+  logger -p local1.warn -t logger "Dies ist eine Testmeldung"
+
+Beispiel: Logdaten von einem Rechner auf den nächsten übertragen
+
+===== Zielrechner: =====
+Zielrechner netzwerkfähig machen :
+
+''/etc/syslog-ng/syslog-ng.conf.in'': (SuSE bis 10.1)
+
+''/etc/syslog-ng/syslog-ng.conf'': (SuSE ab 10.2)
+
+<file>
+source src{
+
+  ...
+
+  udp(ip("0.0.0.0") port(514));
+
+};  
+</file>
+
+Meldungen bestimmter Log-Facilities und Log-Priorities werden durch Filter und Destination definiert
+
+<file>
+filter f_local5 { 
+  level(info) and facility(local5); 
+}; 
+
+destination d_local5 { 
+  file("/var/log/beispiel"); 
+};
+
+log { 
+  source(src) ; 
+  filter(f_local5) ; 
+  destination(d_local5); 
+};  
+</file>
+
+Danach ''SuSEconfig'' oder ''/sbin/conf.d/SuSEconfig.syslog-ng'' aufrufen um die Änderungen permanent zu übertragen und syslog-ng reloaden.
+
+  rcsyslog reload
+
+===== Absender-Rechner =====
+''/etc/syslog-ng/syslog-ng.conf.in'': (SuSE bis 10.1)
+
+''/etc/syslog-ng/syslog-ng.conf'': (SuSE ab 10.2)
+
+<file>
+destination d_ziel { udp( "Zielrechner" port(514) ); };
+
+log { source(src); destination(d_ziel);  };
+</file>
+
+''SuSEconfig'' aufrufen zum Ändern der Konfigdatei und syslog reloaden
+ 
+  rcsyslog reload
+
+====== Doku ======
+  * Facility:
+
+Nicht jedes Linux/Unix hat alle Facilities:
+<file>
+  Facility        Description              
+  ----------------------------                                                        
+  auth/security   Activity related to requesting name and password (getty, su, login)              
+  authpriv        Same as auth but logged to a file that can only be read by selected users        
+  console         Used to capture messages that would generally be directed to the system console  
+  cron            Messages from the cron system scheduler                                          
+  daemon          System daemon catch-all                                                          
+  ftp             Messages relating to the ftp daemon                                              
+  kern            Kernel messages                                                                  
+  local0.local7   <Local facilities defined per site                                               
+  lpr             Messages from the line printing system                                           
+  mail            Messages relating to the mail system                                             
+  mark            Pseudo event used to generate timestamps in log files                            
+  news            Messages relating to network news protocol (nntp)                                
+  ntp             Messages relating to network time protocol                                       
+  syslog          Syslog service
+  user            Regular user processes                                                           
+  uucp            UUCP subsystem      
+</file>
+
+  * Level (Severity): 
+
+<file>
+emerg    Emergency condition, such as an imminent system crash, usually broadcast to all users
+alert    Condition that should be corrected immediately, such as a corrupted system database
+crit     Critical condition, such as a hardware error
+err      Ordinary error
+warning  Warning
+notice   Condition that is not an error, but possibly should be handled in a special way
+info     Informational message
+debug    Messages that are used when debugging programs
+none     Pseudo level used to specify not to log messages.
+</file>
+''debug, info, notice, warning, warn (same as warning), err, error (same as err), crit, alert, emerg,  panic  (same  as  emerg)''
+
+((
+Testskript für Alles
+<file bash>for fac in auth authpriv cron daemon ftp kern lpr mail mark news syslog user uucp local0 local1 local2 local3 local4 local5 local6 local7; do 
+  for lev in debug info notice warning err crit alert emerg; do 
+    logger -p "${fac}.${lev}" "${fac}.${lev}"
+  done
+done</file>
+))
+
+===== Syslog =====
+  * http://de.linwiki.org/wiki/Linuxfibel_-_System-Administration_-_Protokollierung
+
+===== Syslog-NG =====
+  * http://www.linux-magazin.de/Artikel/ausgabe/2003/11/tagebuch/tagebuch.html
+  * http://www.wikidorf.de/reintechnisch/Inhalt/SyslogNGEinfuehrung
+  * http://www.balabit.com/products/syslog_ng/reference-1.6/syslog-ng.html/book1.html

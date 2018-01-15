@@ -1,0 +1,82 @@
+
+<p>
+Die wichtigsten Befehle in GIT
+</p>
+
+<p>
+erstellt im aktuellen Ordner ein neues Git Reposietory
+<pre class="code git">git init </pre>
+
+</p>
+
+<p>
+zeigt an welche Dateien noch nicht getrackt wurden sind 
+<pre class="code git">git status</pre>
+
+</p>
+
+<p>
+Bereitet die Dateien für den commit vor 
+<pre class="code git">git add  .</pre>
+
+</p>
+
+<p>
+zeigt die anderung an 
+<pre class="code git">git show</pre>
+
+</p>
+
+<p>
+Commit erstellt die erste Version 
+<pre class="code git">git commit -m &quot;erster Version&quot;</pre>
+
+</p>
+
+<p>
+zeigt die Unterschiedlichen Versionen an 
+<pre class="code git">git log</pre>
+
+</p>
+
+<p>
+um nun die Version zu wechseln kann folgender befehl genutzt werden 
+<pre class="code git">git reset &lt;commitid&gt; --hard </pre>
+
+</p>
+
+<p>
+der folgende Befehl zeigt die änderungen zwischen der letzten Version 
+<pre class="code git">git diff HEAD~1</pre>
+
+</p>
+
+<p>
+Um zu einer anderen Version zu wechseln kann folgendes genutzt werden (checkout verlässt den master)
+<pre class="code git">git revert &lt;commitid&gt; --no-commit 
+git commit  -m &quot;New Versiom from Version&quot;</pre>
+
+</p>
+
+<p>
+mit dem dem Kommando branch kann der zustand angezeigt werden. Ideal ist master nach einem checkout neu einbinden
+<pre class="code git">git branch </pre>
+
+</p>
+
+<p>
+Mi dem anlegen der Datei ~./gitconfig können die Passwörter gecacht werden. 
+</p>
+
+<p>
+<pre class="code">vim ~./gitconfig
+
+[credential &quot;https://git.f-i-ts.de&quot;]
+        username = ize1e22
+[URL &quot;https://git.f-i-ts.de&quot;]
+        insteadOf = git@git.admnet.fits:
+[credential]
+        helper = store
+        helper = cache --timeout=86400</pre>
+
+</p>

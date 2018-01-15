@@ -1,0 +1,174 @@
+Hier eine kleine Auflistung aller geprüften PowerShell Kommandos im Bezug auf SCCM 2012. 
+
+1. Dieses Beispiel listet alle Applikationsnamen auf  
+<code powershell>
+(Get-CMApplication).LocalizedDisplayName
+</code>
+
+Links : 
+
+[[http://cm12sdk.net/?page_id=10]] 
+
+[[https://technet.microsoft.com/en-us/library/jj821831.aspx]]
+
+Content aktualisieren auf allen Pakete 
+
+<code powershell> 
+try
+{
+    Get-Wmiobject -Namespace "root\SMS\Site_P01" -Class SMS_Application -Filter "isLatest='true' and isExpired='false'" | foreach{
+           $name = $_.LocalizedDisplayName
+           echo "Application : $name"
+           $dptypes = Get-CMDeploymentType -ApplicationName "$name"
+           foreach ($dpt in $dptypes){
+                $dptname = $dpt.LocalizedDisplayName
+                echo "Deployment Type: $dptname"
+                Update-CMDistributionPoint -ApplicationName "$name" -DeploymentTypeName "$dptname"
+                }
+           }
+}
+catch
+{
+    $_.Exception.Message
+}
+</code> 
+
+Dieses Skript verteilt den Content auf eine DistributionGroup 
+
+<code powershell>
+    Get-Wmiobject -Namespace "root\SMS\Site_S01" -Class SMS_Application -Filter "isLatest='true' and isExpired='false'" | foreach{
+           $name = $_.LocalizedDisplayName
+           echo "Application : $name"
+           $dptypes = Get-CMDeploymentType -ApplicationName "$name"
+           foreach ($dpt in $dptypes){
+                $dptname = $dpt.LocalizedDisplayName
+               # echo "Deployment Type: $dptname"
+                Start-CMContentDistribution -ApplicationName "$name" -DistributionPointGroupName "LRA"
+                }
+           }
+    $_.Exception.Message
+</code>
+
+PowerShell module sauber importieren (nur wenn die Admin Konsole installiert ist)
+
+<code powershell>
+Import-Module (Join-Path $(Split-Path $env:SMS_ADMIN_UI_PATH) ConfigurationManager.psd1)
+</code>
+
+
+Dieses Beispiel liest eine XML File aus und erstellt eine Applikation im SCCM !!
+
+<code powershell>if (((get-host).Version).Major -eq 2) {
+    $PSScriptRoot = Split-Path -Parent -Path  $MyInvocation.MyCommand.Definition
+}
+$XMLFile  = "$PSScriptRoot\Application.xml"
+if (-not (Test-Path $XMLFile)){
+ throw "Application.xml not exists"
+}
+##Set variables####################################################
+write-host "Modify the xml ;) !!"
+notepad "$XMLFile"
+write-host "save the XML"
+timeout 5
+Wait-Process -Name "notepad"
+$Data = [Xml] (Get-Content "$XMLFile")
+# Read XML and set Variables 
+($Data).ApplicationProperty|ForEach-Object {
+         $Vendor = $_.Vendor
+         $Product = $_.Product 
+         $Version = $_.Version
+         $Revision = $_.Revision
+         $EXECUTEFile = $_.InstallFile
+         $EXECuteFileArgument = $_.InstallArguments
+         $UnInstallA = $_.UnInstallSetup
+         $UnInstallArgument = $_.UnInstallArguements
+         $ARPPATH = $_.ARPPath
+         $ARCH = $_.ARCH
+         $LANG = $_.LANG
+   }
+$SourceFolder = Read-Host 'What is the Source Folder?'
+$SourceFolderSCCMROOT = "\\teg.teda\admin\SCCM\SD\Applications"
+$FolderName = "$Vendor" + "_" + "$Product" + "_" + "$Version" + "_" + "$ARCH" + "_" + "$LANG_$Revision"
+$ApplicationName = "$Product $Version $Lang $Revision"
+$FolderName
+New-Item "$SourceFolderSCCMROOT\$FolderName" -type directory
+New-Item "$SourceFolderSCCMROOT\$FolderName\approved" -type directory
+Copy-Item "$XMLFile" "$SourceFolderSCCMROOT\$FolderName\"  -force
+Copy-Item "$PSScriptRoot\Wrapper.ps1" "$SourceFolderSCCMROOT\$FolderName\"  -force  
+Copy-Item "$SourceFolder\*" "$SourceFolderSCCMROOT\$FolderName\approved" -Recurse -Force
+########################################################################################################################################
+Import-Module (Join-Path $(Split-Path $env:SMS_ADMIN_UI_PATH) ConfigurationManager.psd1)
+cd "000:"
+New-CMApplication -Name "$ApplicationName" -Description "create_from_Script" -Publisher "$Vendor" -SoftwareVersion "$Version"
+
+$scriptDetection = @'
+$pagefile = Get-WmiObject -Class Win32_PageFileSetting
+$AutomaticManagePageFile = Get-WmiObject -Class Win32_ComputerSystem 
+if (($pagefile.InitialSize -eq 1024) -and ($pagefile.MaximumSize -eq 2048) -and ($AutomaticManagePageFile.AutomaticManagedPagefile -eq $false))
+{
+    Write-host "Installed"
+}
+else
+{
+}
+'@
+
+$DeploymentTypeHash = @{
+                    ManualSpecifyDeploymentType = $true #Yes we are going to manually specify the Deployment type
+                    Applicationname = "$ApplicationName" #Application Name 
+                   # Applicationname = "DymoLabelmanager 1.73 ENG 00" #Application Name 
+                    DeploymentTypeName = "Installation"    #Name given to the Deployment Type
+                    DetectDeploymentTypeByCustomScript = $true # Yes deployment type will use a custom script to detect the presence of this 
+                    ScriptInstaller = $true # Yes this is a Script Installer
+                    ScriptType = 'PowerShell' # yep we will use PowerShell Script
+                    ScriptContent = "$scriptDetection"  # Use the earlier defined here string
+                    AdministratorComment = "created from Skript"
+                   # ContentLocation  = "$SourceFolderSCCMROOT\$FolderName" 
+                    ContentLocation = "$SourceFolderSCCMROOT\$FolderName"  # NAL path to the package
+                    InstallationProgram ='powershell.exe -ExecutionPolicy Bypass -File "Wrapper.ps1"'  #Command line to Run for install
+                    UninstallProgram ='powershell.exe -ExecutionPolicy Bypass -File "Wrapper.ps1" -uninstall' #Command line to Run for un-Install
+                    RequiresUserInteraction = $false  #Don't let User interact with this
+                    InstallationBehaviorType = 'InstallForSystem' # Targeting Devices here
+                    InstallationProgramVisibility = 'Hidden'  # Hide the PowerShell Console
+                    LogonRequirementType = 'WhereOrNotUserLoggedOn'
+                    }
+Add-CMDeploymentType @DeploymentTypeHash 
+####################################################################################################
+$Copy = Get-CMApplication -Name "$ApplicationName"
+Move-CMObject -FolderPath .\Application\T4M -InputObject $copy
+</code>
+
+SCCM Clientcache verändern über die WMI 
+
+<code powershell>
+$sms=gwmi -namespace root\ccm\softmgmtagent -class cacheconfig;$sms.size = "10000";$sms.put() 
+</code>
+
+Das folgende Skript liesst eine CSV aus und verschiebt die Rechner in die entsprechende Collection. 
+Bespiel CSV : 
+<code csv>
+ColID;Rechner
+UBA0001B; PC62328
+UBA0001B; PC62354
+UBA0001B; PC62355
+UBA0001B; PC62356
+UBA0001B; PC62357
+UBA0001B; PC62360
+UBA0001B; PC62361
+UBA0001B; PC62382
+UBA0001B; PC62390
+UBA0001B; PC62391
+UBA0001B; PC62479
+UBA0001B; PC62486
+UBA0001B; SB71111-1
+
+</code>
+Skript : 
+<code powershell>
+if (((get-host).Version).Major -eq 2) {
+    $PSScriptRoot = Split-Path -Parent -Path  $MyInvocation.MyCommand.Definition
+}
+Import-Module (Join-Path $(Split-Path $env:SMS_ADMIN_UI_PATH) ConfigurationManager.psd1)
+cd UBA:
+Import-Csv "$PSScriptRoot\PilotUpdate_2.csv" -Delimiter ";"|%{Add-CMDeviceCollectionDirectMembershipRule  -CollectionId "ColID" -ResourceId (Get-CMDevice -name $_.Rechner).ResourceId}
+</code>

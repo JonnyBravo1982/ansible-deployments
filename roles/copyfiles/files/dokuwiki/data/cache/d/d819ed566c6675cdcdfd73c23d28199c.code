@@ -1,0 +1,45 @@
+  <span class="kw3">Function</span> MSSQLQuery <span class="br0">&#123;</span>
+     <span class="coMULTI">&lt;#
+           .Synopsis
+              Ruft ein T-SQL Skript in der PowerShell auf  !!
+           .PARAMETER
+              -SQLServer   &lt;SQLServerName&gt; angabe des SQL-Servers
+              -SQLDBName   &lt;DatenbankName&gt; angabe der Datenbank
+              -SQLQuery    &lt;T-SQL Skript&gt;  angabe des T-SQL Skriptes einfache abfrage select * from 'mamam' 
+              -UserName    &lt;Username&gt;      angabe des Datenbank Benutzers (optinal)
+              -Password    &lt;User Passwort&gt; angabe des Passwortes des Datenbank Benutzers (optional)
+           .Example
+              MSSQLQuery -SQLServer &quot;klnsv838&quot; -SQLDBName &quot;RolloutWin7&quot; -SQLQuery &quot;select * from Computers where ComputerName like 'STGWSG13%'&quot; -UserName &quot;sbquery&quot; -password 'xxxxxx'
+              MSSQLQuery -SQLServer &quot;klnsv838&quot; -SQLDBName &quot;RolloutWin7&quot; -SQLQuery &quot;select * from Computers where ComputerName like 'KLNWSA31'&quot;
+              MSSQLQuery -SQLServer &quot;klnsv838&quot; -SQLDBName &quot;RolloutWin7&quot; -SQLQuery &quot;select * from Computers where ComputerName like 'KLNWSA31'&quot;            
+              $var = (MSSQLQuery -SQLServer &quot;klnsv838&quot; -SQLDBName &quot;SMS_GOP&quot; -SQLQuery &quot;SELECT NewHash FROM SMSPackages WHERE PkgID='GOP009CC'&quot; -UserName &quot;sbquery&quot; -password 'xxxxx').NewHash
+    #&gt;</span>
+      <span class="kw3">Param</span><span class="br0">&#40;</span>
+        <span class="br0">&#91;</span>parameter<span class="br0">&#40;</span>Mandatory <span class="sy0">=</span> <span class="re0">$true</span><span class="br0">&#41;</span><span class="br0">&#93;</span>
+          <span class="br0">&#91;</span><span class="re3">String</span><span class="br0">&#93;</span><span class="re0">$SQLServer</span><span class="sy0">,</span>
+        <span class="br0">&#91;</span>parameter<span class="br0">&#40;</span>Mandatory <span class="sy0">=</span> <span class="re0">$true</span><span class="br0">&#41;</span><span class="br0">&#93;</span>
+          <span class="br0">&#91;</span><span class="re3">String</span><span class="br0">&#93;</span><span class="re0">$SQLDBName</span><span class="sy0">,</span>
+        <span class="br0">&#91;</span>parameter<span class="br0">&#40;</span>Mandatory <span class="sy0">=</span> <span class="re0">$true</span><span class="br0">&#41;</span><span class="br0">&#93;</span>
+          <span class="br0">&#91;</span><span class="re3">String</span><span class="br0">&#93;</span><span class="re0">$SQLQuery</span><span class="sy0">,</span>
+        <span class="br0">&#91;</span>parameter<span class="br0">&#40;</span>Mandatory <span class="sy0">=</span> <span class="re0">$false</span><span class="br0">&#41;</span><span class="br0">&#93;</span>
+          <span class="br0">&#91;</span><span class="re3">String</span><span class="br0">&#93;</span><span class="re0">$UserName</span><span class="sy0">,</span>
+        <span class="br0">&#91;</span>parameter<span class="br0">&#40;</span>Mandatory <span class="sy0">=</span> <span class="re0">$false</span><span class="br0">&#41;</span><span class="br0">&#93;</span>
+          <span class="br0">&#91;</span><span class="re3">String</span><span class="br0">&#93;</span><span class="re0">$password</span>
+         <span class="br0">&#41;</span>
+  <span class="re0">$SqlConnection</span> <span class="sy0">=</span> <span class="kw1">New-Object</span> System.Data.SqlClient.SqlConnection
+  <span class="kw3">if</span> <span class="br0">&#40;</span><span class="sy0">!</span><span class="re0">$UserName</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="re0">$SqlConnection</span>.ConnectionString <span class="sy0">=</span> <span class="st0">&quot;Server = $SQLServer; Database = $SQLDBName; Integrated Security = True;&quot;</span>
+  <span class="br0">&#125;</span><span class="kw3">else</span><span class="br0">&#123;</span>
+      <span class="re0">$SqlConnection</span>.ConnectionString <span class="sy0">=</span> <span class="st0">&quot;Server = $SQLServer; Database = $SQLDBName; User ID=$UserName; Password=$password;&quot;</span> <span class="co1"># ohne User Integrated Security = True;</span>
+  <span class="br0">&#125;</span>
+  <span class="re0">$SqlCmd</span> <span class="sy0">=</span> <span class="kw1">New-Object</span> System.Data.SqlClient.SqlCommand
+  <span class="re0">$SqlCmd</span>.CommandText <span class="sy0">=</span> <span class="re0">$SqlQuery</span>
+  <span class="re0">$SqlCmd</span>.Connection <span class="sy0">=</span> <span class="re0">$SqlConnection</span>
+  <span class="re0">$SqlAdapter</span> <span class="sy0">=</span> <span class="kw1">New-Object</span> System.Data.SqlClient.SqlDataAdapter
+  <span class="re0">$SqlAdapter</span>.SelectCommand <span class="sy0">=</span> <span class="re0">$SqlCmd</span>
+  <span class="re0">$DataSet</span> <span class="sy0">=</span> <span class="kw1">New-Object</span> System.Data.DataSet
+  <span class="re0">$SqlAdapter</span>.Fill<span class="br0">&#40;</span><span class="re0">$DataSet</span><span class="br0">&#41;</span>
+  <span class="re0">$SqlConnection</span>.Close<span class="br0">&#40;</span><span class="br0">&#41;</span>
+  <span class="kw2">clear</span>
+  <span class="br0">&#40;</span><span class="re0">$DataSet</span>.Tables<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+   <span class="br0">&#125;</span>

@@ -1,0 +1,33 @@
+*<span class="sc0">&lt;!DOCTYPE html&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>*
+* <span class="sc2">&lt;<a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>*
+*  <span class="sc2">&lt;<a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>Beispielformular<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>*
+*  <span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">charset</span><span class="sy0">=</span><span class="st0">&quot;UTF-8&quot;</span> <span class="sy0">/</span>&gt;</span>*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/form.html"><span class="kw2">form</span></a> <span class="kw3">action</span><span class="sy0">=</span><span class="st0">&quot;&lt;?php echo $_SERVER[&quot;</span>PHP_SELF<span class="st0">&quot;];?&gt;</span></span>&quot; method=&quot;get&quot;&gt;*
+*Ihr Nachname: <span class="sc2">&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/input.html"><span class="kw2">input</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;text&quot;</span> <span class="kw3">name</span><span class="sy0">=</span><span class="st0">&quot;nachname&quot;</span> <span class="kw3">size</span><span class="sy0">=</span><span class="st0">&quot;20&quot;</span> <span class="kw3">maxlength</span><span class="sy0">=</span><span class="st0">&quot;30&quot;</span> <span class="sy0">/</span>&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>*
+*Themen: <span class="sc2">&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/input.html"><span class="kw2">input</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;checkbox&quot;</span>  <span class="kw3">name</span><span class="sy0">=</span><span class="st0">&quot;thema[]&quot;</span> <span class="kw3">value</span><span class="sy0">=</span><span class="st0">&quot;HTML&quot;</span> <span class="sy0">/</span>&gt;</span>HTML *
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/input.html"><span class="kw2">input</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;checkbox&quot;</span>  <span class="kw3">name</span><span class="sy0">=</span><span class="st0">&quot;thema[]&quot;</span> <span class="kw3">value</span><span class="sy0">=</span><span class="st0">&quot;CSS&quot;</span> <span class="sy0">/</span>&gt;</span>CSS *
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/input.html"><span class="kw2">input</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;checkbox&quot;</span>  <span class="kw3">name</span><span class="sy0">=</span><span class="st0">&quot;thema[]&quot;</span> <span class="kw3">value</span><span class="sy0">=</span><span class="st0">&quot;JavaScript&quot;</span> <span class="sy0">/</span>&gt;</span>JavaScript *
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/input.html"><span class="kw2">input</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;checkbox&quot;</span>  <span class="kw3">name</span><span class="sy0">=</span><span class="st0">&quot;thema[]&quot;</span> <span class="kw3">value</span><span class="sy0">=</span><span class="st0">&quot;PHP&quot;</span> <span class="sy0">/</span>&gt;</span>PHP<span class="sc2">&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/input.html"><span class="kw2">input</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;submit&quot;</span> <span class="kw3">value</span><span class="sy0">=</span><span class="st0">&quot;Abschicken&quot;</span> <span class="sy0">/</span>&gt;</span>*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/form.html"><span class="kw2">form</span></a>&gt;</span>*
+*<span class="sc2">&lt;?php*</span>
+<span class="sc2">*if <span class="br0">&#40;</span>!empty<span class="br0">&#40;</span>$_GET<span class="br0">&#91;</span><span class="st0">&quot;nachname&quot;</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>*</span>
+<span class="sc2">*  echo <span class="st0">&quot;Ihre Eingaben&lt;br /&gt;</span></span>\n&quot;*
+*    . &quot;Name: &quot;. htmlspecialchars($_GET[&quot;nachname&quot;]) . &quot;<span class="sc2">&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>\n&quot;;*
+*  if (isset($_GET[&quot;thema&quot;]) <span class="sc1">&amp;&amp; is_array($_GET[&quot;thema&quot;])){*</span>
+<span class="sc1">*    echo &quot;Die gewählten Themen: &lt;br /&gt;\n &quot;;</span>*
+*    foreach($_GET[&quot;thema&quot;] as $th) {*
+*      echo htmlspecialchars($th) . &quot;<span class="sc2">&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>\n&quot;;*
+*    }*
+*  }*
+*}*
+//*print_r($_GET);*
+*?&gt;*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>*

@@ -1,0 +1,4 @@
+npm Paket installieren 
+<code>sudo npm install -g grunt-cli</code>
+npm Model in das Projektverzeichnis verschieben
+<code>npm install</code>

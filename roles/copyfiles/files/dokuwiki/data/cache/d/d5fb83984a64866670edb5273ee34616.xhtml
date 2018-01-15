@@ -1,0 +1,397 @@
+
+<h1 class="sectionedit1" id="bootloader">Bootloader</h1>
+<div class="level1">
+
+<p>
+<span class="curid"><a href="/doku.php?id=bootloader" class="wikilink1" title="bootloader">Bootloader</a></span>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Bootloader" [1-40] -->
+<h1 class="sectionedit2" id="initrd">initrd</h1>
+<div class="level1">
+
+<p>
+<a href="/doku.php?id=initrd" class="wikilink2" title="initrd" rel="nofollow">initrd</a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "initrd" [41-71] -->
+<h1 class="sectionedit3" id="init">init</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="/doku.php?id=init" class="wikilink2" title="init" rel="nofollow">SysVinit</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=upstart" class="wikilink1" title="upstart">upstart</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/doku.php?id=systemd" class="wikilink1" title="systemd">systemd</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "init" [72-145] -->
+<h2 class="sectionedit4" id="systemd_vs_sysvinit">systemd vs. SysVinit</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT4 SECTION "systemd vs. SysVinit" [146-178] -->
+<h3 class="sectionedit5" id="dienste_steuern">Dienste steuern</h3>
+<div class="level3">
+<div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Funktion </th><th class="col1"> SysVinit </th><th class="col2"> systemd </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">dienst starten</td><td class="col1"><pre class="code">service dienst start</pre>
+</td><td class="col2"> <pre class="code">systemctl start dienst</pre>
+</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">dienst stoppen</td><td class="col1"><pre class="code">service dienst stop</pre>
+</td><td class="col2"><pre class="code">systemctl stop dienst</pre>
+</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">dienst TERM Signal schicken</td><td class="col1 leftalign">  </td><td class="col2"><pre class="code">systemctl kill dienst</pre>
+</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">dienst prüfen</td><td class="col1"><pre class="code">service dienst status</pre>
+</td><td class="col2"> <pre class="code">systemctl status dienst</pre>
+</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">dienst neu starten</td><td class="col1"><pre class="code">service dienst restart</pre>
+</td><td class="col2"><pre class="code">systemctl restart dienst</pre>
+</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">dienst neu laden</td><td class="col1"><pre class="code">service dienst reload</pre>
+</td><td class="col2"><pre class="code">systemctl reload dienst</pre>
+</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">dienst beim Booten starten</td><td class="col1"><pre class="code">chkconfig dienst on</pre>
+</td><td class="col2"><pre class="code">systemctl enable dienst</pre>
+</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0">dienst beim Booten nicht starten</td><td class="col1"><pre class="code">chkconfig dienst off</pre>
+</td><td class="col2"><pre class="code">systemctl disable dienst</pre>
+</td>
+	</tr>
+	<tr class="row9">
+		<td class="col0">Wird der dienst beim Booten gestartet?</td><td class="col1"><pre class="code">chkconfig dienst</pre>
+</td><td class="col2"><pre class="code">systemctl is-enabled dienst</pre>
+</td>
+	</tr>
+	<tr class="row10">
+		<td class="col0">Abhängigkeiten anzeigen</td><td class="col1"> </td><td class="col2"><pre class="code">systemctl list-dependencies dienst</pre>
+</td>
+	</tr>
+</table></div>
+<!-- EDIT6 TABLE [206-989] -->
+</div>
+<!-- EDIT5 SECTION "Dienste steuern" [179-989] -->
+<h3 class="sectionedit7" id="runlevel">Runlevel</h3>
+<div class="level3">
+<div class="table sectionedit8"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Kurzbefehl/Funktion </th><th class="col1"> SysVinit </th><th class="col2"> systemd </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><pre class="code">halt</pre>
+</td><td class="col1"><pre class="code">init 0</pre>
+</td><td class="col2"><pre class="code">systemctl isolate halt.target
+systemctl halt</pre>
+</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><pre class="code">poweroff</pre>
+</td><td class="col1"> </td><td class="col2"><pre class="code">systemctl isolate poweroff.target
+systemctl poweroff</pre>
+</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">in Single User Mode wechseln</td><td class="col1"><pre class="code">init 1</pre>
+</td><td class="col2"><pre class="code">systemctl isolate rescue.target
+systemctl rescue</pre>
+</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><pre class="code">reboot</pre>
+</td><td class="col1"><pre class="code">init 6</pre>
+</td><td class="col2"><pre class="code">systemctl reboot</pre>
+</td>
+	</tr>
+</table></div>
+<!-- EDIT8 TABLE [1009-1344] -->
+</div>
+<!-- EDIT7 SECTION "Runlevel" [990-1346] -->
+<h1 class="sectionedit9" id="bootloader1">Bootloader</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT9 SECTION "Bootloader" [1347-1371] -->
+<h2 class="sectionedit10" id="bootloader_loeschen">Bootloader löschen</h2>
+<div class="level2">
+<pre class="code">dd if=/dev/zero of=/dev/sda bs=446 count=1</pre>
+
+</div>
+<!-- EDIT10 SECTION "Bootloader löschen" [1372-1449] -->
+<h2 class="sectionedit11" id="grub2">grub2</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT11 SECTION "grub2" [1450-1467] -->
+<h3 class="sectionedit12" id="grub2_in_den_mbr_installieren">Grub2 in den MBR installieren</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="centos_7">CentOS 7</h4>
+<div class="level4">
+<pre class="code">yum install grub2</pre>
+
+</div>
+
+<h4 id="debian_ab_60_ubuntu_ab_1404">Debian (ab 6.0) Ubuntu (ab 14.04)</h4>
+<div class="level4">
+<pre class="code">apt-get install grub-pc
+update-grub2
+grub-install /dev/sda</pre>
+
+</div>
+
+<h4 id="opensuse_122">openSuSE 12.2</h4>
+<div class="level4">
+<pre class="code">update-bootloader
+grub2-install /dev/sda</pre>
+
+</div>
+<!-- EDIT12 SECTION "Grub2 in den MBR installieren" [1468-1721] -->
+<h3 class="sectionedit13" id="kernel_bootparameter_aendern">Kernel Bootparameter ändern</h3>
+<div class="level3">
+
+<p>
+Z.B. Kernel Argument <code>nomodeset</code> setzen:
+</p>
+
+</div>
+
+<h4 id="opensuse_123">openSuSE 12.3</h4>
+<div class="level4">
+
+<p>
+<code>/etc/default/grub</code> :
+</p>
+
+<p>
+Zeile <code>GRUB_CMDLINE_LINUX_DEFAULT</code> anpassen
+</p>
+
+<p>
+<code>/boot/grub2/grub.cfg</code> neu erstellen:
+</p>
+<pre class="code">grub2-mkconfig --output=/boot/grub2/grub.cfg</pre>
+
+</div>
+
+<h4 id="debian_ab_60_ubuntu_1404">debian (ab 6.0) ubuntu (14.04)</h4>
+<div class="level4">
+
+<p>
+<code>/etc/default/grub</code> :
+</p>
+
+<p>
+Zeile <code>GRUB_CMDLINE_LINUX_DEFAULT</code> anpassen
+</p>
+
+<p>
+<code>/boot/grub/grub.cfg</code> neu erstellen:
+</p>
+<pre class="code">grub-mkconfig --output=/boot/grub/grub.cfg</pre>
+
+</div>
+<!-- EDIT13 SECTION "Kernel Bootparameter ändern" [1722-2181] -->
+<h3 class="sectionedit14" id="grub2_mit_passwort_absichern">Grub2 mit Passwort absichern</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="root_passwort_aendern">Root Passwort ändern</h4>
+<div class="level4">
+
+<p>
+Grub Bootprompt: <code>init=/bin/bash</code> hinzufügen
+</p>
+
+<p>
+Kernel mit <code>strg+x</code> booten
+</p>
+<pre class="code">mount -o remount,rw /
+passwd
+mount -o remount,ro /
+exec /sbin/init</pre>
+
+</div>
+
+<h4 id="grub_absichern">Grub absichern</h4>
+<div class="level4">
+
+<p>
+Debian 6.0, CentOS 7:
+</p>
+<pre class="code">grub2-mkpasswd-pbkdf2</pre>
+
+<p>
+Debian 7, Ubuntu (ab 14.04):
+</p>
+<pre class="code">grub-mkpasswd-pbkdf2</pre>
+
+<p>
+<pre class="file">#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the &#039;exec tail&#039; line above.
+set superusers=&quot;root&quot;
+password_pbkdf2 root grub.pbkdf2.sha512.10000.FF73A777C6793E117430446F4D12F00D25DA53515B5048B1DAAA0688743550226CD05AD661EBDCA2AA1997AEBDC0C35C74CA48C9309FBED1C201C5875E3AD2E8.292A1642CB109860054562756A5AE950975B586A8DFDE535F566D1ADDCC6747349406E84862FFD9258F64268A36E63EF25A41A3CC0CD6291E63D98CEDDF00FE6</pre>
+
+</p>
+<pre class="code">chmod +x /etc/grub.d/45_password</pre>
+
+<p>
+Debian (ab 6), Ubuntu (14.04):
+</p>
+<pre class="code">grub-mkconfig -o /boot/grub/grub.cfg</pre>
+
+<p>
+CentOS (7):
+</p>
+<pre class="code">grub2-mkconfig -o /boot/grub2/grub.cfg</pre>
+
+</div>
+
+<h5 id="testen">testen</h5>
+<div class="level5">
+<pre class="code">grep password /boot/grub?/grub.cfg
+reboot</pre>
+
+</div>
+
+<h4 id="doku">Doku</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> <a href="https://www.gnu.org/software/grub/manual/html_node/Security.html" class="urlextern" title="https://www.gnu.org/software/grub/manual/html_node/Security.html" rel="nofollow">https://www.gnu.org/software/grub/manual/html_node/Security.html</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT14 SECTION "Grub2 mit Passwort absichern" [2182-3415] -->
+<h2 class="sectionedit15" id="grub">grub</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT15 SECTION "grub" [3416-3432] -->
+<h3 class="sectionedit16" id="grub_in_den_mbr_installieren">Grub in den MBR installieren</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="debian">Debian</h4>
+<div class="level4">
+<pre class="code">grub-install /dev/sda</pre>
+
+<p>
+oder
+</p>
+<pre class="code">grub
+root (hd0,0)
+setup (hd0)
+quit</pre>
+<pre class="code">update-grub</pre>
+
+</div>
+
+<h4 id="suse">SuSE</h4>
+<div class="level4">
+<pre class="code">grub-install /dev/sda</pre>
+
+<p>
+oder
+</p>
+<pre class="code">grub
+root (hd0,0)
+setup (hd0)
+quit</pre>
+
+</div>
+<!-- EDIT16 SECTION "Grub in den MBR installieren" [3433-3660] -->
+<h3 class="sectionedit17" id="neuen_kernel_testen">Neuen Kernel testen</h3>
+<div class="level3">
+
+<p>
+System rebooten, und einmalig den 3. Eintrag ( grub fängt bei 0 an zu zählen … ) aus <code>/boot/grub/menu.lst</code> verwenden:
+</p>
+
+<p>
+SuSE:
+</p>
+<pre class="code">grubonce 2</pre>
+
+<p>
+Debian:
+</p>
+<pre class="code">grub-reboot 2</pre>
+
+</div>
+<!-- EDIT17 SECTION "Neuen Kernel testen" [3661-3860] -->
+<h3 class="sectionedit18" id="grub_mit_passwort_absichern">Grub mit Passwort absichern</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="root_passwort_aendern1">Root Passwort ändern</h4>
+<div class="level4">
+
+<p>
+Grub Bootprompt: <code>init=/bin/bash</code> hinzufügen
+</p>
+
+<p>
+Kernel mit <code>b</code> booten
+</p>
+<pre class="code">mount -o remount,rw /
+passwd
+mount -o remount,ro /
+exec /sbin/init</pre>
+
+</div>
+
+<h4 id="grub_absichern1">Grub absichern</h4>
+<div class="level4">
+<pre class="code">/sbin/grub-md5-crypt</pre>
+
+<p>
+<code>/boot/grub/menu.lst</code> :
+<pre class="file">password --md5 $1$ZkniA/$2EBU5eSONAj.i2KIhhtWA0</pre>
+
+</p>
+
+</div>
+<!-- EDIT18 SECTION "Grub mit Passwort absichern" [3861-4215] -->
+<h2 class="sectionedit19" id="dokus_links">Dokus &amp; Links</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://wiki.ubuntuusers.de/grub_2/konfiguration" class="urlextern" title="http://wiki.ubuntuusers.de/grub_2/konfiguration" rel="nofollow">http://wiki.ubuntuusers.de/grub_2/konfiguration</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT19 SECTION "Dokus & Links" [4216-] -->

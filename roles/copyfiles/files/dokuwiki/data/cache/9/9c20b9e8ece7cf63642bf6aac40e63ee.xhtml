@@ -1,0 +1,28 @@
+
+<p>
+Wlankey auslesen mit netsh
+</p>
+
+<p>
+<pre class="code">netsh wlan show profile name=&quot;freakhouse&quot; key=clear</pre>
+
+</p>
+
+<p>
+Ein WLAN Profil kann mit Aufruf dem Aufruf Export exportiert werden. 
+</p>
+
+<p>
+<pre class="code"> 
+netsh wlan export profile name=&lt;profilename&gt;</pre>
+
+</p>
+
+<p>
+Mit dem Aufruf „add profile“ kann das Profil wieder importiert werden. 
+</p>
+
+<p>
+<pre class="code">netsh wlan add profile filename=&quot;%~dp0WLAN-wlan.xml&quot;</pre>
+
+</p>

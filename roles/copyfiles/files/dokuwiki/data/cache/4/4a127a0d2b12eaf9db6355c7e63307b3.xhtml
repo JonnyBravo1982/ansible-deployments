@@ -1,0 +1,78 @@
+
+<h2 class="sectionedit1" id="journalctl">journalctl</h2>
+<div class="level2">
+
+<p>
+gleich ans Ende springen
+</p>
+<pre class="code">journalctl -e</pre>
+
+<p>
+follow file mit allem und catalog
+</p>
+<pre class="code">journalctl -f -a -x</pre>
+
+<p>
+alle Felder aufschlüsseln
+</p>
+<pre class="code">journalctl -o verbose</pre>
+
+<p>
+seit dem letztem Boot
+</p>
+<pre class="code">journalctl -b</pre>
+
+<p>
+in einem bestimmten Zeitraum
+</p>
+<pre class="code">journalctl --since &quot;2016-01-10&quot; --until &quot;2016-01-11 03:00&quot;</pre>
+
+<p>
+ab einem bestimmten Level
+</p>
+<pre class="code">journalctl -p 4
+journalctl -p warning</pre>
+
+</div>
+<!-- EDIT1 SECTION "journalctl" [1-374] -->
+<h3 class="sectionedit2" id="meldungen_eines_bestimmten_dienstes">Meldungen eines bestimmten Dienstes</h3>
+<div class="level3">
+<pre class="code">journalctl _SYSTEMD_UNIT=ssh.service
+journalctl -u ssh.service
+journalctl /usr/sbin/sshd</pre>
+
+</div>
+
+<h4 id="kernel_meldungen">Kernel Meldungen</h4>
+<div class="level4">
+<pre class="code">journalctl -k</pre>
+
+</div>
+
+<h4 id="ins_journal_schreiben">Ins Journal schreiben</h4>
+<div class="level4">
+<pre class="code">ls | systemd-cat</pre>
+
+</div>
+<!-- EDIT2 SECTION "Meldungen eines bestimmten Dienstes" [375-607] -->
+<h3 class="sectionedit3" id="groesse_beschraenken">Größe beschränken</h3>
+<div class="level3">
+
+<p>
+<code>/etc/systemd/journald.conf</code> :
+<pre class="file">SystemMaxUse=100M
+SystemKeepFree=1G</pre>
+
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Größe beschränken" [608-723] -->
+<h2 class="sectionedit4" id="doku">Doku</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://0pointer.de/blog/projects/journalctl.html" class="urlextern" title="http://0pointer.de/blog/projects/journalctl.html"  rel="nofollow">http://0pointer.de/blog/projects/journalctl.html</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Doku" [724-] -->

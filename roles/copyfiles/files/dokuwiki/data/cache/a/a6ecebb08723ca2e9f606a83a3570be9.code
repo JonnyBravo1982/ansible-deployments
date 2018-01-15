@@ -1,0 +1,38 @@
+*<span class="sc0">&lt;!DOCTYPE html&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>*
+* <span class="sc2">&lt;<a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>*
+*  <span class="sc2">&lt;<a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>Zufallsbilder<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>*
+*  <span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">charset</span><span class="sy0">=</span><span class="st0">&quot;UTF-8&quot;</span> <span class="sy0">/</span>&gt;</span>*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>*
+*<span class="sc2">&lt;?php*</span>
+<span class="sc2">*$bilder <span class="sy0">=</span> array<span class="br0">&#40;</span> *</span>
+<span class="sc2">*              array<span class="br0">&#40;</span><span class="st0">&quot;pfad&quot;</span> <span class="sy0">=</span>&gt;</span> &quot;blumen.jpg&quot;,*
+*                    &quot;alt&quot; =&gt; &quot;rote Blumen&quot;, *
+*                    &quot;titel&quot; =&gt; &quot;Strauß aus roten Blumen&quot;),*
+*              array(&quot;pfad&quot; =&gt; &quot;landschaft.jpg&quot;, *
+*                    &quot;alt&quot; =&gt; &quot;Landschaft&quot;, *
+*                    &quot;titel&quot; =&gt; &quot;Landschaft im Nebel&quot;),*
+*              array(&quot;pfad&quot; =&gt; &quot;stadt_am_meer.jpg&quot;, *
+*                    &quot;alt&quot; =&gt; &quot;Häuser&quot;,*
+*                    &quot;titel&quot; =&gt; &quot;Griechische Häuser am Abend&quot;),*
+*              array(&quot;pfad&quot; =&gt; &quot;strand.jpg&quot;, *
+*                    &quot;alt&quot; =&gt; &quot;Strand&quot;,*
+*                    &quot;titel&quot; =&gt; &quot;Strand mit Bergen&quot;), *
+*              array(&quot;pfad&quot; =&gt; &quot;boot.jpg&quot;, *
+*                    &quot;alt&quot; =&gt; &quot;Boot&quot;, *
+*                    &quot;titel&quot; =&gt; &quot;Boot auf einem Felsen&quot;)*
+*          );*
+**$max = count($bilder)-1;**
+**$zufallszahl = rand(0, $max); //random sucht sich eine zufällige Zahl von 0-3 aus** 
+&nbsp;
+*echo &quot;<span class="sc2">&lt;<a href="http://december.com/html/4/element/img.html"><span class="kw2">img</span></a> <span class="kw3">src</span><span class="sy0">=</span><span class="st0">'&quot; . $bilder[$zufallszahl][&quot;pfad&quot;] .*</span>
+<span class="sc2">*      &quot;'</span> <span class="kw3">height</span><span class="sy0">=</span><span class="st0">'200'</span> <span class="kw3">width</span><span class="sy0">=</span><span class="st0">'150'</span> <span class="kw3">alt</span><span class="sy0">=</span><span class="st0">'&quot; . *</span>
+<span class="sc2">*      $bilder[$zufallszahl][&quot;alt&quot;] . *</span>
+<span class="sc2">*      &quot;'</span> <span class="kw3">title</span><span class="sy0">=</span><span class="st0">'&quot; .*</span>
+<span class="sc2">*      $bilder[$zufallszahl][&quot;titel&quot;] .*</span>
+<span class="sc2">*      &quot;'</span> <span class="sy0">/</span>&gt;</span>\n&quot;;*
+&nbsp;
+*?&gt;*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>*
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>

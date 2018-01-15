@@ -1,0 +1,236 @@
+/*!
+ * DokuWiki Bootstrap3 Template: Template
+ *
+ * Home     http://dokuwiki.org/template:bootstrap3
+ * Author   Giuseppe Di Terlizzi <giuseppe.diterlizzi@gmail.com>
+ * License  GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ */
+
+body {
+  font-size: small;
+}
+
+body.default.page-on-panel,
+body.optional.page-on-panel, {
+  background: #FDFDFD;
+}
+
+input, textarea, select {
+  font-weight: 400;
+}
+
+#dw__badges {
+  margin-top: 50px;
+}
+
+#dw__breadcrumbs hr {
+  margin: 5px 0;
+  padding: 0;
+}
+
+#dw__toc li {
+  list-style-type: none;
+}
+
+#dw__toc, #dw__toc h3 {
+  font-size: .95em;
+}
+
+#dw__toc h3 {
+  margin: 0;
+  padding: 5px;
+}
+
+#dw__toc h3 span {
+  display: none;
+}
+
+#dw__toc h3 strong {
+  padding-right: 5px;
+}
+
+#dw__toc .panel-body {
+  padding-left: 0;
+  width: 16em;
+}
+
+#dw__toc {
+  margin-left: 20px;
+  background-color: #FFF;
+  width: auto;
+}
+
+#dw__toc ul.toc {
+  padding-left: 15px;
+}
+
+#dw__toc div {
+  padding-left: 15px;
+}
+
+#config__manager .label {
+  padding: 0 !important;
+}
+
+#config__manager label {
+  color: initial;
+  white-space: initial;
+  font-size: 1.2em;
+  font-weight: initial;
+}
+
+#config__manager fieldset {
+  background: initial !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#config__manager .outkey {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 1.2em !important;
+  background: transparent !important;
+}
+
+#dw__breadcrumbs .breadcrumb {
+  background: transparent;
+  border: 0 none;
+}
+
+#dw__breadcrumbs, .dw__sidebar {
+  font-size: .9em;
+}
+
+#dokuwiki__content .page-header {
+  margin-top: 10px;
+}
+
+#dw__logo {
+  margin-right: 10px;
+}
+
+#dw__title {
+  display: inline-block;
+}
+
+#dw__tagline {
+  font-size: .6em;
+  display: block;
+  line-height: 1em;
+  white-space: nowrap;
+}
+
+.dw__sidebar .nav li a {
+  padding: 5px 10px;
+}
+
+.dw__sidebar .nav li a.urlextern {
+  padding-left: 28px;
+  background-position: 8px center;
+}
+
+.dw__sidebar h1,
+.dw__sidebar h2,
+.dw__sidebar h3,
+.dw__sidebar h4
+.dw__sidebar h5 {
+  margin: 10px 0 5px 0;
+}
+
+.dw__sidebar h1 {
+  font-size: 1.8em;
+}
+
+.dw__sidebar h2 {
+  font-size: 1.6em;
+}
+
+.dw__sidebar h3 {
+  font-size: 1.4em;
+}
+
+.dw__sidebar h4 {
+  font-size: 1.2em;
+}
+
+.dw__sidebar h5 {
+  font-size: 1em;
+}
+
+.dw__sidebar .panel-heading {
+  cursor: pointer;
+}
+
+.dw__sidebar .page-header {
+  margin-top: 0;
+}
+
+.breadcrumb {
+  margin: 0;
+  padding: 0;
+}
+
+.curid {
+  font-weight: bold;
+}
+
+.page fieldset {
+  border: none;
+}
+
+.dokuwiki ul.idx {
+  padding-left: 15px;
+}
+
+.dokuwiki textarea.edit {
+  font-family: Consolas,"Andale Mono WT","Andale Mono","Bitstream Vera Sans Mono","Nimbus Mono L",Monaco,"Courier New",monospace;
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  opacity: .8
+}
+
+.alert {
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.dokuwiki .diffnav select {
+  height: auto;
+}
+
+/* Interwiki User Page Icon */
+a.iw_user {
+  background-image: none;
+  padding: 0 !important;
+}
+
+
+/** Override Bootstrap3 style */
+
+/** Set ".img-responsive" to "inline" */
+.img-responsive {
+  display: inline;
+}
+
+.dokuwiki img.media {
+  margin: .2em 0;
+}
+
+.dokuwiki img.medialeft {
+  float: left;
+  margin: .2em 1em .2em 0;
+}
+
+.dokuwiki img.mediaright {
+  float: right;
+  margin: .2em 0 .2em 1em;
+}
+
+.dokuwiki img.mediacenter {
+  display: block;
+  margin: .2em auto;
+}

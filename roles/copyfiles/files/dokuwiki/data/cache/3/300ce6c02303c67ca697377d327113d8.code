@@ -1,0 +1,1 @@
+<span class="kw3">echo</span> <span class="st0">&quot;BODY: Test&quot;</span><span class="sy0">|</span>mail <span class="re5">-s</span> <span class="st0">&quot;Test&quot;</span> nutzer31<span class="sy0">@</span>localhost

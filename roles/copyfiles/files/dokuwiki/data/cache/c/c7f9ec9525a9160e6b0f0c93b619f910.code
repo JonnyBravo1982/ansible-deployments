@@ -1,0 +1,2 @@
+gluster peer probe Server01
+gluster peer Status 

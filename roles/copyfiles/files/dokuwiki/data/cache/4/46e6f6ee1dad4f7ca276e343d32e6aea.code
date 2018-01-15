@@ -1,0 +1,7 @@
+&lt;VirtualHost *:443&gt;
+    SSLEngine on
+    SSLCertificateFile /etc/ssl/certs/apache.crt
+    SSLCertificateKeyFile /etc/ssl/private/apache.key
+    # Pfad zu den Webinhalten
+    DocumentRoot /var/www/html/
+&lt;/VirtualHost&gt;

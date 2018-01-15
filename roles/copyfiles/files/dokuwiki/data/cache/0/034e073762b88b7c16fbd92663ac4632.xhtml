@@ -1,0 +1,75 @@
+
+<p>
+Hier eine kleine Auflistung aller geprüften PowerShell Kommandos im Bezug auf SCCM 2012. 
+</p>
+
+<p>
+1. Dieses Beispiel listet alle Applikationsnamen auf  
+<pre class="code powershell"><span class="br0">&#40;</span>Get<span class="sy0">-</span>CMApplication<span class="br0">&#41;</span>.LocalizedDisplayName</pre>
+
+</p>
+
+<p>
+Links : 
+</p>
+
+<p>
+<a href="http://cm12sdk.net/?page_id=10" class="urlextern" title="http://cm12sdk.net/?page_id=10"  rel="nofollow">http://cm12sdk.net/?page_id=10</a>
+</p>
+
+<p>
+<a href="https://technet.microsoft.com/en-us/library/jj821831.aspx" class="urlextern" title="https://technet.microsoft.com/en-us/library/jj821831.aspx"  rel="nofollow">https://technet.microsoft.com/en-us/library/jj821831.aspx</a>
+</p>
+
+<p>
+Content aktualisieren auf allen Pakete 
+</p>
+
+<p>
+<pre class="code powershell">try
+<span class="br0">&#123;</span>
+    <span class="kw1">Get-Wmiobject</span> <span class="kw5">-Namespace</span> <span class="st0">&quot;root\SMS\Site_P01&quot;</span> <span class="kw5">-Class</span> SMS_Application <span class="sy0">-</span><span class="kw3">Filter</span> <span class="st0">&quot;isLatest='true' and isExpired='false'&quot;</span> <span class="sy0">|</span> <span class="kw3">foreach</span><span class="br0">&#123;</span>
+           <span class="re0">$name</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.LocalizedDisplayName
+           <span class="kw2">echo</span> <span class="st0">&quot;Application : $name&quot;</span>
+           <span class="re0">$dptypes</span> <span class="sy0">=</span> Get<span class="sy0">-</span>CMDeploymentType <span class="sy0">-</span>ApplicationName <span class="st0">&quot;$name&quot;</span>
+           <span class="kw3">foreach</span> <span class="br0">&#40;</span><span class="re0">$dpt</span> <span class="kw3">in</span> <span class="re0">$dptypes</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+                <span class="re0">$dptname</span> <span class="sy0">=</span> <span class="re0">$dpt</span>.LocalizedDisplayName
+                <span class="kw2">echo</span> <span class="st0">&quot;Deployment Type: $dptname&quot;</span>
+                Update<span class="sy0">-</span>CMDistributionPoint <span class="sy0">-</span>ApplicationName <span class="st0">&quot;$name&quot;</span> <span class="sy0">-</span>DeploymentTypeName <span class="st0">&quot;$dptname&quot;</span>
+                <span class="br0">&#125;</span>
+           <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>
+catch
+<span class="br0">&#123;</span>
+    <a href="about:blank"><span class="kw6">$_</span></a>.Exception.Message
+<span class="br0">&#125;</span></pre>
+
+</p>
+
+<p>
+Dieses Skript verteilt den Content auf eine DistributionGroup 
+</p>
+
+<p>
+<pre class="code powershell">    <span class="kw1">Get-Wmiobject</span> <span class="kw5">-Namespace</span> <span class="st0">&quot;root\SMS\Site_S01&quot;</span> <span class="kw5">-Class</span> SMS_Application <span class="sy0">-</span><span class="kw3">Filter</span> <span class="st0">&quot;isLatest='true' and isExpired='false'&quot;</span> <span class="sy0">|</span> <span class="kw3">foreach</span><span class="br0">&#123;</span>
+           <span class="re0">$name</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.LocalizedDisplayName
+           <span class="kw2">echo</span> <span class="st0">&quot;Application : $name&quot;</span>
+           <span class="re0">$dptypes</span> <span class="sy0">=</span> Get<span class="sy0">-</span>CMDeploymentType <span class="sy0">-</span>ApplicationName <span class="st0">&quot;$name&quot;</span>
+           <span class="kw3">foreach</span> <span class="br0">&#40;</span><span class="re0">$dpt</span> <span class="kw3">in</span> <span class="re0">$dptypes</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+                <span class="re0">$dptname</span> <span class="sy0">=</span> <span class="re0">$dpt</span>.LocalizedDisplayName
+               <span class="co1"># echo &quot;Deployment Type: $dptname&quot;</span>
+                Start<span class="sy0">-</span>CMContentDistribution <span class="sy0">-</span>ApplicationName <span class="st0">&quot;$name&quot;</span> <span class="sy0">-</span>DistributionPointGroupName <span class="st0">&quot;LRA&quot;</span>
+                <span class="br0">&#125;</span>
+           <span class="br0">&#125;</span>
+    <a href="about:blank"><span class="kw6">$_</span></a>.Exception.Message</pre>
+
+</p>
+
+<p>
+Um Module sauber in PowerShell zu Importieren (nur wenn die Konsole installiert ist) env
+</p>
+
+<p>
+<pre class="code powershell">Import<span class="sy0">-</span>Module <span class="br0">&#40;</span><span class="kw1">Join-Path</span> $<span class="br0">&#40;</span><span class="kw1">Split-Path</span> <span class="re0">$env</span>:SMS_ADMIN_UI_PATH<span class="br0">&#41;</span> ConfigurationManager.psd1<span class="br0">&#41;</span></pre>
+
+</p>

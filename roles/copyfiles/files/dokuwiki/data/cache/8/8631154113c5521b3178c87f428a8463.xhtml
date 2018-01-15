@@ -1,0 +1,109 @@
+
+<p>
+Wichtige Befehle : 
+</p>
+
+<p>
+Ad-hoc: 
+</p>
+
+<p>
+<pre class="code">ansible &lt;hosts&gt; -m &lt;modul&gt;</pre>
+
+</p>
+
+<p>
+<pre class="code">ansible all -m ping </pre>
+
+<pre class="code">ansible all -b -m group -a &quot;name_special state=present&quot;
+
+ansible all -b -m yum -a &quot;name=mysqld state=latest&quot;
+
+ansible all -m stat -a path=/etc/profiles</pre>
+
+</p>
+
+<p>
+Alle Server herrunterfahren 
+<pre class="code">ansible all -a &quot;/sbin/shutdown -h now&quot; -b</pre>
+
+</p>
+
+<p>
+Ansible Facts können mit setup angezeigt werden 
+<pre class="code"> ansible all -m setup
+ ansible all -m setup -a &#039;filter=ansible_distribution&#039;</pre>
+
+Die Facts können in den Playbooks  als varibale aufgerufen werden <a href="/lib/exe/fetch.php?media=ansible_distribution" class="media mediafile mf_ wikilink2" title="ansible_distribution">ansible_distribution</a>
+</p>
+
+<p>
+Playbook mit with (es werden zwei Pakete installiert  
+</p>
+
+<p>
+<pre class="code">pip: name {{ item }}
+with
+  - httpd
+  - andere</pre>
+
+</p>
+
+<p>
+Cow deaktiveren /etc/ansible/ansible.cfg
+<pre class="code">[defaults]
+nocows = 1 </pre>
+
+</p>
+
+<p>
+Alle Task für ein Playbook können mit dem Kommando 
+</p>
+
+<p>
+<pre class="code">ansible-playbook --list-tasks playbook.yaml</pre>
+
+</p>
+
+<p>
+Es können blocks ausgeführt werden und im Fehlerfall kann rescue ausgeführt werden. 
+</p>
+
+<p>
+<pre class="code">task:
+  - block:
+      - &lt;es passiert was &gt;
+  - resuce:
+      - &lt;im Fehlerfall mach was&gt;
+  - always: 
+      - &lt;läuft immer&gt;  </pre>
+
+</p>
+
+<p>
+Der Roles Pfad kann angepasst werden. 
+</p>
+
+<p>
+ansible.cfg
+<pre class="code">[defaults]
+roles_path = /etc/...</pre>
+
+</p>
+
+<p>
+Bei den Rollen gibt es pre_tasks (bevor) und post_tasks (nach der Ausführung der rollen) 
+</p>
+
+<p>
+Beispiel einer Verschlüsslung. 
+</p>
+
+<p>
+<pre class="code">ansible-vault create secrets.yaml</pre>
+
+Aufruf
+<pre class="code">ansible-playbook &lt;play&gt; --ask-vault_pass
+ansible-playbook --vault-password-file &lt;file&gt;</pre>
+
+</p>

@@ -1,0 +1,75 @@
+Um im PowerShell eine GUI zu erstellen ist XAML die beste Möglichkeit. Der XAML Code kann über Visual Studio einfach erstellt werden muss leicht angepasst werden. 
+
+Ein einfaches Beispiel was man problemlos erweitern kann 
+
+<code powershell>
+#XAML Testing
+[void][System.Reflection.Assembly]::LoadWithPartialName('presentationframework')
+[xml]$XAML = @'
+<Window 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="331.361" Width="275.444">
+       <Grid Margin="0,0,2,-4" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Height="424" VerticalAlignment="Top">      
+        
+        <Button Name="button" Content="Button" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Name="Exit" Content="Exit" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.795,0.374"/>
+        <Button Name="Remote" Content="RemoteCon" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <TextBox Name="CName" HorizontalAlignment="Left" Height="21" Margin="130,81,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="129" IsEnabled="False" />
+        <TextBox Name="CName_W" HorizontalAlignment="Left" Height="21" Margin="10,81,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="99" IsEnabled="False"/>
+        <TextBox Name="RemoteConT" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="98" Margin="0,271,0,0" IsEnabled="False" /> 
+        <TextBox Name="RemoteCon" HorizontalAlignment="Left" Height="23" Margin="119,271,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="146"  />    
+
+    </Grid>
+</Window>
+'@
+
+#Read XAML
+$reader = (New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $XAML) 
+#    $Form = [Windows.Markup.XamlReader]::Load($reader)
+try
+{
+    $Form = [Windows.Markup.XamlReader]::Load($reader)
+}
+catch
+{
+    Write-Host -Object 'Unable to load Windows.Markup.XamlReader. Some possible causes for this problem include: .NET Framework is missing PowerShell must be launched with PowerShell -sta, invalid XAML code was encountered.'
+    exit
+}
+#===========================================================================
+# Store Form Objects In PowerShell
+#===========================================================================
+$XAML.SelectNodes('//*[@Name]') | ForEach-Object -Process {
+    Set-Variable -Name ($_.Name) -Value $Form.FindName($_.Name)
+}
+#===========================================================================
+# WMI Query
+#===========================================================================
+$oWMIOS = Get-WmiObject -Class win32_OperatingSystem
+#===========================================================================
+# Add events to Form Objects
+#===========================================================================
+$button.Add_Click({
+        $msg = "Ich bin ein Test " + $textBox2.text
+        [System.Windows.Forms.MessageBox]::Show($msg,"Titel",0)
+})
+$Exit.Add_Click({
+        $Form.Close()
+})
+$Remote.Add_Click({
+      $pro = Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "-v $($RemoteCon.text)" -PassThru
+
+})
+#===========================================================================
+# Info Box
+#===========================================================================
+$CName.Text = hostname
+$CName_W.Text = "Hostname"
+$RemoteConT.Text = "Remote Conect"
+#===========================================================================
+# Shows the form
+#===========================================================================
+$null = $Form.ShowDialog()
+
+
+</code>

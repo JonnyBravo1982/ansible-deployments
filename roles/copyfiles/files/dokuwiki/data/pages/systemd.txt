@@ -1,0 +1,266 @@
+systemd ist ein Hintergrundprogramm (Daemon) für Linux-Systeme, das als init-Prozess als erster Prozess (Prozess-ID 1) zum Starten, Überwachen und Beenden weiterer Prozesse dient. Es wurde von Lennart Poettering, Kay Sievers (Red Hat Inc.) und Anderen in C[3] geschrieben und wird als freie Software unter der GNU Lesser General Public License (LGPL) veröffentlicht.[4]
+
+Der Name entspricht mit dem abschließenden „d“ dem für Daemons üblichen Namensschema: systemd ist der Daemon, der das System startet und betreut.
+
+===== Systemd und die Prozesse =====
+
+Systemd steuerten den gesamten Bootvorgang und organisiert zum anderen, indem es später Auskunft gibt,wie es den gestarteten Prozess geht. Dabei st Systemd der Nachfolger von System-V-Init-Systems.
+
+Systemd managt nicht nur Dienste, sondern auch Geräte oder Mountpoints. Diese werden als Unit bezeichnet Die Unitfiles liegen in den Verzeichnissen :
+
+   - /ect/systemd/system/*
+   - /run/systemd/system/*
+   - /usr/lib/systemd/system/*
+
+Unitfiles sind keine ausführbaren Datein, sonderen Konfigurationsfiles.
+
+Die folgenden Beispiele wie mit Systemd Dienste überwacht werden können. 
+
+Auflistung der Dienste 
+<code bash>systemctl</code>
+
+Auflistung der fehlerhaften Dienste 
+<code bash> systemctl --state_failed </code>
+
+Status eines Dienstes anzeigen lassen 
+<code bash> systemctl status mysql.service </code>
+
+Starten und Stoppen eines Dienstes
+<code bash>systemctl stop/start mysqld</code>
+
+Dienst _SIGKILL
+<code bash>systemctl kill Unitname</code>
+
+Dienst dauerhaft deaktiveren oder aktivieren  
+<code bash>systemctl disable/enable UnitName</code>
+
+Das folgende Kommando analysiert den Zeitbedarf der Dienste (wie lange) 
+<code bash>systemd-analyze blame</code>  
+
+Eine zeitliche analysiere kann auch grafisch dargestellt
+<code bash>systemd-analyze plot > plot.svg && eog plot.svg</code>
+
+==== Logging ====
+Journald ist die Logging-Komponente von systemd. Das Kommando journalctl ruft die Logging-Komponente auf. Ein einfacher Aufruf mit Root enthält eine Liste aller aufgelaufenen Syslog-Nachrichten. 
+
+Hier ein paar wichtige Beispiele für das Arbeiten mit journald : 
+
+Das folgende Beispiel zeigt alle Einträge seit dem letzten Boot an 
+<code bash>journalctl -b</code>
+
+Zeigt alle Einträge seit dem letzten Boot an mit der Priorität err
+<code bash>journalctl -b -p err</code>
+
+Der Parameter since und until definieren einen Zeitraum
+<code bash>journalctl --since="2016-01-11 22:00:00" --until="2016-01-11 23:00:00"</code>
+
+Es können auch Dienste abgefragt werden. 
+<code bash>journalctl -u smartd</code>
+
+
+
+
+
+
+
+===== Grafischeoberfläche =====
+Eine Grafischeoberfläche kann mit
+<code bash> sudo apt-get install systemd-ui </code>
+installiert werden.  
+
+Gestartet wird die GUI mit dem Kommando 
+<code bash>systemadm</code>
+
+====== systemd ======
+===== erste init-Skripte =====
+Durch Konfigurationsdateien ersetzt. Siehe http://0pointer.de/blog/projects/the-new-configuration-files und 
+http://fedoraproject.org/wiki/Systemd
+
+===== Units =====
+3 Ebenen der Konfiguration von Units:
+  - ''/etc/systemd/system/...'' <- (höchste Priorität) Hier dürfen sich Admins austoben
+  - ''/run/systemd/...'' <- dynamisch aus systemd
+  - ''{/usr}/lib/systemd/system/...'': aus der Paketverwaltung, nicht anfassen.
+
+systemd ist aber auch weiterhin kompatibel zu den aus [[init|sysVinit]] bekannten Startskripten in 
+  * ''/etc/init.d/''
+
+===== Units Timer =====
+Unter den Units können auch Timer konfiguriert werden das folgte Beispiel startet ein Shellskript jeden Tag 20:00 Uhr.
+
+Zu erst muss der service erstellt werden in /etc/systemd/system/rsync-media.service
+<code>
+[UNIT]
+Description=Sync Dokuwiki from website
+[Service]
+ExecStart=/srv/mediawiki_sync.sh
+</code>
+
+Im nächsten Schritt wird der Timer konfiguriert mit der Datei rsync-timer.timer. 
+<code>
+[Unit]
+Description=Run rsynfrom website Timer
+[Timer]
+OnCalendar=20:00
+OnUnitActiveSec=24h
+Persistent=true
+Unit=rsync-media.service
+[Install]
+WantedBy=timers.target
+</code>
+
+Die letzten beiden Schritte aktivieren und starten den Timer und service.
+<code>
+systemctl enable rsync-timer.timer
+systemctl start rsync-timer.timer
+</code> 
+
+Das folgende Kommando gibt die aktiven Timer aus 
+<code>
+systemctl list-timers
+</code>
+==== Systemd Architektur ====
+  * ''systemd-hostnamed'' --> ''hostnamectl''
+  * ''systemd-machined'' --> ''machinectl''
+  * ''systemd-journald'' --> ''journalctl''
+  * ''systemd-localed'' --> ''localectl''
+  * ''systemd-logind'' --> ''loginctl''
+  * ''systemd-shutdownd'' --> ''shutdown''
+  * ''systemd-timedated'' --> ''timedatectl''
+  * Systemd Unit Arten
+    * service: von Systemd gestartete Anwendungen
+    * socket: Socket Aktivierung
+    * scopes: ausserhalb von systemd gestartete Anwendungen
+    * slice: Resourcen für Prozessgruppen
+    * path: Pfad Aktivierung
+    * mount: Mountpoints (teilweise aus ''/etc/fstab'')
+    * automount: automatische Mountpoints
+    * target: Gruppen von Units
+
+=== Standard Target ===
+== Das Standard-Boot-Target ändern ==
+  systemctl set-default graphical.target
+
+== Das Standard-Boot-Target anzeigen ==
+  systemctl get-default
+oder
+  readlink /etc/systemd/system/default.target
+
+==== Dienste starten und eintragen ====
+=== Dienst sofort, einmalig starten ===
+== systemd nativ ==
+  systemctl start dienst.service
+
+== sysVinit kompatibel ==
+  service dienst start
+
+=== Dienst immer beim Booten starten ===
+== systemd nativ ==
+  systemctl enable dienst.service
+  systemctl reenable dienst.service
+
+== sysVinit kompatibel ==
+  chkconfig dienst on
+
+=== Dienst sofort, einmalig beenden ===
+== systemd nativ ==
+  systemctl stop dienst.service
+
+== sysVinit kompatibel ==
+  service dienst stop
+
+=== Dienst restart ===
+== systemd nativ ==
+  systemctl restart dienst.service
+== Nur starten, wenn der Dienst bereits aktiv ist ==
+  systemctl try-restart dienst.service
+
+== sysVinit kompatibel ==
+  service dienst restart
+
+=== Dienst neu laden ===
+== systemd nativ ==
+  systemctl reload dienst.service
+  systemctl reload-or-restart dienst.service
+  systemctl reload-or-try-restart dienst.service
+
+== sysVinit kompatibel ==
+  service dienst reload
+
+=== Dienst beim Booten nicht starten ===
+== systemd nativ ==
+  systemctl disable dienst.service
+
+== sysVinit kompatibel ==
+  chkconfig dienst off
+
+=== Dienst maskieren ===
+dann kann er überhaupt nicht mehr gestartet werden
+  systemctl mask dienst.service
+  systemctl unmask dienst.service
+
+=== Dienste anzeigen ===
+== systemd nativ ==
+  systemctl list-units -t service
+  systemctl list-units -t service --all
+  systemctl list-unit-files -t service
+  systemctl is-enable service
+  systemctl is-active service
+ 
+== sysVinit kompatibel  ==
+  service --status-all
+
+
+=== Targets ===
+== auflisten ==
+  systemctl --type=target
+== isolieren ==
+alle anderen Targets beenden
+  systemctl isolate rescue.target
+  systemctl rescue
+  systemctl emergency
+  systemctl single
+  systemctl halt
+  systemctl poweroff
+  systemctl reboot
+  systemctl suspend
+  systemctl hibernate
+  systemctl hybrid-sleep
+
+===== Startoptionen eines Dienstes ändern =====
+  cp -a /lib/systemd/system/dienst.service /etc/systemd/system/
+  vim /etc/systemd/system/dienst.service
+
+Änderungen anzeigen:
+  systemd-delta
+
+Änderungen aktivieren:
+  systemctl daemon-reload
+
+Dienst neu starten:
+  systemctl restart dienst
+
+===== Journalc =====
+  * [[journald]]
+
+===== Weitere Befehle und Subsysteme =====
+  * [[Analyse]]
+  * [[Snapshots]]
+  * [[Systemd-Prozesse]]
+  * [[Systemd-Resourcenkontrolle]]
+
+== Powersave verhindern ==
+  systemd-inhibit <cmd>
+
+== Virtualisierung erkennen ==
+  systemd-detect-virt
+
+==== *.ctl ====
+  * [[loginctl]]
+  * [[localectl]]
+  * [[hostnamectl]]
+  * [[timedatectl]]
+  
+
+
+

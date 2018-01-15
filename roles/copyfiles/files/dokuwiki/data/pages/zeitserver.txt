@@ -1,0 +1,55 @@
+====== Zeit erstmalig/einmalig einstellen ======
+  ntpdate de.pool.ntp.org
+oder
+  sntp -v -P no -r 1.de.pool.ntp.org
+
+
+  hwclock --systohc
+
+====== Zeitserver ======
+Zeitserver konfigurieren:
+
+''/etc/ntp.conf'': (SuSE 10.0, Debian, CentOS 5)
+<file>
+server 127.127.1.0              # local clock (LCL)
+fudge  127.127.1.0 stratum 10   # LCL is unsynchronized
+
+server 0.de.pool.ntp.org
+server 1.de.pool.ntp.org
+server 2.de.pool.ntp.org
+
+driftfile /var/lib/ntp/drift/ntp.drift # path for drift file
+logfile   /var/log/ntp          # alternate log file
+</file>
+
+Weitere Zeitserver im Netz können sich dann mit diesem Zeitserver syncronisieren. Einfach den ''server'' Parameter auf den ersten Zeitserver einstellen. 
+
+Zeitserver starten: ( CentOS 5 )
+  /etc/init.d/ntpd start
+Zeitserver starten: ( SuSE 10.0, Debian 4.0 )
+  /etc/init.d/ntp start
+Zeitserver starten: ( Debian 3.1 )
+  /etc/init.d/ntp-server start
+
+Warten bis der Zeitserver sich syncronisiert hat (kann bis zu 30 Minuten dauern, geht aber meistens schneller):
+  watch ntpq -np
+
+Die Syncronisation ist an einem * am Beginn einer Zeile zu erkennen. Die Spalten haben folgende Bedeutung:
+
+|remote|Mit welchen Servern ist mein Zeitserver verbunden?                     |
+|refid |Von welcher Zeitquelle stammt die Zeit?                                |
+|st    |stratum (Entfernung von der Zeitquelle in )                            |
+|t     |type (u = unicast, m = multicast, l = local, - = don't know)           |
+|when  |Wann wurde der Server zuletzt angefragt                                |
+|poll  |Wie oft wird mit diesem Server syncronisiert? ( Intervall in Sekunden )|
+|reach |Wie gut ist der Server erreichbar? 377 = optimal                       |
+|delay |                                                                       |
+|offset|                                                                       |
+|jitter| Abweichung in Millisekunden                                           |
+
+
+
+
+====== Links ======
+
+  * [[http://support.ntp.org/bin/view/Servers/WebHome|Liste mit Zeitservern]]

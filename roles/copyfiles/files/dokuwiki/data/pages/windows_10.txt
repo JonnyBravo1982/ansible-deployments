@@ -1,0 +1,69 @@
+====== Windows 10 Tipps und Tricks ======
+
+
+===== Windows 10 Image bearbeiten mit DISM =====
+
+
+Um ein Windows 10 zu bearbeiten muss das ADK für Windows 10 installiert werden. Link https://msdn.microsoft.com/en-us/windows/hardware/dn913721.aspx#adkwin10
+
+Das dism für Windows 10 liegt nach der Installation im Verzeichnis C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\DeploymentTools\x86\DISM. Das folgende Beispiel Mountet ein WIM File und installiert das Sprachpaket it-it. 
+
+<code batch> 
+dism.exe /mount-Image /ImageFile:C:\temp\Wacom\Imaging\win10-1511_x64_enterprise_eng.wim /index:1 /MountDir:"C:\temp\Wacom\Imaging\Mount"
+Dism /Image:C:\temp\Wacom\Imaging\Mount /ScratchDir:C:\Scratch /Add-Package /PackagePath:C:\temp\Wacom\Imaging\LangPack\it-it\lp.cab
+dism /unmount-Wim /MountDir:C:\temp\Wacom\Imaging\Mount /commit
+Dism /Image:C:\temp\Wacom\Imaging\Mount /Get-ProvisionedAppxPackages >> C:\temp\Wacom\Porv.txt
+</code>
+
+==== Applikationen (APPx) deinstallieren ====
+
+Alle Anwendungen die in der Metrooberfläche dargestellt werden sind .appx Anwendungen diese liegen im Verzeichnis C:\Program Files\WindowsApps. 
+
+Das folgende PowerShell Skript deinstalliert mehre Appx Programme. 
+
+<code PowerShell>
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "*Solitaire*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxPackage *solitaire* | Remove-AppxPackag
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "*xbox*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "*3DBuilder*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxPackage *3dbuilder* | Remove-AppxPackage
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "*News*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxPackage *News* | Remove-AppxPackage
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "*OneNote*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxPackage *OneNote* | Remove-AppxPackage
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "*Sway*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxPackage *Sway* | Remove-AppxPackag
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "*Skype*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxPackage *Skype* | Remove-AppxPackag
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "*Zune*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxPackage *Zunee* | Remove-AppxPackag
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "*People*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxPackage *People* | Remove-AppxPackag
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "*Messaging*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxPackage *Messaging* | Remove-AppxPackag
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "*OfficeHub*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxPackage *Office* | Remove-AppxPackag
+Get-AppxPackage *Feedback* | Remove-AppxPackag
+Get-AppxPackage *Cortana* | Remove-AppxPackag
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "*bingfinance*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxPackage *bingfinance* | Remove-AppxPackage
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "**bingnews*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxPackage *bingnews* | Remove-AppxPackage
+Get-AppxProvisionedPackage -Online | Select-Object Packagename | Where-Object {$_.PackageName -like "*bingsports*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+Get-AppxPackage *bingsports* | Remove-AppxPackage
+</code>  
+
+
+=== Startmenü anpassen ===
+Das Windows Startmenü kann mit den PowerShell-Befehlen Export-StartLayout und Import-StartLayout Import/Exportiert werden. Das Beispiel beschreibt eine Modifizierung der default Einstellungen. 
+
+  - Startmenü manuell anpassen. 
+  - Startmenü exportieren 
+<code PowerShell>Export-StartLayout -Path "C:\temp\myLayout.bin" </code>
+  - 3. Importieren 
+<code PowerShell>Import-StartLayout -Path "C:\temp\myLayout.bin" </code> 
+Der Import überschreibt automatisch die Default einstellung 
+
+
+
+

@@ -1,0 +1,7 @@
+Sichert mit Python die Systemkofnigurationen. 
+
+Aufruf : 
+
+<code> 
+./configsnap -t etcsicherung
+</code>

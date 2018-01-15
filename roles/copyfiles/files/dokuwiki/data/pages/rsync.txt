@@ -1,0 +1,15 @@
+Sicherung von entferntem Rechner auf lokalen Rechner
+
+In diesem Beispiel soll das Verzeichnis /var/www vom Rechner example.com auf den lokalen Rechner gesichert werden. Außerdem sollen alle Dateien, die in /var/www gelöscht wurden, nachdem die letzte Sicherung erstellt wurde, lokal ebenfalls gelöscht werden, nachdem man sie noch ein letztes Mal sichert.
+
+Es werden wieder die selben Optionen wie vorher genommen sowie --delete für das Löschen und -b für die Backups gelöschter und veränderter Dateien. Diese Backups finden sich später in dem mit --backup-dir angegebenen Verzeichnis. Der Befehl sieht dann so aus:
+
+<code bash>
+rsync --delete -avzbe ssh jonnybravo@jonnybravoserver.de:/var/www/dokuwiki /var/www/html/ --backup-dir=~/old 
+</code>
+
+Sollen dem SSH-Befehl weitere Optionen angehängt werden, z.B. -i, um einen abweichenden Private-Key bei der Anmeldung zu übergeben, muss der SSH-Befehl in einfache Anführungszeichen gesetzt werden, etwa so:
+<code bash>
+rsync --delete -avzbe 'ssh -i /pfad/zur/id_rsa'  jonnybravo@jonnybravoserver.de:/var/www/dokuwiki /var/www/html/ --backup-dir=~/old 
+</code>
+Der Pfad zu dem Private-Key File muss dabei absolut sein. Dann den ganzen Befehl mit Cron zeitgesteuert automatisieren und die Angst vor einer defekten Festplatte oder versehentlich gelöschten Daten ist vorbei.

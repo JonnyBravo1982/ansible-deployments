@@ -1,0 +1,58 @@
+**Native NAT in Windows 10 Hyper-V**
+
+Ab Windows 10 ist es möglich NAT Switch zu erstellen. Das folgende Beispiel erläutert ein Beispiel mit Hyper-V. 
+
+erstellen eines neuen VM-Switches 
+<code powershell>
+New-VMSwitch -Name "NAT" -SwitchType NAT -NATSubnetAddress 10.0.75.0/24
+</code>
+
+erstellen des neuen NAT
+<code powershell>
+New-NetNat –Name "NAT" –InternalIPInterfaceAddressPrefix 10.0.75.0/24
+</code>
+
+Nach dem Release 16.07.2016 würde der Schalter vom SwitchType NAT wieder entfernt. In der neuen Version muss folgendes ausgeführt werden. 
+
+<code powershell>
+New-VMSwitch –SwitchName "NAT" –SwitchType Internal
+</code>
+
+<code powershell>
+New-NetIPAddress –IPAddress 10.0.75.1 -PrefixLength 24 -InterfaceAlias "vEthernet (NAT)"
+</code>
+
+<code powershell>
+New-NetNat –Name NAT –InternalIPInterfaceAddressPrefix 10.0.75.0/24
+</code>
+
+
+Die folgende Schritte müssen für beide Version ausgeführt werden  
+Dem neuem NAT-Adapter wird eine statische IP zugewiesen. 
+
+{{:hyperv1.png?200|}}
+
+Dem Client kann man nun eine statische Addresse zuweisen oder man installiert einen kleinen DHCP. 
+
+{{:hyperv-2.png?200|}}
+
+Der kleine DHCP kann auf folgender Website heruntergeladen werden : http://www.dhcpserver.de/cms/download/ oder aus meiner Owncloud. 
+
+Für die Konfiguration des DHCP wird die dhcpwiz.exe gestartet und wie folgt konfiguriert. 
+
+{{:dhcpwiz1.png?200|}}
+
+{{:dhcpwiz2.png?200|}}
+
+{{:dhcpwiz3.png?200|}}
+
+{{:dhcpwiz4.png?200|}}
+
+{{:dhcpwiz5.png?200|}}
+
+Im letzten Fenster wird die Firewall konfiguriert und der Server installiert. Um nun den zugriff über icmp und smb auf dem Host zu erlauben muss auf dem Host eine Firewallregel definiert werden die den zugriff aus diesem Netz erlaubt.  
+
+{{:dhcpwiz6.png?200|}}
+
+
+

@@ -1,0 +1,1 @@
+<span class="kw1">EXEC</span> SP_SearchTables @Tablenames <span class="sy0">=</span> <span class="st0">'%'</span> <span class="sy0">,</span>@SearchStr <span class="sy0">=</span> <span class="st0">'%Beispiel_Example%'</span>

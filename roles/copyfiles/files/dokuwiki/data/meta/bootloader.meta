@@ -1,0 +1,18 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1461832230;s:8:"modified";i:1461832828;}s:7:"creator";s:10:"JonnyBravo";s:4:"user";s:10:"jonnybravo";s:11:"last_change";a:7:{s:4:"date";i:1461832828;s:2:"ip";s:14:"79.228.211.104";s:4:"type";s:1:"E";s:2:"id";s:10:"bootloader";s:4:"user";s:10:"jonnybravo";s:3:"sum";s:0:"";s:5:"extra";s:0:"";}s:11:"contributor";a:1:{s:10:"jonnybravo";s:10:"JonnyBravo";}s:5:"title";s:10:"Bootloader";s:11:"description";a:2:{s:15:"tableofcontents";a:17:{i:0;a:4:{s:3:"hid";s:10:"bootloader";s:5:"title";s:10:"Bootloader";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:6:"initrd";s:5:"title";s:6:"initrd";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:2;a:4:{s:3:"hid";s:4:"init";s:5:"title";s:4:"init";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:3;a:4:{s:3:"hid";s:19:"systemd_vs_sysvinit";s:5:"title";s:20:"systemd vs. SysVinit";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:4;a:4:{s:3:"hid";s:15:"dienste_steuern";s:5:"title";s:15:"Dienste steuern";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:5;a:4:{s:3:"hid";s:8:"runlevel";s:5:"title";s:8:"Runlevel";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:6;a:4:{s:3:"hid";s:11:"bootloader1";s:5:"title";s:10:"Bootloader";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:7;a:4:{s:3:"hid";s:19:"bootloader_loeschen";s:5:"title";s:19:"Bootloader löschen";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:8;a:4:{s:3:"hid";s:5:"grub2";s:5:"title";s:5:"grub2";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:9;a:4:{s:3:"hid";s:29:"grub2_in_den_mbr_installieren";s:5:"title";s:29:"Grub2 in den MBR installieren";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:10;a:4:{s:3:"hid";s:28:"kernel_bootparameter_aendern";s:5:"title";s:28:"Kernel Bootparameter ändern";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:11;a:4:{s:3:"hid";s:28:"grub2_mit_passwort_absichern";s:5:"title";s:28:"Grub2 mit Passwort absichern";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:12;a:4:{s:3:"hid";s:4:"grub";s:5:"title";s:4:"grub";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:13;a:4:{s:3:"hid";s:28:"grub_in_den_mbr_installieren";s:5:"title";s:28:"Grub in den MBR installieren";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:14;a:4:{s:3:"hid";s:19:"neuen_kernel_testen";s:5:"title";s:19:"Neuen Kernel testen";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:15;a:4:{s:3:"hid";s:27:"grub_mit_passwort_absichern";s:5:"title";s:27:"Grub mit Passwort absichern";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:16;a:4:{s:3:"hid";s:11:"dokus_links";s:5:"title";s:13:"Dokus & Links";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:289:"Bootloader
+
+Bootloader
+
+initrd
+
+initrd
+
+init
+
+	*  SysVinit
+	*  upstart
+	*  systemd
+
+systemd vs. SysVinit
+
+Dienste steuern
+ Funktion  SysVinit  systemd dienst startenservice dienst start systemctl start dienstdienst stoppenservice dienst stopsystemctl stop dienstdienst TERM Signal schicken";}s:8:"relation";a:2:{s:10:"references";a:5:{s:10:"bootloader";b:1;s:6:"initrd";b:0;s:4:"init";b:0;s:7:"upstart";b:1;s:7:"systemd";b:1;}s:10:"firstimage";s:0:"";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1461832230;s:8:"modified";i:1461832828;}s:7:"creator";s:10:"JonnyBravo";s:4:"user";s:10:"jonnybravo";s:11:"last_change";a:7:{s:4:"date";i:1461832828;s:2:"ip";s:14:"79.228.211.104";s:4:"type";s:1:"E";s:2:"id";s:10:"bootloader";s:4:"user";s:10:"jonnybravo";s:3:"sum";s:0:"";s:5:"extra";s:0:"";}s:11:"contributor";a:1:{s:10:"jonnybravo";s:10:"JonnyBravo";}}}

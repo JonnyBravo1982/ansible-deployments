@@ -1,0 +1,2 @@
+<span class="kw2">yum install</span> samba-vfs-glusterfs
+<span class="kw2">yum install</span> samba-client

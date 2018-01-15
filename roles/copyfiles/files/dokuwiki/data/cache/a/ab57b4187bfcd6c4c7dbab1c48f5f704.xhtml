@@ -1,0 +1,208 @@
+
+<p>
+Alle Container löschen 
+<pre class="code">docker rm $(docker ps -a -q)</pre>
+
+Alle Images löschen 
+<pre class="code">docker rmi $(docker images -q)</pre>
+
+</p>
+
+<p>
+Anlegen eines logalen reposetoriers und verteilung eines Images !
+<pre class="code">docker run -d -p 5500:5000 registry:2
+docker tag test/mycow:latest localhost:5500/mycow:0.1
+docker push localhost:5500/mycow:0.1</pre>
+
+</p>
+
+<p>
+Um den dockerd Distributionsübergreift zu bearbeiten eignet sich am besten die Datei /etc/docker/daemon.json an zulegen 
+daemon.json
+<pre class="code">{
+&quot;authorization-plugins&quot;: [],
+&quot;dns&quot;: [],
+&quot;dns-opts&quot;: [],
+&quot;dns-search&quot;: [],
+&quot;exec-opts&quot;: [],
+Persönliches Exemplar für Daniel Schlaupitz
+1254
+Docker
+&quot;exec-root&quot;: &quot;&quot;,
+&quot;storage-driver&quot;: &quot;&quot;,
+&quot;storage-opts&quot;: [],
+&quot;labels&quot;: [],
+&quot;live-restore&quot;: true,
+&quot;log-driver&quot;: &quot;&quot;,
+&quot;log-opts&quot;: {},
+&quot;mtu&quot;: 0,
+&quot;pidfile&quot;: &quot;&quot;,
+&quot;graph&quot;: &quot;&quot;,
+&quot;cluster-store&quot;: &quot;&quot;,
+&quot;cluster-store-opts&quot;: {},
+&quot;cluster-advertise&quot;: &quot;&quot;,
+&quot;max-concurrent-downloads&quot;: 3,
+&quot;max-concurrent-uploads&quot;: 5,
+&quot;debug&quot;: true,
+&quot;hosts&quot;: [],
+&quot;log-level&quot;: &quot;&quot;,
+&quot;tls&quot;: true,
+&quot;tlsverify&quot;: true,
+&quot;tlscacert&quot;: &quot;&quot;,
+&quot;tlscert&quot;: &quot;&quot;,
+&quot;tlskey&quot;: &quot;&quot;,
+&quot;swarm-default-advertise-addr&quot;: &quot;&quot;,
+&quot;api-cors-header&quot;: &quot;&quot;,
+&quot;selinux-enabled&quot;: false,
+&quot;userns-remap&quot;: &quot;&quot;,
+&quot;group&quot;: &quot;&quot;,
+&quot;cgroup-parent&quot;: &quot;&quot;,
+&quot;default-ulimits&quot;: {},
+&quot;ipv6&quot;: false,
+&quot;iptables&quot;: false,
+&quot;ip-forward&quot;: false,
+&quot;ip-masq&quot;: false,
+&quot;userland-proxy&quot;: false,
+&quot;ip&quot;: &quot;0.0.0.0&quot;,
+&quot;bridge&quot;: &quot;&quot;,
+&quot;bip&quot;: &quot;&quot;,
+&quot;fixed-cidr&quot;: &quot;&quot;,
+&quot;fixed-cidr-v6&quot;: &quot;&quot;,
+&quot;default-gateway&quot;: &quot;&quot;,
+&quot;default-gateway-v6&quot;: &quot;&quot;,
+&quot;icc&quot;: false,
+&quot;raw-logs&quot;: false,
+&quot;registry-mirrors&quot;: [],
+&quot;insecure-registries&quot;: [],
+&quot;disable-legacy-registry&quot;: false,
+&quot;default-runtime&quot;: &quot;runc&quot;,
+&quot;oom-score-adjust&quot;: -500,
+&quot;runtimes&quot;: {
+&quot;runc&quot;: {
+&quot;path&quot;: &quot;runc&quot;
+},
+&quot;custom&quot;: {
+&quot;path&quot;: &quot;/usr/local/bin/my-runc-replacement&quot;,
+&quot;runtimeArgs&quot;: [
+&quot;--debug&quot;
+]
+}
+}
+}</pre>
+
+</p>
+
+<p>
+Alle Einstellung in der deamon.json können auch mit dem Kommando dockerd konfiguriert werden.
+</p>
+
+<p>
+Beispiel setzten einen alternativen Docker-Verzeichnis: 
+</p>
+
+<p>
+deamon.json
+<pre class="code">{
+&quot;graph&quot;: &quot;/data/docker&quot;
+}</pre>
+
+dockerd
+<pre class="code">dockerd --graph=&quot;/data/docker&quot;</pre>
+
+</p>
+
+<p>
+Docker CLI-Subkommandos
+<pre class="code">history Zeige die History eines Images
+images Liste Images
+image [build history import
+inspect load ls prune pull
+push rm save tag] (ab 1.13) Neues Subkommando für die Image-
+Verwaltung mit weiteren Subkommandos
+import Inhalt eines Tarballs importieren, um ein
+Image zu erzeugen
+info Docker-Informationen
+inspect Detaillierte Informationen zu einem Image
+ps Liste Container-Instanzen
+[image] prune (ab 1.13) Löschen von Dangling/Unused-
+Images
+pull Pulle ein Image aus einer Registry
+rm Container removen
+rmi Images removen
+run Container mit einem Kommando ausführen
+search Docker Registry nach Images durchsuchen
+system [df events info prune] (ab 1.13) Neue System-spezifische</pre>
+
+</p>
+
+<p>
+Docker INFO gibt alle wichtigen Informationen aus. Beispiel Befehl zum auslesen der Registry
+</p>
+
+<p>
+<pre class="code">docker info|grep &quot;registry&quot;</pre>
+
+</p>
+
+<p>
+Für eine detailsuche zu nutzen kann mit search und Filter gearbeitet werden. 
+</p>
+
+<p>
+<pre class="code">docker search ubuntu --filter=is-official=true</pre>
+
+</p>
+
+<p>
+Mit inspect können die Metadaten eines Images ausgelesen werden. 
+</p>
+
+<p>
+<pre class="code">docker image inspect jonnybravo/mycow</pre>
+
+</p>
+
+<p>
+Mit dem Commado prune werden die Image Leichen gelöscht 
+</p>
+
+<p>
+<pre class="code">docker image prune</pre>
+
+</p>
+
+<p>
+Dockerfile wichtige Kommands
+</p>
+<ol>
+<li class="level1"><div class="li"> from welches BasisImage</div>
+</li>
+<li class="level1"><div class="li"> MAINTAINER Autor </div>
+</li>
+<li class="level1"><div class="li"> RUN im Read/Write Layer des Intermediate Container auszuführende Aktion </div>
+</li>
+<li class="level1"><div class="li"> ENV Umgebungsvaribale </div>
+</li>
+<li class="level1"><div class="li"> EXPOSE Portmapping</div>
+</li>
+<li class="level1"><div class="li"> ENTRYPOINT fixes Startkommando für primäre Applikation</div>
+</li>
+<li class="level1"><div class="li"> CMD überschreibbares Startkommando für primäre Applikation</div>
+</li>
+<li class="level1"><div class="li"> LABEL eindeutige Bezeichnung für spätere Selektion </div>
+</li>
+<li class="level1"><div class="li"> ADD Files,Directory, remote URLs in Image kopieren </div>
+</li>
+<li class="level1"><div class="li"> COPY Files in Image kopieren </div>
+</li>
+<li class="level1"><div class="li"> VOLUME persistentes Volumes für Image definieren </div>
+</li>
+<li class="level1"><div class="li"> USER User für die Kommandoausführung</div>
+</li>
+<li class="level1"><div class="li"> WORKDIR Setzt das Work Directory </div>
+</li>
+<li class="level1"><div class="li"> ARG Build Arguments</div>
+</li>
+<li class="level1"><div class="li"> ONBUILD Postbuild Trigger für spätere auf diesem Image basierende Builds</div>
+</li>
+</ol>

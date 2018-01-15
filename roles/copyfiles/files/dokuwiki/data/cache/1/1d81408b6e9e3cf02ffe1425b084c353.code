@@ -1,0 +1,1 @@
+server01:<span class="sy0">/</span>gv0 <span class="sy0">/</span>mnt<span class="sy0">/</span>glusterfs glusterfs defaults,_netdev <span class="nu0">0</span> <span class="nu0">0</span>

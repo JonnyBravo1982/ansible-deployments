@@ -1,0 +1,23 @@
+ <span class="sc2">&lt;<a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+  <span class="sc2">&lt;<a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>Funktionen<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>
+  <span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">charset</span><span class="sy0">=</span><span class="st0">&quot;UTF-8&quot;</span> <span class="sy0">/</span>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>
+<span class="sc2">&lt;?php</span>
+<span class="sc2">echo <span class="st0">&quot;&lt;h3&gt;</span></span>Übergabe per Wert<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/h3.html"><span class="kw2">h3</span></a>&gt;</span>\n&quot;;
+function veraendern($a) {
+  $a++;
+}
+$c = 2;
+echo &quot;Vor Funktionsaufruf: \$c ist $c<span class="sc2">&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>\n&quot;;
+veraendern($c);
+echo &quot;Nach Funktionsaufruf: \$c ist $c<span class="sc2">&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>\n&quot;;
+echo &quot;<span class="sc2">&lt;<a href="http://december.com/html/4/element/h3.html"><span class="kw2">h3</span></a>&gt;</span>Übergabe per Referenz<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/h3.html"><span class="kw2">h3</span></a>&gt;</span>\n&quot;;
+**function veraendern2(<span class="sc1">&amp;$a) {			**</span>
+<span class="sc1">**  $a++;</span>				**
+**}**
+echo &quot;Vor Funktionsaufruf: \$c ist $c<span class="sc2">&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>\n&quot;;
+veraendern2($c);
+echo &quot;Nach Funktionsaufruf: \$c ist $c<span class="sc2">&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>\n&quot;;
+?&gt;
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>

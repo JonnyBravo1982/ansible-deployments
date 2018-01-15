@@ -1,0 +1,94 @@
+
+<h2 class="sectionedit1" id="schluesselpaar_erstellen">Schlüsselpaar erstellen</h2>
+<div class="level2">
+<pre class="code">DISPLAY=&#039;&#039; gpg --gen-key</pre>
+
+</div>
+<!-- EDIT1 SECTION "Schlüsselpaar erstellen" [1-64] -->
+<h2 class="sectionedit2" id="oeffentliche_schluessel_anzeigen">Öffentliche Schlüssel anzeigen</h2>
+<div class="level2">
+<pre class="code">gpg --list-keys</pre>
+
+</div>
+<!-- EDIT2 SECTION "Öffentliche Schlüssel anzeigen" [65-127] -->
+<h2 class="sectionedit3" id="private_schluessel_anzeigen">Private Schlüssel anzeigen</h2>
+<div class="level2">
+<pre class="code">gpg --list-secret-keys</pre>
+
+</div>
+<!-- EDIT3 SECTION "Private Schlüssel anzeigen" [128-192] -->
+<h2 class="sectionedit4" id="signaturen_anzeigen">Signaturen anzeigen</h2>
+<div class="level2">
+<pre class="code">gpg --list-sigs 0x473041FA</pre>
+
+</div>
+<!-- EDIT4 SECTION "Signaturen anzeigen" [193-253] -->
+<h2 class="sectionedit5" id="datei_verschluesseln">Datei verschlüsseln</h2>
+<div class="level2">
+<pre class="code">cp /etc/passwd .
+gpg --encrypt --recipient &#039;Ingo Wichmann&#039; --armor passwd</pre>
+
+</div>
+<!-- EDIT5 SECTION "Datei verschlüsseln" [254-364] -->
+<h2 class="sectionedit6" id="datei_entschluesseln">Datei entschlüsseln</h2>
+<div class="level2">
+<pre class="code">gpg --decrypt passwd.asc</pre>
+
+</div>
+<!-- EDIT6 SECTION "Datei entschlüsseln" [365-424] -->
+<h2 class="sectionedit7" id="datei_signieren">Datei signieren</h2>
+<div class="level2">
+<pre class="code">gpg --sign --armor passwd</pre>
+
+<p>
+<sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup>
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Datei signieren" [425-584] -->
+<h2 class="sectionedit8" id="datei_ueberpruefen">Datei überprüfen</h2>
+<div class="level2">
+<pre class="code">gpg --verify --armor passwd.asc</pre>
+
+</div>
+<!-- EDIT8 SECTION "Datei überprüfen" [585-649] -->
+<h2 class="sectionedit9" id="oeffentlichen_schluessel_weitergeben">Öffentlichen Schlüssel weitergeben</h2>
+<div class="level2">
+<pre class="code">gpg --export --armor &quot;Ingo Wichmann&quot; &gt; /tmp/schluessel
+# gpg --send-keys &#039;Ingo Wichmann&#039; # Bitte nicht mit Testschlüsseln
+mv passwd.asc /tmp</pre>
+
+</div>
+<!-- EDIT9 SECTION "Öffentlichen Schlüssel weitergeben" [650-846] -->
+<h2 class="sectionedit10" id="oeffentlichen_schluessel_importieren">Öffentlichen Schlüssel importieren</h2>
+<div class="level2">
+<pre class="code">gpg --import --armor /tmp/schluessel
+gpg --edit-key &#039;Ingo Wichmann&#039;
+trust
+5
+gpg --verify /tmp/passwd.asc
+
+gpg --search-keys &#039;Ingo Wichmann&#039;  
+gpg --keyserver wwwkeys.uk.pgp.net --recv-key 0x473041FA</pre>
+
+</div>
+<!-- EDIT10 SECTION "Öffentlichen Schlüssel importieren" [847-1111] -->
+<h2 class="sectionedit11" id="schluessel_widerrufen">Schlüssel widerrufen</h2>
+<div class="level2">
+<pre class="code">gpg --gen-revoke &#039;Ingo Wichmann&#039;</pre>
+
+</div>
+<!-- EDIT11 SECTION "Schlüssel widerrufen" [1112-1181] -->
+<h2 class="sectionedit12" id="dokumentation">Dokumentation</h2>
+<div class="level2">
+
+<p>
+<a href="http://www.stierand-linuxit.de/Doku/gpg-tutorial.html" class="urlextern" title="http://www.stierand-linuxit.de/Doku/gpg-tutorial.html" rel="nofollow">http://www.stierand-linuxit.de/Doku/gpg-tutorial.html</a>
+</p>
+
+</div>
+<!-- EDIT12 SECTION "Dokumentation" [1182-] --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+  Signatur in separater Datei, z.B. für Debian Release Dateien<pre class="code">gpg --detach-sign --armor passwd</pre>
+</div>
+</div>

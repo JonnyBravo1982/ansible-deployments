@@ -1,0 +1,31 @@
+---
+ - name: Install Docker and Dokuwiki
+   hosts: all
+   become: true
+   gather_facts: yes
+   roles: 
+     - docker
+       # - copyfiles
+       # - pause
+     - dokuwikidock  
+     
+       
+#tasks:
+#    - name: Install python setup tools
+#      yum: name=python-setuptools
+#    - name: Install Pypi
+#      easy_install: name=pip
+#    - name: Install docker-py
+#      pip: name={{ item }}
+#      with_items:
+#        docker-py
+#        docker-compose
+#    - name: Install Docker
+#      yum: name=docker state=latest
+#      when: ansible_distribution == "CentOS"
+#    - name: create a docker Group
+#      group: name=docker state=present
+    #- name: Adding existing user {{ lookup('env','USER') }} to group sudo
+    #  user: name={{ lookup('env','USER') }} groups=docker append=yes
+    #    - name: Make sure Docker is running
+    #   service: name=docker state=running enabled=yes

@@ -1,0 +1,8 @@
+Beispiel für eine Session und einem ScriptBlock !
+
+<code powershell>
+$CON = New-PSSession -ComputerName 'T4M-APC-252' -Credential 'Trans4mation\adm-dschlaupitz'
+Invoke-Command -Session $CON -ScriptBlock {
+Get-CimInstance -Namespace root/StandardCimv2 -ClassName MSFT_NetAdapter
+}
+</code>

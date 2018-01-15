@@ -1,0 +1,8 @@
+---
+- hosts: all         
+  become: true
+  gather_facts: yes    
+  #remote_user: ansible              
+  #become: True       
+  roles:              
+    - honeypy

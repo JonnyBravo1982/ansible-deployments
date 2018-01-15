@@ -1,0 +1,16 @@
+*<span class="kw2">&lt;?php</span><span class="sy0">*</span>
+<span class="sy0">*</span><span class="re0">$nn</span> <span class="sy0">=</span> <span class="st0">&quot;   Maier     &quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="re0">$vn</span> <span class="sy0">=</span> <span class="st0">&quot;<span class="es1">\t</span>Berenice<span class="es1">\n</span> &quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;&lt;pre&gt;&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;Vor trim: *
+*         Name: '<span class="es4">$nn</span>',*
+*         Vorname '<span class="es4">$vn</span>'&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="re0">$nn</span> <span class="sy0">=</span> <a href="http://php.net/trim"><span class="kw3">trim</span></a><span class="br0">&#40;</span><span class="re0">$nn</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="re0">$vn</span> <span class="sy0">=</span> <a href="http://php.net/trim"><span class="kw3">trim</span></a><span class="br0">&#40;</span><span class="re0">$vn</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;<span class="es1">\n</span>Nach trim: *
+*         Name: '<span class="es4">$nn</span>'*
+*         Vorname: '<span class="es4">$vn</span>'&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;&lt;/pre&gt;&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="re0">$str</span> <span class="sy0">=</span> <span class="st0">&quot;'O'Brien'...&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <a href="http://php.net/trim"><span class="kw3">trim</span></a><span class="br0">&#40;</span><span class="re0">$str</span><span class="sy0">,</span> <span class="st0">&quot;'.&quot;</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="sy1">?&gt;</span>*

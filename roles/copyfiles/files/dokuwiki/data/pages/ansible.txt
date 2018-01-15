@@ -1,0 +1,85 @@
+Wichtige Befehle : 
+
+Ad-hoc: 
+
+<code>
+ansible <hosts> -m <modul>
+</code>
+
+<code>
+ansible all -m ping 
+</code>
+<code>
+ansible all -b -m group -a "name_special state=present"
+
+ansible all -b -m yum -a "name=mysqld state=latest"
+
+ansible all -m stat -a path=/etc/profiles
+</code>
+
+Alle Server herrunterfahren 
+<code>
+ansible all -a "/sbin/shutdown -h now" -b
+</code>
+
+Ansible Facts können mit setup angezeigt werden 
+<code>
+ ansible all -m setup
+ ansible all -m setup -a 'filter=ansible_distribution'
+</code>
+Die Facts können in den Playbooks  als varibale aufgerufen werden {{ ansible_distribution }}
+
+Playbook mit with (es werden zwei Pakete installiert  
+
+<code>
+pip: name {{ item }}
+with
+  - httpd
+  - andere
+</code>
+
+Cow deaktiveren /etc/ansible/ansible.cfg
+<code>
+[defaults]
+nocows = 1 
+</code>
+
+Alle Task für ein Playbook können mit dem Kommando 
+
+<code>
+ansible-playbook --list-tasks playbook.yaml
+</code>
+
+
+Es können blocks ausgeführt werden und im Fehlerfall kann rescue ausgeführt werden. 
+
+<code>
+task:
+  - block:
+      - <es passiert was >
+  - resuce:
+      - <im Fehlerfall mach was>
+  - always: 
+      - <läuft immer>  
+</code>
+
+Der Roles Pfad kann angepasst werden. 
+
+ansible.cfg
+<code>
+[defaults]
+roles_path = /etc/...
+</code>
+
+Bei den Rollen gibt es pre_tasks (bevor) und post_tasks (nach der Ausführung der rollen) 
+
+Beispiel einer Verschlüsslung. 
+
+<code>
+ansible-vault create secrets.yaml
+</code>
+Aufruf
+<code>
+ansible-playbook <play> --ask-vault_pass
+ansible-playbook --vault-password-file <file>
+</code>

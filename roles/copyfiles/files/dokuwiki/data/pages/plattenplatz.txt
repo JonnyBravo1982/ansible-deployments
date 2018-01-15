@@ -1,0 +1,39 @@
+==== Welche Partitionen sind am vollsten ====
+  df -i
+  df -h
+
+==== Wieviel Platz ist reserviert ====
+  tune2fs -l /dev/sda5 | grep -i reserved
+
+==== Wieviel Platz wird in einer Subhierarchie verbraucht ====
+  du -sh /usr
+
+==== Welche Verzeichnisse sind am vollsten ====
+  du -mx --max-depth=1 / | sort -n
+  du -mx / | sort -n
+oder
+  du -hx / | sort -h
+
+==== Wo sind die größten Dateien ====
+  find / -xdev -size +1G
+  find / -xdev -size +10M -ls | sort -n -k 7
+  find / -xdev -size +10M -printf '%k %p\n' | sort -n
+
+==== Welche 3 Dateien sind am größten ====  
+  find / -mount -type f  -printf "%s\t%p\n" | sort -nr | head -3
+
+==== Welche Pakete verbrauchen am meisten Platz ====
+dpkg-basierte Distributionen:
+  dpkg-query -W --showformat='${Installed-Size} ${Package}\n' | sort -n
+rpm-basierte Distributionen:
+  rpm -qa --queryformat '%{SIZE} %{NAME}\n' | sort -n
+
+==== Welcher Benutzer verbraucht wie viel Platz ====
+  find / -mount -printf '%k %u\n' | perl -ane '$sum{$F[1]} += $F[0]; END {print join $/, %sum}'
+
+==== Zuletzt geänderte Dateien im Verzeichnisbaum finden ====
+  find / -xdev -type f -printf '%TY%Tm%Td%TH%TM %p\n' | sort -n
+
+==== Graphische Darstellung ====
+  kdirstat
+  baobab

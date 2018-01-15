@@ -1,0 +1,8 @@
+^Filter Syntax^Beschreibung^
+|<code>tcp.port eq 89 or icmp</code>| Filtert nach Port 89 und dem icmp Protokoll | 
+|<code> smb || nbns || dcerpc || nbss || dns</code>|Filtert nach Protokollen | 
+|<code>http.request.method == "POST"</code>|Filtert nach php post (kann benötigt werden für php-post z.B. login|
+
+Mit den entsprechenden rechten ist es auch möglich per Remote auf eine Netzwerkadapter zuzugreifen. 
+
+{{:wireshark_remote.png?1000|}}

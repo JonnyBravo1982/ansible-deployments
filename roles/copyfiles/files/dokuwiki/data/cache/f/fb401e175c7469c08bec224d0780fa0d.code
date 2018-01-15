@@ -1,0 +1,8 @@
+*<span class="kw2">&lt;?php</span><span class="sy0">*</span>
+<span class="sy0">*</span><span class="re0">$string</span> <span class="sy0">=</span> <span class="st0">&quot;&lt;p&gt;Ein Absatz mit &lt;em&gt;mehrfacher&lt;/em&gt; &lt;strong&gt;Betonung&lt;/strong&gt;&lt;/p&gt;&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="re0">$string</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <a href="http://php.net/strip_tags"><span class="kw3">strip_tags</span></a><span class="br0">&#40;</span><span class="re0">$string</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <a href="http://php.net/strip_tags"><span class="kw3">strip_tags</span></a><span class="br0">&#40;</span><span class="re0">$string</span><span class="sy0">,</span> <span class="st0">&quot;&lt;p&gt;&lt;em&gt;&quot;</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="sy1">?&gt;</span>*

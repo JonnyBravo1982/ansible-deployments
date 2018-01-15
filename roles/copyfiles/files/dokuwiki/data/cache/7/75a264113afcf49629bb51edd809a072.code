@@ -1,0 +1,6 @@
+<span class="kw2">&lt;?php</span>
+  <span class="re0">$zahl1</span> <span class="sy0">=</span> <span class="nu0">7</span><span class="sy0">;</span>
+  <span class="re0">$zahl2</span> <span class="sy0">=</span> <span class="nu0">5</span><span class="sy0">;</span>
+  <span class="re0">$ergebnis</span> <span class="sy0">=</span> <span class="re0">$zahl1</span> <span class="sy0">%</span> <span class="re0">$zahl2</span><span class="sy0">;</span>
+  <span class="kw1">echo</span> <span class="re0">$ergebnis</span><span class="sy0">;</span>
+<span class="sy1">?&gt;</span>

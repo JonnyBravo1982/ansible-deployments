@@ -1,0 +1,116 @@
+===== Architektur =====
+Bei der Eintwicklung des Metasploit-Frameworks wurde speziell auf Modularität geachtet. Der dadruch erlangte Aufbau ermöglicht eine häufige Wiederverwendung von bereits erstelleten Codebereich, wodruch statischer Code kaum neu geschrieben wird. 
+
+Der modulare Aufbau des Frameworks umfasst folgende Hauptbestandteile. 
+
+- Rex
+
+-MSF Core
+
+-MSF Base
+
+-Interfaces
+
+-Modules
+
+-Tools
+
+-Plugins
+
+
+Die Rex Bibliothek ist das Herzstück die wichtigesten Klassen sind Assembly,Encoding,Exploitation,Jobs,Logging,Post-Exploitation,Protocols und Sockets.
+
+===== Verzeichnise =====
+
+Bei Kali ist das Framework im Verzeichnis /opt/metasploit eingerichtet Dabei ist zu beachten, das der Pfad zum Open-Source-Bereich msf3 eine Verlinkung nach /usr/share/metasploit-framework darstellt. 
+
+Das Unterverzeichnis msf3 dient als Ausgangspunkt. In diesem Verzeichnis sind die unter anderem folgende zentral Binaries zur Interaktion mit dem Framework vorhanden(msfbinscan,msfconsole,msfd,msfelfscan,msfmachscan,msfpescan,msfrop,msfrpc,msfrpcd,msfvenome). Diese BInaries werden von den Startskripten im Verzeichnis //app// aufgerufen.
+
+//./data// = Im data Verzeichnis sind unterschiedliche Daten und Informatationen zum Framework hinterlegt. 
+
+
+//./documentation// = befinden sich die vorhanden dokumentation 
+
+//./external// = Im external Verzeichnis sind third party-Module,Patches,Erweiterungen gespeichert
+
+//./lib// =  Im lib-Verzeichnis sind die wichtigsten Daten und Informationen aufzufinden.
+
+//./modules// = In diesem Verzeichnis sind alle in Metasploit integrierten Module zu finden. (Payloads,Exploits,Auxiliary Module)
+
+//./plugins// = In Plugins befinden sich die nachladbare Erweiterungen des Frameworks.
+
+//./scripts// = Dieses Verzeichnis umfasst die Post-Exploitation-Skripte von Meterpreter. 
+
+//./tools// = In diesem Verzeichnis befinden sich weitere Tools und Skripte. 
+
+===== Befehle =====
+ 
+Dieser Abschnitt beschreibt die wichtigsten Befehle um ein exploit auszuführen. 
+
+=== Search ===
+
+<code msf>
+search type:exploit name:Microsoft path:smb
+</code>
+oder um alle meterpreter anzuzeigen 
+<code msf>
+search path:meterpreter reverse_tcp
+</code>
+
+Das Search-Kommando hat folgende Parameter 
+
+name: sucht nach Namen 
+
+path: sucht nach Modulpfad
+
+platform: sucht nach der Platfform (linux,windows)
+
+type: sucht nach dem Typ (exploit,auxiliary,post)
+
+app: sucht nach CLient oder Server Module app:client
+
+author: sucht nach speziellen Autor
+
+cve: sucht nach einer CVE-ID
+
+bid: sucht nach Bugtraq-ID
+
+osvdb: sucht nach OSVDB-ID
+ 
+=== use/back ===
+ 
+Mit dem Kommandos use/back nutzt man den ausgesuchten exploit.
+
+<code>
+use payload/windows/x64/meterpreter_reverse_https
+</code> 
+=== Show ===
+
+Mit dem Shown Kommando werden die Optionen des exploits angezeigt. 
+
+<code>
+use payload/windows/x64/meterpreter_reverse_https
+show options 
+</code>
+
+=== Set Unset ===
+Mit dem beiden Befehlen werden die Optionen entfernt oder gesetzt. 
+
+<code> 
+set LHOST 192.168.50.31
+</code>
+
+Mit Show options wird die geänderte Option angezeigt. 
+Unset setzt die option wieder in den Orginalzustand zurück.
+Mit den Befehl set ohne weitere Parameter ist es möglich den Status aller Optionen abzufragen.
+
+=== externe Befehle ===
+Im Rahmen von Sicherheitsanalysen mit Metasploit kann es zu der Situation kommen, dass möglichst schnell bestimmte Daten oder Informationen vom lokalen Betriebssystem benötigt werden. 
+
+Folgende externe Befehle gibt es : 
+
+ifconfig = zeigt die Netzwerkadapter Einstellungen an. 
+
+===== GUIs =====
+
+Armitage 

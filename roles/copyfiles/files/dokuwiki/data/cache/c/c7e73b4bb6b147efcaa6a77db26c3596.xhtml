@@ -1,0 +1,77 @@
+
+<h1 class="sectionedit1" id="netzwerk_ps_per_tcpwrapper_einschraenken">netzwerk ps per tcpwrapper einschränken</h1>
+<div class="level1">
+
+<p>
+Vorraussetzung: <a href="/doku.php?id=inetd" class="wikilink2" title="inetd" rel="nofollow">inetd</a>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "netzwerk ps per tcpwrapper einschränken" [1-82] -->
+<h3 class="sectionedit2" id="einen_rechner_verbieten">Einen Rechner verbieten</h3>
+<div class="level3">
+
+<p>
+<code>/etc/hosts.deny</code> :
+<pre class="file">ps : notebook04.linuxhotel.de</pre>
+
+</p>
+
+<p>
+evtl. Dienst neu starten
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Einen Rechner verbieten" [83-211] -->
+<h3 class="sectionedit3" id="einen_rechner_erlauben_alle_anderen_verbieten">Einen Rechner erlauben, alle anderen verbieten</h3>
+<div class="level3">
+
+<p>
+<code>/etc/hosts.allow</code> :
+<pre class="file">ps : notebook04.linuxhotel.de</pre>
+
+</p>
+
+<p>
+<code>/etc/hosts.deny</code> :
+<pre class="file">ps : ALL</pre>
+
+</p>
+
+<p>
+evtl. Dienst neu starten
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Einen Rechner erlauben, alle anderen verbieten" [212-411] -->
+<h3 class="sectionedit4" id="bei_zugriff_einen_aktion_ausloesen">Bei Zugriff einen Aktion auslösen</h3>
+<div class="level3">
+
+<p>
+<code>/etc/hosts.allow</code> :
+<pre class="file">ps : notebook04.linuxhotel.de : spawn echo &#039;Zugriff auf ps&#039; &gt;&gt; /tmp/psax</pre>
+
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Bei Zugriff einen Aktion auslösen" [412-569] -->
+<h3 class="sectionedit5" id="bei_zugriff_einen_aktion_ausloesen1">Bei Zugriff einen Aktion auslösen</h3>
+<div class="level3">
+
+<p>
+<code>/etc/hosts.deny</code> :
+<pre class="file">ps : ALL : twist echo &#039;Zugriff auf ps nicht erlaubt&#039;</pre>
+
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Bei Zugriff einen Aktion auslösen" [570-706] -->
+<h1 class="sectionedit6" id="doku">Doku</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.centos.org/docs/5/html/5.1/Deployment_Guide/s1-server-tcpw-xinetd.html" class="urlextern" title="http://www.centos.org/docs/5/html/5.1/Deployment_Guide/s1-server-tcpw-xinetd.html" rel="nofollow">http://www.centos.org/docs/5/html/5.1/Deployment_Guide/s1-server-tcpw-xinetd.html</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Doku" [707-] -->

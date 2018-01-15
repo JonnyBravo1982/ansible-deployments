@@ -1,0 +1,16 @@
+<span class="kw2">&lt;?php</span>
+<a href="http://php.net/setcookie"><span class="kw3">setcookie</span></a><span class="br0">&#40;</span><span class="st0">&quot;name&quot;</span><span class="sy0">,</span> <span class="st0">&quot;Marie&quot;</span><span class="sy0">,</span> <a href="http://php.net/time"><span class="kw3">time</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="nu0">7200</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<a href="http://php.net/setcookie"><span class="kw3">setcookie</span></a><span class="br0">&#40;</span><span class="st0">&quot;farbe&quot;</span><span class="sy0">,</span> <span class="st0">&quot;rot&quot;</span><span class="sy0">,</span> <a href="http://php.net/time"><span class="kw3">time</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="nu0">7200</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="sy1">?&gt;</span>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;Cookies setzen&lt;/title&gt;
+  &lt;meta charset=&quot;UTF-8&quot; /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;In diesem Dokument sollten zwei Cookies gesetzt werden&lt;/p&gt;
+&lt;p&gt;Prüfen Sie, ob das geklappt hat über 
+&lt;a href=&quot;cookie_auslesen.php&quot;&gt;cookie_auslesen.php&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;}

@@ -1,0 +1,2 @@
+setspn <span class="re5">-s</span> http<span class="sy0">/</span>APMBAM01.apexxxx.xx dorheine\admin_mbam
+setspn <span class="re5">-s</span> http<span class="sy0">/</span>APMBAM01 dorheine\admin_mbam

@@ -1,0 +1,2 @@
+git revert &lt;commitid&gt; --no-commit 
+git commit  -m &quot;New Versiom from Version&quot;

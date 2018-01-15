@@ -1,0 +1,40 @@
+Das folgende PowerShell Skript erstellt einen Nano-Server und legt diesen im HyperV an. 
+
+Verzeichnisse = Im ISO Verzeichnis müssen die Sourcen eines Windows Server 2016 liegen 
+
+Base = wird für die Erstellung genutzt 
+
+VHD = in diesen Verzeichnis liegen die fertigen VHDs
+
+<code powershell>
+ #region PREREQUISITES
+    # Variables
+    $password = ConvertTo-SecureString -AsPlainText -Force -String 'Pa$$w0rd'
+    $iso_X = 'C:\temp\TP5\'
+    $VirtualHardDiskPath = $(Get-VMHost).VirtualHardDiskPath
+    # Nano creation module (from WS 2016 ISO) 
+    # Import-Module 'C:\temp\TP5\NanoServer\NanoServer\NanoServerImageGenerator\NanoServerImageGenerator.psm1'
+
+$nanoName = 'sea-nano1'
+New-NanoServerImage `
+   -DeploymentType Guest `
+   -Edition Standard `
+   -MediaPath "$PSScriptRoot\ISO\" `
+   -BasePath "$PSScriptRoot\Base" `
+   -TargetPath "$PSScriptRoot\VHD\$nanoName.vhd" `
+   -ComputerName $nanoname `
+   -AdministratorPassword $password `
+   -Packages Microsoft-NanoServer-IIS-Package
+
+    $paramsNewVM = @{
+        Computername = $env:computername
+        Name = $nanoName
+        Generation = 1
+        MemoryStartupBytes = 1GB # Minimum: 512 GB 
+        VHDPath = "$PSScriptRoot\VHD\$nanoName.vhd"
+        SwitchName = 'NAT'
+    }
+    New-VM @paramsNewVM | Start-VM
+</code>
+
+ 

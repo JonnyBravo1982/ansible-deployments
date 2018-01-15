@@ -1,0 +1,8 @@
+- hosts: prod
+  gather_facts: no
+  remote_user: jonnybravo
+  #become: True
+  roles:
+    - gitlab
+    - jenkins
+    - honeypy

@@ -1,0 +1,2 @@
+SET<span class="sy0">-</span>WSManQuickConfig 
+Enable<span class="sy0">-</span>WSManCredSSP <span class="kw5">-Role</span> Server

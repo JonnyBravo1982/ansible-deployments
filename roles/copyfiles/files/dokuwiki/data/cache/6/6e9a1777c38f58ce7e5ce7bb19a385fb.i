@@ -1,0 +1,3 @@
+a:8:{i:0;a:3:{i:0;s:14:"document_start";i:1;a:0:{}i:2;i:0;}i:1;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:0;}i:2;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:61:"Bei solchen Fehler wiederholt SCCM denn Aufruf aller 15 min. ";}i:2;i:1;}i:3;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:62;}i:4;a:3:{i:0;s:6:"p_open";i:1;a:0:{}i:2;i:62;}i:5;a:3:{i:0;s:5:"cdata";i:1;a:1:{i:0;s:201:"Folgende Exitcodes sind Non-Fatal für SCCM. 
+4,5,8,13,14,39,51,53,54,55,59,64,65,67,70,71,85,86,87,112,128,170,267,999,1003,1203,1219, 
+1220,1222,1231,1232,1238,1265,1311,1323,1326,1330,1618,1622,2250";}i:2;i:64;}i:6;a:3:{i:0;s:7:"p_close";i:1;a:0:{}i:2;i:64;}i:7;a:3:{i:0;s:12:"document_end";i:1;a:0:{}i:2;i:64;}}

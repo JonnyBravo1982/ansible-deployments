@@ -1,0 +1,5 @@
+Bei solchen Fehler wiederholt SCCM denn Aufruf aller 15 min. 
+
+Folgende Exitcodes sind Non-Fatal für SCCM. 
+4,5,8,13,14,39,51,53,54,55,59,64,65,67,70,71,85,86,87,112,128,170,267,999,1003,1203,1219, 
+1220,1222,1231,1232,1238,1265,1311,1323,1326,1330,1618,1622,2250

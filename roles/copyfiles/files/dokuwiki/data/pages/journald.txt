@@ -1,0 +1,38 @@
+===== journalctl =====
+gleich ans Ende springen
+  journalctl -e
+
+follow file mit allem und catalog
+  journalctl -f -a -x
+
+alle Felder aufschlüsseln
+  journalctl -o verbose
+
+seit dem letztem Boot
+  journalctl -b
+
+in einem bestimmten Zeitraum
+  journalctl --since "2016-01-10" --until "2016-01-11 03:00"
+  
+ab einem bestimmten Level
+  journalctl -p 4
+  journalctl -p warning
+==== Meldungen eines bestimmten Dienstes ====
+  journalctl _SYSTEMD_UNIT=ssh.service
+  journalctl -u ssh.service
+  journalctl /usr/sbin/sshd
+
+=== Kernel Meldungen ===
+  journalctl -k
+
+=== Ins Journal schreiben ===
+  ls | systemd-cat
+==== Größe beschränken ====
+''/etc/systemd/journald.conf'' :
+<file>
+SystemMaxUse=100M
+SystemKeepFree=1G
+</file>
+
+===== Doku =====
+  * http://0pointer.de/blog/projects/journalctl.html

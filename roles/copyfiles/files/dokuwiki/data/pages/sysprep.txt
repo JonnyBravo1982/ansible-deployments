@@ -1,0 +1,30 @@
+Workaround:
+
+    First run slmgr.vbs /dlv and check the re-arm counter towards the bottom is zero
+    If it is not zero then you may be able to get away with running slmgr.vbs –rearm else you will need to use an unattend.xml file
+    Either add the below to your existing unattend.xml or there is an example unattend.xml at the bottom of his post. Save the unattend.xml file to C:\Windows System32\sysprep
+
+XHTML
+<settings pass="generalize">
+<component name="Microsoft-Windows-Security-SPP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<SkipRearm>1</SkipRearm>
+</component>
+</settings>
+1
+2
+3
+4
+5
+	
+<settings pass="generalize">
+<component name="Microsoft-Windows-Security-SPP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<SkipRearm>1</SkipRearm>
+</component>
+</settings>
+
+    Run slmgr.vbs –rearm
+    Use regedit and navigate to HKEY_LOCAL_MACHINE\SYSTEM\Setup\Status\SysprepStatus\GeneralizationState\ and change CleanupState to 2 and GeneralizationState to 7
+    Start => Run : msdtc -uninstall (wait few seconds)
+    Start => Run : msdtc -install (wait few seconds)
+    Restart the computer
+    Try Sysprep or SCCM again and you should be OK

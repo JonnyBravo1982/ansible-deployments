@@ -1,0 +1,24 @@
+
+<p>
+Es kann vorkommen das es beim ersten Start von UEFI Boot zu einem Partitonsfehler kommen kann. In der SMSTS.log steht dann folgender Fehler.
+</p>
+
+<p>
+„failed to stage winpe code (0x8007000F)“
+</p>
+
+<p>
+Lösung: 
+</p>
+<pre class="code">  Diskpart
+  Select disk 0 (0 being the disk to setup)
+  Clean (wipe the disk)
+  Convert gpt (convert disk to GPT)
+  Create partition efi size=200 (EFI system partition)
+  Assign letter=s (Any allowable letter)
+  Format quick fs=FAT32 (Format the ESP)
+  Create partition msr size=128 (Create the MSR partition)
+  Create partition primary (Create Windows partition)
+  Assign letter=c
+  Format quick fs=NTFS (Format primary partition)
+  Exit</pre>

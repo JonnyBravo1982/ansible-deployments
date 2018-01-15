@@ -1,0 +1,229 @@
+
+<h2 class="sectionedit1" id="architektur">Architektur</h2>
+<div class="level2">
+
+<p>
+Bei der Eintwicklung des Metasploit-Frameworks wurde speziell auf Modularität geachtet. Der dadruch erlangte Aufbau ermöglicht eine häufige Wiederverwendung von bereits erstelleten Codebereich, wodruch statischer Code kaum neu geschrieben wird. 
+</p>
+
+<p>
+Der modulare Aufbau des Frameworks umfasst folgende Hauptbestandteile. 
+</p>
+
+<p>
+- Rex
+</p>
+
+<p>
+-MSF Core
+</p>
+
+<p>
+-MSF Base
+</p>
+
+<p>
+-Interfaces
+</p>
+
+<p>
+-Modules
+</p>
+
+<p>
+-Tools
+</p>
+
+<p>
+-Plugins
+</p>
+
+<p>
+Die Rex Bibliothek ist das Herzstück die wichtigesten Klassen sind Assembly,Encoding,Exploitation,Jobs,Logging,Post-Exploitation,Protocols und Sockets.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Architektur" [1-572] -->
+<h2 class="sectionedit2" id="verzeichnise">Verzeichnise</h2>
+<div class="level2">
+
+<p>
+Bei Kali ist das Framework im Verzeichnis /opt/metasploit eingerichtet Dabei ist zu beachten, das der Pfad zum Open-Source-Bereich msf3 eine Verlinkung nach /usr/share/metasploit-framework darstellt. 
+</p>
+
+<p>
+Das Unterverzeichnis msf3 dient als Ausgangspunkt. In diesem Verzeichnis sind die unter anderem folgende zentral Binaries zur Interaktion mit dem Framework vorhanden(msfbinscan,msfconsole,msfd,msfelfscan,msfmachscan,msfpescan,msfrop,msfrpc,msfrpcd,msfvenome). Diese BInaries werden von den Startskripten im Verzeichnis <em>app</em> aufgerufen.
+</p>
+
+<p>
+<em>./data</em> = Im data Verzeichnis sind unterschiedliche Daten und Informatationen zum Framework hinterlegt. 
+</p>
+
+<p>
+<em>./documentation</em> = befinden sich die vorhanden dokumentation 
+</p>
+
+<p>
+<em>./external</em> = Im external Verzeichnis sind third party-Module,Patches,Erweiterungen gespeichert
+</p>
+
+<p>
+<em>./lib</em> =  Im lib-Verzeichnis sind die wichtigsten Daten und Informationen aufzufinden.
+</p>
+
+<p>
+<em>./modules</em> = In diesem Verzeichnis sind alle in Metasploit integrierten Module zu finden. (Payloads,Exploits,Auxiliary Module)
+</p>
+
+<p>
+<em>./plugins</em> = In Plugins befinden sich die nachladbare Erweiterungen des Frameworks.
+</p>
+
+<p>
+<em>./scripts</em> = Dieses Verzeichnis umfasst die Post-Exploitation-Skripte von Meterpreter. 
+</p>
+
+<p>
+<em>./tools</em> = In diesem Verzeichnis befinden sich weitere Tools und Skripte. 
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Verzeichnise" [573-1897] -->
+<h2 class="sectionedit3" id="befehle">Befehle</h2>
+<div class="level2">
+
+<p>
+Dieser Abschnitt beschreibt die wichtigsten Befehle um ein exploit auszuführen. 
+</p>
+
+</div>
+
+<h4 id="search">Search</h4>
+<div class="level4">
+
+<p>
+<pre class="code msf">search type:exploit name:Microsoft path:smb</pre>
+
+oder um alle meterpreter anzuzeigen 
+<pre class="code msf">search path:meterpreter reverse_tcp</pre>
+
+</p>
+
+<p>
+Das Search-Kommando hat folgende Parameter 
+</p>
+
+<p>
+name: sucht nach Namen 
+</p>
+
+<p>
+path: sucht nach Modulpfad
+</p>
+
+<p>
+platform: sucht nach der Platfform (linux,windows)
+</p>
+
+<p>
+type: sucht nach dem Typ (exploit,auxiliary,post)
+</p>
+
+<p>
+app: sucht nach CLient oder Server Module app:client
+</p>
+
+<p>
+author: sucht nach speziellen Autor
+</p>
+
+<p>
+cve: sucht nach einer CVE-ID
+</p>
+
+<p>
+bid: sucht nach Bugtraq-ID
+</p>
+
+<p>
+osvdb: sucht nach OSVDB-ID
+</p>
+
+</div>
+
+<h4 id="use_back">use/back</h4>
+<div class="level4">
+
+<p>
+Mit dem Kommandos use/back nutzt man den ausgesuchten exploit.
+</p>
+
+<p>
+<pre class="code">use payload/windows/x64/meterpreter_reverse_https</pre>
+
+</p>
+
+</div>
+
+<h4 id="show">Show</h4>
+<div class="level4">
+
+<p>
+Mit dem Shown Kommando werden die Optionen des exploits angezeigt. 
+</p>
+
+<p>
+<pre class="code">use payload/windows/x64/meterpreter_reverse_https
+show options </pre>
+
+</p>
+
+</div>
+
+<h4 id="set_unset">Set Unset</h4>
+<div class="level4">
+
+<p>
+Mit dem beiden Befehlen werden die Optionen entfernt oder gesetzt. 
+</p>
+
+<p>
+<pre class="code"> 
+set LHOST 192.168.50.31</pre>
+
+</p>
+
+<p>
+Mit Show options wird die geänderte Option angezeigt. 
+Unset setzt die option wieder in den Orginalzustand zurück.
+Mit den Befehl set ohne weitere Parameter ist es möglich den Status aller Optionen abzufragen.
+</p>
+
+</div>
+
+<h4 id="externe_befehle">externe Befehle</h4>
+<div class="level4">
+
+<p>
+Im Rahmen von Sicherheitsanalysen mit Metasploit kann es zu der Situation kommen, dass möglichst schnell bestimmte Daten oder Informationen vom lokalen Betriebssystem benötigt werden. 
+</p>
+
+<p>
+Folgende externe Befehle gibt es : 
+</p>
+
+<p>
+ifconfig = zeigt die Netzwerkadapter Einstellungen an. 
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Befehle" [1898-3513] -->
+<h2 class="sectionedit4" id="guis">GUIs</h2>
+<div class="level2">
+
+<p>
+Armitage 
+</p>
+
+</div>
+<!-- EDIT4 SECTION "GUIs" [3514-] -->

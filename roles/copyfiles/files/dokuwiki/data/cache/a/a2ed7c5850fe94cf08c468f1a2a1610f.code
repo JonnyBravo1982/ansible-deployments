@@ -1,0 +1,2 @@
+sudo a2ensite ssl.conf
+sudo service apache2 force-reload 

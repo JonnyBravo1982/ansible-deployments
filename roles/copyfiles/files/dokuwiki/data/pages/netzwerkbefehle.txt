@@ -1,0 +1,399 @@
+<code bash>
+ lsof -i tcp:443 
+</code> prüft welcher service den Port 443 nutzt
+
+Eine Adresse mit ip vergeben 
+
+<code bash>
+ip addr add 10.1.1.31/24 dev enp0s25
+</code> 
+
+''traceroute'' verfolgt den Weg von Netzwerk-Paketen hin zu einem bestimmten Host. Dazu verändert ''traceroute'' das  [[WPDE>Time_to_Live|Time to live (TTL)]] Feld des [[WPDE>Internet_Protocol|IP]] Protokolls. Durch kleine TTL Werte versucht ''traceroute'' ICMP TIME_EXCEEDED Antworten der einzelnen Router zu bekommen. Der einzige notwendige Parameter von ''traceroute'' ist der Host zu dem der Weg aufgezeigt werden soll:
+
+  traceroute www.tuxclouds.org
+
+Für das Erfassen der einzelnen Hops (Router) am Weg vom aktuellen Rechner hin zum gewünschten Host geht traceroute folgendermaßen vor:
+
+  - 1 Ein IP Paket mit TTL=1 wird verschickt, das Paket verwirft bereits der erste Router und schickt uns eine **ICMP TIME_EXCEEDED** Antwort zurück.
+  - 2 Nun verschickt unser einmal gestartetes ''traceroute'' weitere Pakete und erhöht dabei die TTL immer um jeweils 1. Beim zweiten Paket (TTL=2) gelangt das Paket über den ersten Router weiter zum nächsten Router am Weg zum Host. Da das Default Gateway beim Weiterleiten des Pakets die TTL um 1 verringert, kommt das Paket mit TTL=1 am zweiten Router an. Dieser verwirft das Paket und schickt eine ICMP TIME_EXCEEDED Antwort an den ursprünglichen Rechner zurück. Analog funktioniert es dann mit TTL=3 beim dritten Router, TTL=4 beim vierten Router, usw. 
+
+Erreicht ein IP Paket mit ausreichend hoher TTL letztendlich den Ziel-Host, antwortet er mit einer ICMP "port unreachable" Meldung. Juhu \\
+
+**Hinweis** Im Default verwendet das Linux traceroute UDP, hingegen Windows ICMP verwendet.
+Wollen wir auch ICMP so erledigen wir das mit dem Schalter -I
+
+  traceroute -I www.tuxclouds.org
+
+Oder den Weg zum Mailserver prüfen auf Port 25 ist möglich mit dem Schalter -T und -p.
+
+  root@twink:~# traceroute -T -p 25 www.tuxclouds.org
+   traceroute to www.tuxclouds.org (46.30.212.35), 30 hops max, 60 byte packets
+   1  fritz.box (192.168.2.1)  3.794 ms  3.599 ms  7.921 ms
+   2  * * *
+   3  de-fra01b-rc1-ae28.fra.unity-media.net (81.210.141.33)  22.364 ms  19.576 ms  23.242 ms
+   4  84.116.132.149 (84.116.132.149)  23.142 ms  21.020 ms 84.116.132.145 (84.116.132.145)  20.958 ms
+   5  lag-10.ear1.Frankfurt.Level3.net (4.68.62.237)  25.061 ms  22.795 ms  44.796 ms
+   6  ae-0-10.bar1.Copenhagen2.Level3.net (4.69.137.154)  64.000 ms  32.823 ms  36.196 ms
+   7  * * *
+   8  * * *
+
+Nur mit -T wird per Default der Port 80 verwendet.
+
+====== NetworkManager ausschalten ======
+((erste Anfänge einer Doku für [[NetworkManager]]))
+=== SuSE 11.1 ===
+''/etc/sysconfig/network/config'' :
+<file>
+NETWORKMANAGER="no"
+</file>
+  SuSEconfig
+  /etc/init.d/network restart
+
+=== SuSE 12.3 ===
+  systemctl stop    network.service
+  systemctl disable NetworkManager.service
+  systemctl start   network.service
+((
+  export SYSTEMD_PAGER=''
+  systemctl -p Id show network.service
+sollte nun 
+))
+
+=== Debian 6.0 / Ubuntu 12.04 ===
+  apt-get --purge remove network-manager
+... und wenn nötig verbleibende dhcp client Prozesse beenden. (( 
+  pkill -x dhclient
+))
+
+=== Centos 6.0 ===
+  chkconfig NetworkManager off
+  service NetworkManager stop
+... und wenn nötig verbleibende dhcp client Prozesse beenden. (( 
+  pkill -x dhclient
+))
+
+====== Netzwerk (temporär) einrichten ======
+((
+===== Traditionelle Methode mit ifconfig & route =====
+==== Arbeitsplatzrechner / Host ====
+  ifconfig eth0 10.0.1.217/24  
+  route add default gw 10.0.1.1 eth0 
+
+==== Router ====
+  ifconfig eth0 10.0.1.1/24
+  ifconfig eth1 212.202.245.174/30
+  route add default gw 212.202.245.173 eth1
+  iptables -t nat -I POSTROUTING -o eth1 -j MASQUERADE
+  sysctl -w net.ipv4.ip_forward=1
+))
+
+==== Host ====
+  ip link set dev eth0 up
+  ip addr add 192.168.1.224/24 dev eth0
+  ip route add default via 192.168.1.1 
+
+==== Router ====
+  ip addr add 10.0.1.224/24 dev eth0
+  ip link set dev eth0 up
+  ip addr add 192.168.1.224/24 dev eth2
+  ip link set dev eth2 up
+  ip route add default via 192.168.1.1 dev eth2
+  iptables -t nat -A POSTROUTING -o eth2 -j MASQUERADE
+  sysctl -w net.ipv4.ip_forward=1
+
+====== Checkliste Netzwerk ======
+===== Ist das Kabel eingesteckt? =====
+  mii-tool
+oder
+  ethtool
+
+==== Speed einstellen ====
+  mii-diag -F 100baseTx eth0
+  ethtool -s eth0 speed 100 duplex full
+===== Welches ist die richtige Netzwerkkarte? =====
+... bzw. ist das Kabel in der richtigen Netzwerkkarte
+
+  ethtool -p eth0
+
+Wenn die Netzwerkkarte Lämpchen hat und der Treiber die Funktion unterstützt, dann blinken ein paar Sekunden lang die Lämpchen der gesuchten Netzwerkkarte.
+
+Achtung OpenSuSE 11.1 bitte nicht während des Tests das Kabel ziehen --> Tastaturtod\\
+(auch Debian und generell 2.6er Kernel reagieren so. Man muss dazu noch nicht mal das Kabel ziehen ;-) )
+
+===== Welcher Treiber wird von der Netzwerkkarte genutzt =====
+  ethtool -i eth0
+
+===== Ist die IP-Adresse richtig eingestellt =====
+... bzw. gibt es übermäßig viele Übertragungsfehler, Kollisionen?
+  ifconfig
+  ip -s link
+  ip addr show
+===== Ist das Routing / der Gateway richtig eingestellt? =====
+  ip route
+
+===== Ist der andere Rechner erreichbar? =====
+  ping 10.0.1.214
+
+===== Ist das Gateway erreichbar? =====
+  ip neigh show
+
+===== Gehen Pakete verloren? =====
+  ping -f -s 1472 10.0.1.214
+
+Erzwingen des DONT-FRAGMENT Bits:((ping-Header 28 bytes. Deshalb 1500-28=1472))
+
+  ping -s 1472 -M do 10.0.1.214
+
+
+Eine ausführliche Übersicht über Übertragungsprobleme gibt auch:
+  netstat -ni
+
+===== Welches Kabel ist das Richtige? =====
+  ping -a 10.0.1.214
+oder
+  ping 10.0.1.214 | while read; do echo -e -n "\007"; done
+oder
+  ping 10.0.1.214 | while read; do echo -e "\007 $REPLY"; done
+
+===== Bis zu welchem Router laufen die Pakete =====
+  traceroute 81.169.176.98
+  traceroute -T -p 80 81.169.176.98
+
+==== packet lost? ====
+  mtr 81.169.176.98
+
+===== Sind Firewall-Regeln aktiv? =====
+
+  iptables -L -n
+  iptables -t nat -L -n
+
+Ausgabe von iptables:
+
+<file>
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+</file>
+
+iptables abschalten
+  iptables-restore <<LEER
+<file>
+*mangle
+:PREROUTING ACCEPT
+:INPUT ACCEPT
+:FORWARD ACCEPT
+:OUTPUT ACCEPT
+:POSTROUTING ACCEPT
+COMMIT
+*nat
+:PREROUTING ACCEPT
+:POSTROUTING ACCEPT
+:OUTPUT ACCEPT
+COMMIT
+*filter
+:INPUT ACCEPT
+:FORWARD ACCEPT
+:OUTPUT ACCEPT
+COMMIT
+</file>
+  LEER
+
+==== SuSE Firewall abschalten ====
+  systemctl stop SuSEfirewall2_setup.service
+  systemctl stop SuSEfirewall2_init.service  
+  systemctl disable SuSEfirewall2_setup.service
+  systemctl disable SuSEfirewall2_init.service  
+
+=== ab OpenSUSE 12 ===
+  systemctl stop SuSEfirewall2.service  
+  systemctl disable SuSEfirewall2.service
+
+Prüfen:
+  chkconfig --list
+
+==== Fedora / RedHat Firewall abschalten ====
+  /etc/init.d/iptables stop
+  chkconfig iptables off
+  
+Prüfen:
+  chkconfig --list
+
+====== Netzwerk (dauerhaft) einrichten ======
+===== Server / Host =====
+==== Debian ====
+''/etc/network/interfaces'' :
+<file>
+auto eth0
+
+iface eth0 inet static
+  address 10.0.1.217
+  netmask 255.255.255.0
+  gateway 10.0.1.1
+</file>
+  
+  /etc/init.d/networking restart
+
+==== Ubuntu 12.04 ====
+''/etc/network/interfaces'' :
+<file>
+auto eth0
+
+iface eth0 inet static
+  address 10.0.1.217
+  netmask 255.255.255.0
+  gateway 10.0.1.1
+  dns-nameservers 192.168.1.6
+  dns-search linuxhotel.de
+</file>
+  
+  /etc/init.d/networking restart
+
+
+==== SuSE ====
+''/etc/sysconfig/network/config'' :
+<file>NETWORKMANAGER="no"</file>
+
+''/etc/sysconfig/network/ifcfg-eth-id-00:a0:cc:d5:57:98'' :
+
+''/etc/sysconfig/network/ifcfg-eth0'' : ( openSuSE 11.4 )
+<file>
+BOOTPROTO='static'
+BROADCAST=''
+IPADDR='192.168.1.202'
+MTU=''
+NAME='Uniwill VT6102 [Rhine-II]'
+NETMASK='255.255.255.0'
+NETWORK=''
+REMOTE_IPADDR=''
+STARTMODE='auto'
+UNIQUE='rBUF.weGuQ9ywYPF'
+USERCONTROL='no'
+_nm_name='bus-pci-0000:00:12.0'
+</file>
+
+Diese Dateien werden i.d.R. mit YaST erstellt ( siehe ''/etc/sysconfig/network/ifcfg.template'' )
+
+==== RedHat ==== 
+''/etc/sysconfig/network-scripts/ifcfg-eth0'' 
+<file>
+DEVICE=eth0
+BOOTPROTO=static
+BROADCAST=192.168.1.255
+HWADDR=00:A0:CC:DE:13:A6
+IPADDR=192.168.1.214
+NETMASK=255.255.255.0
+NETWORK=192.168.1.0
+GATEWAY=192.168.1.1
+DNS1=192.168.1.6
+ONBOOT=yes
+TYPE=Ethernet
+</file>
+
+Die Netzwerkkonfigurationsdateien kann man mit dem Tool ''system-config-network'' erstellen
+
+Doku siehe ''/usr/share/doc/initscripts-*/sysconfig.txt''
+===== Router =====
+''/etc/sysctl.conf'' :
+<file>net.ipv4.ip_forward = 1</file>
+Unter SuSE besser Datei ''/etc/sysconfig/sysctl'' nutzen
+
+
+==== Debian ====
+''/etc/network/interfaces'' mit mehreren Netzwerkkarten:
+( veraltet, heute mit [[udev]] besser lösbar )
+<file>
+   auto eth0 eth1
+mapping eth0 eth1
+        script /usr/local/bin/get-mac-address.sh
+        map 00:0A:E6:5A:75:A5 extern
+        map 00:11:6B:31:4F:59 intern
+
+iface extern inet static
+        address   212.202.245.174
+        broadcast 212.202.245.175
+        netmask   255.255.255.252
+        gateway   212.202.245.173
+        pre-up iptables -t nat -I POSTROUTING -o eth1 -j MASQUERADE
+
+iface intern inet static
+        address 192.168.1.7
+        netmask 255.255.255.0
+        network 192.168.1.0
+        broadcast 192.168.1.255
+</file>
+
+Eine andere ( bessere? ) Möglichkeit zur eindeutigen Benennung von Netzwerkkarten bietet das Paket ''ifrename''
+
+
+==== CentOS ====
+''/etc/sysconfig/network-scripts/route-eth0''
+<file>
+X.X.X.X/Y via X.X.X.X dev interface
+</file>
+
+
+
+
+
+====== Rechenhilfe für IP-Adressen und Netzmasken ======
+Debian
+  ipcalc 212.202.245.174/30
+SuSE
+  iptab
+... oder übers Web http://jodies.de/ipcalc
+
+====== IPv6 abschalten ======
+//Todo: testen ob das noch geht.// 
+(( Bei openSuSE 12.3 und debian 6 z.B. ist ipv6 nicht als Modul kompiliert:
+  grep CONFIG_IPV6= /boot/config-*
+))
+
+Man erkennt aktiviertes IPv6 daran, dass das Modul ipv6 geladen ist.
+
+  lsmod | grep ipv6 
+
+''/etc/modprobe.d/aliases.conf'' : ( Debian 6 )
+
+''/etc/modprobe.d/99-local.conf'' : ( openSuSE 12.3 )
+<file>alias net-pf-10 off          # IPv6</file>
+
+Soll auch das manuelle Laden des Modules verhindert werden, kann auch noch folgende Zeile eingetragen werden:
+<file>alias ipv6 off </file>
+
+  depmod -a
+
+=== Testen ===
+Zeigt ''modprobe'' die Einstellungen richtig an:
+  modprobe -c | grep -i ipv6
+Wird nach einem reboot das IPv6-Modul automatisch geladen:
+  reboot
+  lsmod | grep ipv6
+====== Wireless LAN ======
+  ifconfig wlan0
+  iwconfig wlan0
+  iwlist wlan0 scan
+  ifconfig wlan0 up
+  iwlist wlan0 scan
+  iwconfig wlan0
+  iwconfig wlan0 essid linuxhotel
+  iwconfig wlan0
+  man dhclient3 
+  dhclient wlan0
+
+
+====== Dokumentation ======
+  * [[ http://www.centos.org/docs/5/html/Deployment_Guide-en-US/s1-networkscripts-interfaces.html | centos 5 ]]
+  * [[ http://www.novell.com/documentation/opensuse103/opensuse103_reference/data/sec_basicnet_manconf.html | openSuSE 10.3 ]]
+
+  * [[ http://www.lug-erding.de/vortrag/ng.html | Netzwerk Grundlagen für Linux ]]
+  * [[ http://www.netzmafia.de/skripten/netze/ | Netzwerk Protokolle im Detail ]]
+
+  * [[ http://ipsysctl-tutorial.frozentux.net/ipsysctl-tutorial.html | Sysctl Tutorial ]]
+  * [[ http://de.opensuse.org/SDB:IPv6_dauerhaft_ausschalten | SuSE / IPv6 ausschalten ]]
+  * [[ http://lartc.org/howto/ | routing für Fortgeschrittene]]
+

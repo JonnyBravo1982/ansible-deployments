@@ -1,0 +1,1 @@
+Publish-Module <span class="re5">-Name</span> MSSQLQuery <span class="re5">-Repository</span> <span class="st0">&quot;T4M&quot;</span> <span class="re5">-ReleaseNotes</span> <span class="st0">&quot;First&quot;</span>

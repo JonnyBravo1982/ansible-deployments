@@ -1,0 +1,105 @@
+
+<p>
+nginx {en} (gesprochen „engine x”) ist ein Webserver, der im Vergleich zum Marktführer Apache sehr schnell und schlank ist. Er wurde mit der Vorgabe konzipiert, selbst unter hoher Last nur wenig Ressourcen zu verbrauchen. nginx wird von Igor Sysoev entwickelt und wird laut w3techs.com Statsitik {en} von ca. 30 % aller Websites genutzt (Stand: Sommer 2016). Damit ist nginx der am 2. meisten eingesetzte Webserver.
+</p>
+
+<p>
+nginx als Webserver mit SSL konfigurieren. 
+</p>
+
+<p>
+Im Verzeichnis /etc/nginx/site-available/ wird eine Konfigurationsdatei angelegt. Beispiel. 
+</p>
+
+<p>
+<pre class="code">server {
+	listen 80;
+	listen [::]:80;
+	root /var/www/html/Testsite;
+	index index.html;
+	server_name localhost.localdomain rrot-armhf www.Testsite.de Testsite.de;
+	location / {
+		try_files $uri $uri/ =404;
+	}
+}
+</pre>
+
+</p>
+
+<p>
+Diese Datei bekommt nun einen symbolischen Link nach /etc/nginx/sites-enable
+</p>
+
+<p>
+<pre class="code">ln -s /etc/nginx/sites-available/Testsite /etc/nginx/sites-enabled/</pre>
+
+</p>
+
+<p>
+Nach einem Serviceneustart ist die Website zu erreichen.
+Als nächstes wird ein Zertifkat erstellt und im nging eingebunden. 
+</p>
+
+<p>
+OpenSSL CA erstellen: 
+</p>
+
+<p>
+<pre class="code">openssl genrsa -aes256 -out ca-key.pem 2048
+openssl req -x509 -new -nodes -extensions v3_ca -key ca-key.pem -days 1024 -out ca-root.pem -sha512</pre>
+
+</p>
+
+<p>
+Danach das Webserver zertifikate ersellen: 
+<pre class="code"> 
+openssl genrsa -out zertifikat-key.pem 4096
+openssl req -new -key zertifikat-key.pem -out zertifikat.csr -sha512
+openssl x509 -req -in zertifikat.csr -CA ca-root.pem -CAkey ca-key.pem -CAcreateserial -out zertifikat-pub.pem -days 365 -sha512</pre>
+
+</p>
+
+<p>
+Um nginx mitzuteilen wo die Zertifkate liegen wird die die /etc/nginx/snippets/self-signed.conf angelegt.Mit folgenden Inhalt 
+</p>
+
+<p>
+<pre class="code">ssl_certificate /var/www/ssl/zertifikat-pub.pem;
+ssl_certificate_key /var/www/ssl/zertifikat-key.pem;</pre>
+
+</p>
+
+<p>
+Für die SSL-Konfiguriert wird eine weitere File angelegt etc/nginx/snippets/ssl-params.conf. Mit folgenden Inhalt : 
+</p>
+
+<p>
+<pre class="code">ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+ssl_prefer_server_ciphers on;
+ssl_ciphers &quot;EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH&quot;;
+ssl_ecdh_curve secp384r1;
+ssl_session_cache shared:SSL:10m;</pre>
+
+</p>
+
+<p>
+Zum Schluss beabeiten wir die Serverkonfigurationsdatei erneut und sagen ihn auf welchen Port er zugreifen kann. 
+</p>
+
+<p>
+<pre class="code">server {
+	listen 80;
+	listen 442 ssl;
+	listen [::]:80;
+	listen [::]:443 ssl;
+	root /var/www/html/Testsite;
+	index index.html;
+	server_name localhost.localdomain rrot-armhf www.Testsite.de Testsite.de;
+	include snippets/self-signed.conf;
+	include snippets/ssl-params.conf;
+	location / {
+		try_files $uri $uri/ =404;
+	}
+}</pre>
+
+</p>

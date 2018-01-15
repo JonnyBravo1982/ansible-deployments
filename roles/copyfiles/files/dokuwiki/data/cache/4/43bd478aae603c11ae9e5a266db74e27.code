@@ -1,0 +1,1 @@
+<span class="re0">$sms</span><span class="sy0">=</span><span class="kw2">gwmi</span> <span class="kw5">-namespace</span> root\ccm\softmgmtagent <span class="kw5">-class</span> cacheconfig;$sms.size <span class="sy0">=</span> <span class="st0">&quot;10000&quot;</span>;$sms.put<span class="br0">&#40;</span><span class="br0">&#41;</span> 

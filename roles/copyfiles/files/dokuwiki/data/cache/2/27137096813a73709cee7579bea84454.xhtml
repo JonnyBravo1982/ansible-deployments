@@ -1,0 +1,47 @@
+
+<h1 class="sectionedit1" id="python_gui">Python GUI</h1>
+<div class="level1">
+
+<p>
+Mit Python3 können GUI´s mit tkinter erstellt werden. 
+</p>
+
+<p>
+Ihr ein Beispiel für eine einfache <abbr title="Graphical User Interface">GUI</abbr> : 
+</p>
+<pre class="code"> #!/usr/bin/python3
+ from tkinter import *
+ fields = &#039;Filmname&#039;, &#039;Genre&#039;
+ def fetch(entries):
+    for entry in entries:
+       field = entry[0]
+       text  = entry[1].get()
+       print(field, text)
+    def makeform(root, fields):
+ entries = []
+ for field in fields:
+    row = Frame(root)
+    lab = Label(row, width=15, text=field, anchor=&#039;w&#039;)
+    ent = Entry(row)
+    row.pack(side=TOP, fill=X, padx=5, pady=5)
+    lab.pack(side=LEFT)
+    ent.pack(side=RIGHT, expand=YES, fill=X)
+    entries.append((field, ent))
+ return entries
+ if __name__ == &#039;__main__&#039;:
+ root = Tk()
+ ents = makeform(root, fields)
+ root.bind(&#039;&lt;Return&gt;&#039;, (lambda event, e=ents: fetch(e)))   
+ b1 = Button(root, text=&#039;Show&#039;,
+        command=(lambda e=ents: fetch(e)))
+ b1.pack(side=LEFT, padx=5, pady=5)
+ b2 = Button(root, text=&#039;Quit&#039;, command=root.quit)
+ b2.pack(side=LEFT, padx=5, pady=5)
+ root.mainloop()</pre>
+
+<p>
+Ausgabe : 
+<a href="/dokuwiki/lib/exe/detail.php?id=python_gui&amp;media=ausgabe.png" class="media" title="ausgabe.png"><img src="/dokuwiki/lib/exe/fetch.php?w=200&amp;tok=24ee83&amp;media=ausgabe.png" class="media" alt="" width="200" /></a>
+</p>
+
+</div>

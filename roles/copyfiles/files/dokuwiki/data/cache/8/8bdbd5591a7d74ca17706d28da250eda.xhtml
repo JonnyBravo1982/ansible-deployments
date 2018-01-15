@@ -1,0 +1,302 @@
+
+<h1 class="sectionedit1" id="benoetigte_pakete">Benötigte Pakete</h1>
+<div class="level1">
+
+</div>
+
+<h4 id="debian_31_40">Debian(3.1, 4.0)</h4>
+<div class="level4">
+<pre class="code">foomatic-db-engine cupsys cupsys-client cupsys-bsd</pre>
+
+<p>
+Pakete mit Drucker-Filtern/Treibern
+</p>
+<pre class="code">foomatic-filters-ppds foomatic-db-hpijs foomatic-db-gimp-print foo2zjs</pre>
+
+</div>
+
+<h4 id="debian_50">Debian 5.0</h4>
+<div class="level4">
+<pre class="code">cups foomatic-filters-ppds </pre>
+
+</div>
+
+<h4 id="centos_4">Centos 4</h4>
+<div class="level4">
+<pre class="code">cups foomatic</pre>
+
+</div>
+
+<h4 id="suse_93">SuSE 9.3</h4>
+<div class="level4">
+<pre class="code">cups</pre>
+
+<p>
+Pakete mit Drucker-Filtern/Treibern
+</p>
+<pre class="code">cups-drivers cups-drivers-stp manufacturer-PPDs hplip</pre>
+
+</div>
+<!-- EDIT1 SECTION "Benötigte Pakete" [1-423] -->
+<h2 class="sectionedit2" id="weitere_moegliche_quellen_fuer_ppd-dateien">Weitere mögliche Quellen für ppd-Dateien</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.openprinting.org" class="urlextern" title="http://www.openprinting.org"  rel="nofollow">http://www.openprinting.org</a></div>
+</li>
+<li class="level1"><div class="li"> Linux Treiber des Herstellers</div>
+</li>
+<li class="level1 node"><div class="li"> Kommerzielle Treiber: </div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://www.turboprint.de/english.html" class="urlextern" title="http://www.turboprint.de/english.html"  rel="nofollow">http://www.turboprint.de/english.html</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Windows Treiber des Herstellers</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Weitere mögliche Quellen für ppd-Dateien" [424-652] -->
+<h1 class="sectionedit3" id="drucken_mit_cups">Drucken mit CUPS</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT3 SECTION "Drucken mit CUPS" [653-683] -->
+<h2 class="sectionedit4" id="druckerwarteschlange_anlegen">Druckerwarteschlange anlegen</h2>
+<div class="level2">
+
+<p>
+ppd-Datei testen
+</p>
+<pre class="code">cupstestppd Kyocera_FS-C5020N_de.ppd</pre>
+
+<p>
+Drucker anzeigen:
+</p>
+<pre class="code">lpinfo -v</pre>
+
+<p>
+Druckerwarteschlange anlegen
+</p>
+<pre class="code">lpadmin -p kyocera2 -E -P Kyocera_FS-C5020N_de.ppd -v socket://kyocera2.villa-vogelsang.de:9100</pre>
+
+<p>
+(<code>-x kyocera2</code> zum Löschen)
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Druckerwarteschlange anlegen" [684-969] -->
+<h2 class="sectionedit5" id="druckerwarteschlangen_verwalten">Druckerwarteschlangen verwalten</h2>
+<div class="level2">
+
+</div>
+
+<h4 id="warteschlange_abschalten">Warteschlange abschalten</h4>
+<div class="level4">
+
+<p>
+Warteschlange soll Druckjobs ablehnen
+</p>
+<pre class="code">reject kyocera2</pre>
+
+</div>
+
+<h5 id="testen">testen</h5>
+<div class="level5">
+<pre class="code">lpc status kyocera2</pre>
+
+</div>
+
+<h4 id="warteschlange_einschalten">Warteschlange einschalten</h4>
+<div class="level4">
+
+<p>
+Warteschlange soll Druckjobs annehmen
+</p>
+<pre class="code">accept kyocera2</pre>
+
+</div>
+
+<h4 id="drucker_anhalten">Drucker anhalten</h4>
+<div class="level4">
+
+<p>
+Es sollen keine Druckjobs an den Drucker gesendet werden
+</p>
+<pre class="code">cupsdisable kyocera2</pre>
+
+</div>
+
+<h4 id="drucker_fortsetzen">Drucker fortsetzen</h4>
+<div class="level4">
+
+<p>
+Es sollen Druckjobs an den Drucker gesendet werden
+</p>
+<pre class="code">cupsenable kyocera2</pre>
+
+</div>
+<!-- EDIT5 SECTION "Druckerwarteschlangen verwalten" [970-1433] -->
+<h2 class="sectionedit6" id="druckjobs_verwalten">Druckjobs verwalten</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT6 SECTION "Druckjobs verwalten" [1434-1465] -->
+<h3 class="sectionedit7" id="cups_bzw_system_v_style">CUPS bzw. System V style</h3>
+<div class="level3">
+
+<p>
+Drucker anzeigen:
+</p>
+<pre class="code">lpstat -p -d</pre>
+
+<p>
+Testseite drucken:
+</p>
+<pre class="code">lp -d kyocera2 /usr/share/cups/data/testprint.ps</pre>
+
+<p>
+Warteschlange anzeigen:
+</p>
+<pre class="code">lpstat -o</pre>
+
+<p>
+Druckjob aus Warteschlange entfernen:
+</p>
+<pre class="code">cancel 1</pre>
+
+</div>
+<!-- EDIT7 SECTION "CUPS bzw. System V style" [1466-1689] -->
+<h3 class="sectionedit8" id="bsd_style">BSD style</h3>
+<div class="level3">
+
+<p>
+Drucker anzeigen:
+</p>
+<pre class="code">lpc status</pre>
+
+<p>
+oder
+</p>
+<pre class="code">/usr/sbin/lpc status</pre>
+
+<p>
+Testseite drucken:
+</p>
+<pre class="code">lpr -P kyocera2 /usr/share/cups/data/testprint.ps</pre>
+
+<p>
+Warteschlange anzeigen:
+</p>
+<pre class="code">lpq -a</pre>
+
+<p>
+Druckjob aus Warteschlange entfernen:
+</p>
+<pre class="code">lprm 1</pre>
+
+</div>
+<!-- EDIT8 SECTION "BSD style" [1690-1920] -->
+<h2 class="sectionedit9" id="pdf-drucker_anlegen">PDF-Drucker anlegen</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT9 SECTION "PDF-Drucker anlegen" [1921-1952] -->
+<h3 class="sectionedit10" id="benoetigte_pakete1">Benötigte Pakete</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="debian_501">Debian 5.0</h4>
+<div class="level4">
+<pre class="code">cups-pdf</pre>
+
+</div>
+<!-- EDIT10 SECTION "Benötigte Pakete" [1953-2011] -->
+<h3 class="sectionedit11" id="konfiguration">Konfiguration</h3>
+<div class="level3">
+<pre class="code">lpadmin -p pdf -E -v cups-pdf:/</pre>
+
+</div>
+<!-- EDIT11 SECTION "Konfiguration" [2012-2071] -->
+<h2 class="sectionedit12" id="drucker-klasse_anlegen">Drucker-Klasse anlegen</h2>
+<div class="level2">
+
+<p>
+Drucker-Klasse anlegen:
+</p>
+<pre class="code">lpadmin -p kyocera2 -c beide</pre>
+
+<p>
+Drucker zu Klasse hinzufügen:
+</p>
+<pre class="code">lpadmin -p pdf -c beide</pre>
+
+<p>
+Druck-Job von Drucker auf Klasse verschieben:
+</p>
+<pre class="code">/usr/sbin/lpmove 2 beide</pre>
+
+</div>
+<!-- EDIT12 SECTION "Drucker-Klasse anlegen" [2072-2293] -->
+<h2 class="sectionedit13" id="druckerwarteschlange_konfigurieren">Druckerwarteschlange konfigurieren</h2>
+<div class="level2">
+
+<p>
+Optionen anzeigen:
+</p>
+<pre class="code">lpoptions -p kyocera</pre>
+
+<p>
+Optionen ändern:
+</p>
+<pre class="code">lpoptions -p kyocera -o PageSize=A4</pre>
+
+</div>
+<!-- EDIT13 SECTION "Druckerwarteschlange konfigurieren" [2294-2439] -->
+<h2 class="sectionedit14" id="cups_administration">CUPS Administration</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> KDE Kontrollzentrum <code>kcontrol</code></div>
+</li>
+<li class="level1"><div class="li"> Weboberfläche mit Dokumentation <a href="http://localhost:631" class="urlextern" title="http://localhost:631"  rel="nofollow">http://localhost:631</a></div>
+</li>
+</ul>
+
+<p>
+Läuft <code>cupsd</code> nicht als root „lp“ <sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup> ( default bei SuSE ),  dann kann <code>cupsd</code> nicht gegen die Datei <code>/etc/shadow</code> authentifizieren. Für den Fall bietet CUPS die Möglichkeit eine CUPS-eigene Passwort-Datei zu nutzen. Bei SuSE ist das wie folgt gelöst:
+<code>/etc/cups/cups.conf</code>:
+<pre class="file">&lt;Location /admin&gt;</pre>
+
+..
+<pre class="file">  AuthType BasicDigest
+  AuthClass Group
+  AuthGroupName sys</pre>
+
+Einen CUPS-Benutzer legt man dann mit dem Befehl <code>lppasswd -g sys -a   <em>name</em></code> an. <sup><a href="#fn__2" id="fnt__2" class="fn_top">2)</a></sup>
+</p>
+
+</div>
+<!-- EDIT14 SECTION "CUPS Administration" [2440-3430] -->
+<h1 class="sectionedit15" id="links">Links</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="http://de.wikipedia.org/wiki/Common_Unix_Printing_System" class="urlextern" title="http://de.wikipedia.org/wiki/Common_Unix_Printing_System"  rel="nofollow">http://de.wikipedia.org/wiki/Common_Unix_Printing_System</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Common_Unix_Printing_System" class="urlextern" title="http://en.wikipedia.org/wiki/Common_Unix_Printing_System"  rel="nofollow">http://en.wikipedia.org/wiki/Common_Unix_Printing_System</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.linuxprinting.org/" class="urlextern" title="http://www.linuxprinting.org/"  rel="nofollow">http://www.linuxprinting.org/</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.linuxprinting.org/kpfeifle/LinuxKongress2002/Tutorial/VII.cups-help/VII.cups-help.html" class="urlextern" title="http://www.linuxprinting.org/kpfeifle/LinuxKongress2002/Tutorial/VII.cups-help/VII.cups-help.html"  rel="nofollow">http://www.linuxprinting.org/kpfeifle/LinuxKongress2002/Tutorial/VII.cups-help/VII.cups-help.html</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://de.opensuse.org/SDB:CUPS_in_aller_K%C3%BCrze" class="urlextern" title="http://de.opensuse.org/SDB:CUPS_in_aller_K%C3%BCrze"  rel="nofollow">http://de.opensuse.org/SDB:CUPS_in_aller_K%C3%BCrze</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT15 SECTION "Links" [3431-] --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+Einstellbar über die Parameter <code>User</code> und <code>RunAsUser</code> in der Datei <code>/etc/cups/cupsd.conf</code></div>
+<div class="fn"><sup><a href="#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+ Alternativ kann man auch über den Parameter <code>Group</code> in der Datei <code>/etc/cups/cupsd.conf</code> den <code>cupsd</code> unter der Unix-Gruppe „shadow“ laufen lassen, der Unix-Gruppe „shadow“ Leserechte für die Datei „/etc/shadow“ geben und den Parameter <code>AuthType</code> auf Basic stellen.  </div>
+</div>

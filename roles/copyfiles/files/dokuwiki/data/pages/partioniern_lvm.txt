@@ -1,0 +1,121 @@
+
+====== Aufbau eines logical volumes (LV) ======
+Ein LV besteht aus mehreren Ebenen. Die unterste Ebene bilden die sogenannten **physical volumes** ( PV ).\\ 
+Mehrere PVs kann man nun zusammenfassen zu einer logischen Einheit, der sogenannten **volume group** ( VG ).\\ 
+Auf der VG kann man nun **logical volumes** ( LV ) erzeugen, die eine beliebige Größe haben können.\\ 
+In der Summe können die LVs die Größe der VG natürlich nicht überschreiten.
+
+{{ :admin_grundlagen:lvm.png?200 |}}
+====== LVM einrichten ======
+Pakete installieren ( Debian ):
+  aptitude install lvm2 parted
+
+Kernel Modul laden (Ubuntu):
+  modprobe dm_mod
+
+Boot-Initialisierung einrichten: ( SuSE )
+  /etc/init.d/boot.lvm start
+  chkconfig boot.lvm on
+
+Boot-Initialisierung einrichten: ( Debian -6)
+  service lvm2 start
+  /etc/init.d/lvm2 start
+
+LVM-Partition anlegen:
+  parted /dev/sda print
+  parted /dev/sda set 2 lvm on
+  parted /dev/sda set 3 lvm on
+
+====== LV anlegen ======
+Physical Volume anlegen:
+  pvcreate /dev/sda2
+  pvcreate /dev/sda3
+
+Bestehende Physical Volumes anzeigen:
+  pvs
+
+Volume Group anlegen ( bestehend aus den zwei physical volumes ):
+(( ''-'' ( Minus ) in VG und LV Namen besser vermeiden ))
+''vg_system'' ist hier der Name der VolumeGroup
+  vgcreate vg_system /dev/sda2 /dev/sda3
+
+Volume Group aktivieren:
+  vgchange -a y vg_system
+
+Bestehende Volume Groups anzeigen:
+  vgs
+
+Logical Volume anlegen: ''lv_test'' ist hier der Name des LogicalVolume
+  lvcreate --size 5G --name /dev/vg_system/lv_test
+
+Bestehende Logical Volumes anzeigen:
+  lvs
+
+Formatieren ( hier mit ext3-FilesSystem ):
+  mkfs.ext3 /dev/vg_system/lv_test
+
+=== Testen ===
+Mount-Point erstellen:
+  mkdir /mnt/lv_test
+
+logical volume an Mount-Point in Dateisystem einhängen:
+  mount /dev/vg_system/lv_test /mnt/lv_test
+
+Testweise bin-Verzeichnis kopieren:
+  cp -a /home/. /mnt/lv_test
+
+====== LV vergrößern / verkleinern ======
+Der Vorteil eines LV ist, daß es zur Laufzeit vergrößert und verkleinert werden kann. 
+
+===== Volume Group um PV vergrößern =====
+nur falls auf Volume Group nicht mehr genug Platz
+  vgextend <Name Volume group> <Name physical volume>
+  vgextend vg_system /dev/sda5
+
+===== Logical Volume & Dateisystem vergrößern =====
+  lvresize --size +1g --resizefs /dev/vg_system/LogVol01
+oder
+  lvextend -L +2g /dev/vg_system/LogVol00
+
+Dateisystem vergrößern:
+  * ext3
+  resize2fs /dev/vg_system/LogVol00
+
+  * xfs
+  xfs_growfs /home
+
+====== Snapshot erstellen ======
+
+(( Falls das Kernel Modul dm-snapshot noch nicht geladen ist:
+  modprobe dm-snapshot
+))
+  mount -o remount,ro /dev/vg_system/lv_test
+  lvcreate --snapshot --size 100M --name lv_snapshot /dev/vg_system/lv_test
+  mount -o ro /dev/vg_system/lv_snapshot /mnt/
+(( Vorsicht bei XFS, das Snapshot wird nicht lesbar sein. Generell eine gute Idee, das Volume vorher read-only zu mounten ))
+====== Hinweise ======
+
+Falls man vergessen hat das LVM in die Fstab einzutragen, sind diese nach einem Neustart verschwunden.
+  lvdisplay
+listet die LVMs dann als "LV Status              NOT available" auf.
+
+Lösung: Vgs von Hand aktivieren:
+
+  lvchange -a y vg_system
+
+Es kann praktisch sein, die //extent size// zu ändern, z.B. um sie passend für ein RAID-stripe set zu machen
+
+  vgchange -s 1m
+  vgs -v
+
+====== Links ======
+  * http://tldp.org/HOWTO/LVM-HOWTO
+  * http://www.linux-magazin.de/heft_abo/ausgaben/2005/10/ueber_alle_fallen
+  * https://www.redhat.com/docs/manuals/enterprise/RHEL-5-manual/Cluster_Logical_Volume_Manager/index.html
+  * http://www.novell.com/documentation/sles10/sles_admin/data/cha_advdisk.html
+
+
+partionieren 
+<code bash>
+pvcreate /dev/sda3 && vgcreate system /dev/sda3 && for t in vfat xfs ext2 ext3 ext4 btrfs ;do lvcreate -n $t -L 1g system && mkfs.$t /dev/system/$t && mkdir /mnt/$t && mount /dev/system/$t && echo "/dev/system/$t /mnt/$t $t rw 0 0" >> /etc/fstab; done
+</code>

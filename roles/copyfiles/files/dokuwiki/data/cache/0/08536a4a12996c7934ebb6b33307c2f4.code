@@ -1,0 +1,1 @@
+systemctl <span class="kw2">kill</span> Unitname

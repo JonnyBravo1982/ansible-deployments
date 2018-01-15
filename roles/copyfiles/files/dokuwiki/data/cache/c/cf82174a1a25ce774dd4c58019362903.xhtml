@@ -1,0 +1,135 @@
+
+<h1 class="sectionedit1" id="apache">Apache</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Apache" [1-22] -->
+<h2 class="sectionedit2" id="virtuele_hosts">Virtuele Hosts</h2>
+<div class="level2">
+
+<p>
+Im Ordner /etc/apache2/sites-available können Virtuele Host definieren werden. Virtuele Host werden benötigt um mehrere Webseiten auf einen Server zu betreiben.
+Mit dem Befehl <strong>a2ensite</strong> wird die Webseite registriert. 
+Der Befehl <strong>a2enmod proxy</strong> installiert das Proxymodul.
+</p>
+
+<p>
+Step by Step Anleitunug:
+1. Module installieren 
+<pre class="code linux">sudo a2enmod proxy
+sudo a2enmod proxy_http
+sudo service apache2 reload</pre>
+
+</p>
+
+<p>
+2. File erstellen  in <strong>/etc/apache2/sites-available/jonnywordpress.conf</strong>
+<pre class="code apache">&lt;<span class="kw3">VirtualHost</span> *:<span class="nu0">80</span>&gt;
+<span class="co1">#ProxyPreserveHost On</span>
+<span class="co1">#ProxyRequests Off</span>
+<span class="kw1">ServerName</span> jonnywordpress
+<span class="kw1">ProxyPass</span>               /       http://localhost:<span class="nu0">8081</span>/
+<span class="kw1">ProxyPassReverse</span>        /       http://localhost:<span class="nu0">8081</span>/
+&lt;/<span class="kw3">VirtualHost</span>&gt;</pre>
+
+</p>
+
+<p>
+3. File registrieren 
+<pre class="code linux">a2ensite /etc/apache2/sites-available/jonnywordpress.conf  #deaktvieren mit a2dissite 
+service apache2 reloade </pre>
+
+</p>
+
+<p>
+Der Virtuelle Host der auf den Port 8081 lag, wurde umgeleitet auf den Port 80 und ist über den Namen „jonnywordpress“ erreichbar (evtl. hosts Datei anpassen).  
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Virtuele Hosts" [23-1107] -->
+<h3 class="sectionedit3" id="openssl_and_apache">OpenSSL and Apache</h3>
+<div class="level3">
+
+<p>
+Step by Step: 
+1. Im ersten Schritt wird ein privater Schlüssel erstellt 
+<pre class="code linux">openssl genrsa -out /etc/ssl/private/apache.key 4096</pre>
+
+</p>
+
+<p>
+2. Zertifikat erstellt 
+<pre class="code linux">openssl req -new -x509 -key /etc/ssl/private/apache.key -days 365 -sha256 -out /etc/ssl/certs/apache.crt </pre>
+
+</p>
+
+<p>
+3. Um TLS/SSL verwenden zu können muss der Apache auf den TCP-Port 443 lauschen. Die Datei <strong>/etc/apache2/ports.conf</strong> muss wie folgt angepasst werden. 
+<pre class="code linux">&lt;IfModule mod_ssl.c&gt;
+    Listen 443
+&lt;/IfModule&gt;
+&lt;code&gt;
+&nbsp;
+&nbsp;
+4. Das SSL-Modul  wird installiert
+&lt;code linux&gt;
+sudo a2enmod ssl
+service apache2 force-reload </pre>
+
+</p>
+
+<p>
+5. SSL-Webseite konfigurieren und Anpassung 
+</p>
+
+<p>
+- dazu wird die Datei <strong>/etc/apache2/sites-available/ssl.conf</strong> erstellt mit folgenden Inhalten (der Name spielt keine rolle)  
+<pre class="code linux">&lt;VirtualHost *:443&gt;
+    SSLEngine on
+    SSLCertificateFile /etc/ssl/certs/apache.crt
+    SSLCertificateKeyFile /etc/ssl/private/apache.key
+    # Pfad zu den Webinhalten
+    DocumentRoot /var/www/html/
+&lt;/VirtualHost&gt;</pre>
+
+</p>
+
+<p>
+6. der Host wird nun aktiviert 
+<pre class="code linux">sudo a2ensite ssl.conf
+sudo service apache2 force-reload </pre>
+
+</p>
+
+<p>
+7. SSL auf der Webseite erzwingen mit mod_rewrite
+</p>
+
+<p>
+Installation 
+<pre class="code linux">sudo a2enmod rewrite </pre>
+
+</p>
+
+<p>
+und eine .htaccess Datei in /var/www/html/ erstellt mit folgenden Inhalt 
+<pre class="code linux">RewriteEngine On
+RewriteCond %{SERVER_PORT}   !^443$
+RewriteRule  (.*)  https:%{HTTP_HOST}/$1   [L]// </pre>
+
+</p>
+
+<p>
+Berechtigungen auf die  .htaccess setzen
+<pre class="code linux">chown www-data:www-data .htaccess</pre>
+
+</p>
+
+<p>
+zum Schluss muss noch der Port freigegeben werden 
+<pre class="code linux">iptables -A INPUT -p tcp --dport 443 -m state --state NEW -j ACCEPT</pre>
+
+</p>
+
+</div>
+<!-- EDIT3 SECTION "OpenSSL and Apache" [1108-] -->

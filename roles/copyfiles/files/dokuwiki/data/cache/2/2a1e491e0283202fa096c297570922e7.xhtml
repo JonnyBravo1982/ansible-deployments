@@ -1,0 +1,22 @@
+<div class="table sectionedit1"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0" colspan="2">Commando</th><th class="col2">beschreibung</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><pre class="code powershell"><span class="kw1">Get-Command</span><span class="sy0">|</span><span class="kw1">Sort-Object</span> noun</pre>
+</td><td class="col1"> Sortiert get-command</td><td class="col2"></td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><pre class="code powershell"><span class="kw1">Get-Command</span> <span class="sy0">*-</span>Service</pre>
+</td><td class="col1">zeigt alle Kommandos die Service im Namen haben</td><td class="col2"></td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><pre class="code powershell"> <span class="re0">$varping</span> <span class="sy0">=</span> <span class="kw1">Get-Content</span> .\computers.txt 
+ <span class="re0">$varping</span><span class="sy0">|</span><span class="kw1">Where-Object</span> <span class="br0">&#123;</span><span class="kw3">if</span> <span class="br0">&#40;</span>Test<span class="sy0">-</span>Connection <a href="about:blank"><span class="kw6">$_</span></a> <span class="kw5">-Quiet</span><span class="br0">&#41;</span>
+ <span class="br0">&#123;</span><span class="kw1">write-host</span> <span class="st0">&quot;$_ is running&quot;</span><span class="br0">&#125;</span><span class="kw3">ELSE</span> <span class="br0">&#123;</span><span class="kw1">write-host</span> <span class="st0">&quot;$_ is not running&quot;</span><span class="br0">&#125;</span> <span class="br0">&#125;</span></pre>
+</td><td class="col1">Das folgende Beispiel pingt Rechner an </td><td class="col2"></td>
+	</tr>
+</table></div>
+<!-- EDIT1 TABLE [1-429] -->

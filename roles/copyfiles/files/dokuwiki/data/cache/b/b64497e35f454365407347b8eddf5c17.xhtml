@@ -1,0 +1,935 @@
+
+<h1 class="sectionedit1" id="lokale_paketverwaltung">lokale Paketverwaltung</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "lokale Paketverwaltung" [1-37] -->
+<h2 class="sectionedit2" id="dpkg_und_rpm">dpkg und rpm</h2>
+<div class="level2">
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Funktion </th><th class="col1">Debian und Ubuntu </th><th class="col2">RedHat, Fedora und SuSE <sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup> </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Anzeigen welche Pakete installiert sind: </td><td class="col1"> <pre class="code">dpkg -l 
+COLUMNS=150 dpkg -l </pre>
+</td><td class="col2"><pre class="code">rpm -qa</pre>
+</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Anzeigen zu welchem Paket die Datei <code>/usr/bin/top</code> gehoert: </td><td class="col1"> <pre class="code">dpkg -S /usr/bin/top</pre>
+</td><td class="col2"><pre class="code">rpm -qf /usr/bin/top</pre>
+</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Beschreibung zum Paket <em>procps</em> anzeigen: </td><td class="col1"><pre class="code">dpkg -s procps</pre>
+</td><td class="col2"><pre class="code">rpm -qi procps</pre>
+</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Anzeigen welche Dateien zum Paket <em>procps</em> gehoeren: </td><td class="col1"><pre class="code">dpkg -L procps</pre>
+</td><td class="col2"><pre class="code">rpm -ql procps</pre>
+</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Paket installieren <sup><a href="#fn__2" id="fnt__2" class="fn_top">2)</a></sup>: </td><td class="col1"><pre class="code">dpkg -i xskat_4.0-1_i386.deb</pre>
+</td><td class="col2"><pre class="code">rpm -i datei.rpm</pre>
+</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">Paket loeschen: <sup><a href="#fn__3" id="fnt__3" class="fn_top">3)</a></sup> </td><td class="col1"><pre class="code">dpkg --remove paket
+dpkg --purge paket</pre>
+</td><td class="col2"><pre class="code">rpm -e &lt;paket&gt;</pre>
+</td>
+	</tr>
+</table></div>
+<!-- EDIT3 TABLE [63-930] --><div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Funktion </th><th class="col1">Debian und Ubuntu </th><th class="col2">RedHat, Fedora und SuSE <sup><a href="#fn__4" id="fnt__4" class="fn_top">4)</a></sup> </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Pakete nach Größe sortiert ausgeben: </td><td class="col1"><pre class="code">dpkg-query -W --showformat=&#039;${Installed-Size} \
+${Package}\n&#039; | sort -n</pre>
+</td><td class="col2"><pre class="code">rpm -qa --queryformat &#039;%{SIZE} %{NAME}\n&#039; | sort -n</pre>
+</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Geaenderte Dateien suchen </td><td class="col1"><pre class="code">debsums -e procps</pre>
+</td><td class="col2"><pre class="code">rpm -V procps</pre>
+</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> Geänderte Konfigurationsdateien suchen </td><td class="col1"><pre class="code">debsums -ec</pre>
+</td><td class="col2"><pre class="code">rpm -qac --dump | perl -naF&#039;\s+&#039; -e &#039;print $F[0], $/ if -f $F[0] and not -l $F[0] and (split /\s+/, `md5sum $F[0]`)[0] ne $F[3]&#039; </pre>
+</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> Konfigurationsdatei wiederherstellen </td><td class="col1"><pre class="code">cd /var/cache/apt/archives/
+dpkg -i --force-confmiss dokuwiki_0.0.20120125b-2_all.deb</pre>
+</td><td class="col2"></td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> Zuletzt installierte Pakete anzeigen: </td><td class="col1"><pre class="code">grep &#039;status installed&#039; /var/log/dpkg.log</pre>
+</td><td class="col2"><pre class="code">rpm -qa --last | tac</pre>
+</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> Datenverzeichnis für Dienst <em>apache</em> finden: </td><td class="col1"><pre class="code">dpkg -S var/ | grep apache</pre>
+</td><td class="col2"></td>
+	</tr>
+</table></div>
+<!-- EDIT4 TABLE [932-1861] -->
+</div>
+<!-- EDIT2 SECTION "dpkg und rpm" [38-1862] -->
+<h3 class="sectionedit5" id="abhaengigkeiten_rpm">Abhängigkeiten (rpm)</h3>
+<div class="level3">
+
+<p>
+Von welchen Eigenschaften hängt das Paket <em>cups-libs</em> ab?
+</p>
+<pre class="code">rpm -q --requires cups</pre>
+
+<p>
+Welche Eigenschaften stellt das Paket <em>cups-libs</em> anderen Paketen zur Verfügung?
+</p>
+<pre class="code">rpm -q --provides paket</pre>
+
+<p>
+Welche Pakete hängen von der Eigenschaft <em>libcups.so.2</em> ab?
+</p>
+<pre class="code">rpm -q --whatrequires libcups.so.2</pre>
+
+<p>
+Welches Paket stellt die Eigenschaft <em>libcups.so.2</em> zur Verfügung?
+</p>
+<pre class="code">rpm -q --whatprovides libcups.so.2</pre>
+
+<p>
+Bei <em>dpkg</em> sind Pakete direkt von anderen Paketen abhängig.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Abhängigkeiten (rpm)" [1863-2362] -->
+<h1 class="sectionedit6" id="repository_basierte_paketverwaltung">Repository basierte Paketverwaltung</h1>
+<div class="level1">
+
+<p>
+TODO:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://mvogt.wordpress.com/2014/04/" class="urlextern" title="https://mvogt.wordpress.com/2014/04/"  rel="nofollow">apt</a> ist neu in debian 8.0 (jessie). Dieses Kapitel überarbeiten, sobald debian 7 nicht mehr supportet wird. </div>
+</li>
+<li class="level1"><div class="li"> <a href="http://dnf.readthedocs.org/en/latest/cli_vs_yum.html" class="urlextern" title="http://dnf.readthedocs.org/en/latest/cli_vs_yum.html"  rel="nofollow">dnf</a> statt yum, sobald das in CentOS ist. </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Repository basierte Paketverwaltung" [2363-2677] -->
+<h2 class="sectionedit7" id="apt_yum_und_zypper">apt, yum und zypper</h2>
+<div class="level2">
+<div class="table sectionedit8"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Funktion</th><th class="col1">Debian </th><th class="col2">RedHat </th><th class="col3">SuSE </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Repositories einbinden </td><td class="col1"> <pre class="code">apt-setup</pre>
+
+<p>
+<code>/etc/apt/sources.list</code> 
+</p>
+</td><td class="col2"> <code>/etc/yum.repos.d/*.repo</code> </td><td class="col3"> <code>/etc/zypp/repos.d/*.repo</code> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Repository-Daten aktualisieren</td><td class="col1"><pre class="code">aptitude update</pre>
+</td><td class="col2"><pre class="code">yum check-update</pre>
+</td><td class="col3"><pre class="code">zypper refresh</pre>
+</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Updates einspielen </td><td class="col1"><pre class="code">aptitude safe-upgrade</pre>
+
+<p>
+oder
+</p>
+<pre class="code">apt-get upgrade</pre>
+</td><td class="col2"><pre class="code">yum update</pre>
+</td><td class="col3"><pre class="code">zypper update</pre>
+</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Distributions upgrade </td><td class="col1"><pre class="code">aptitude full-upgrade</pre>
+
+<p>
+oder
+</p>
+<pre class="code">apt-get dist-upgrade</pre>
+</td><td class="col2"><pre class="code">yum upgrade</pre>
+</td><td class="col3"><pre class="code">zypper dup</pre>
+</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Nach Paketen suchen</td><td class="col1"><pre class="code">aptitude search suchwort
+apt-cache search suchwort</pre>
+</td><td class="col2"><pre class="code">yum search suchwort
+yum list | grep paketname</pre>
+</td><td class="col3"><pre class="code">zypper search suchwort</pre>
+</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">Beschreibung zu einem Paket anzeigen:</td><td class="col1"><pre class="code">aptitude show paketname</pre>
+</td><td class="col2"><pre class="code">yum info paketname</pre>
+</td><td class="col3"><pre class="code">zypper info paketname</pre>
+</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">Paket installieren</td><td class="col1"><pre class="code">aptitude install paketname
+apt-get install paketname</pre>
+</td><td class="col2"><pre class="code">yum install paketname</pre>
+</td><td class="col3"><pre class="code">zypper install paketname</pre>
+</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0">Paket erneut installieren</td><td class="col1"> TODO </td><td class="col2"><pre class="code">yum reinstall paketname</pre>
+</td><td class="col3"> TODO </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0">Paket entfernen</td><td class="col1"><pre class="code">aptitude remove paketname
+aptitude purge paketname
+apt-get [--purge] remove paketname</pre>
+</td><td class="col2"><pre class="code">yum remove paketname</pre>
+</td><td class="col3"></td>
+	</tr>
+	<tr class="row10">
+		<td class="col0">Paket für Datei <code>samba.schema</code> im Repository suchen</td><td class="col1"><pre class="code">apt-file update
+apt-file search samba.schema</pre>
+</td><td class="col2"> <pre class="code">yum provides */samba.schema</pre>
+</td><td class="col3"></td>
+	</tr>
+</table></div>
+<!-- EDIT8 TABLE [2710-3935] -->
+</div>
+<!-- EDIT7 SECTION "apt, yum und zypper" [2678-3936] -->
+<h3 class="sectionedit9" id="abhaengigkeiten_dpkg_und_apt">Abhängigkeiten (dpkg und apt)</h3>
+<div class="level3">
+
+<p>
+Von welchen Paketen ist das Paket <em>cups</em> abhängig?
+</p>
+<pre class="code">apt-cache depends cups</pre>
+
+<p>
+Welche Pakete sind vom Paket <em>cups</em> abhängig?
+</p>
+<pre class="code">apt-cache rdepends cups</pre>
+
+</div>
+<!-- EDIT9 SECTION "Abhängigkeiten (dpkg und apt)" [3937-4132] -->
+<h3 class="sectionedit10" id="yast_y2pmsh_rug_und_zypper">yast, y2pmsh, rug und zypper</h3>
+<div class="level3">
+
+<p>
+YaST, y2pmsh, rug und zypper sind nur für SuSE verfügbar.
+</p>
+<div class="table sectionedit11"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Funktion </th><th class="col1">y2pmsh ( SuSE 9.2 bis 10.1 / SLES 9 &amp; 10 ) <sup><a href="#fn__5" id="fnt__5" class="fn_top">5)</a></sup> </th><th class="col2">rug ( SuSE 10.1 bis 10.2 / SLES 10 ) </th><th class="col3">zypper ( ab SuSE 10.2) </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> Repositories einbinden </td><td class="col1"> <pre class="code">y2pmsh source --add http://suse/i386/update/10.1</pre>
+
+<p>
+oder
+</p>
+<pre class="code">y2pmsh source -a http://suse/i386/update/10.1</pre>
+</td><td class="col2"> <pre class="code">rug service-add -t zypp http://suse/i386/update/10.1 </pre>
+
+<p>
+oder
+</p>
+<pre class="code">rug sa -t zypp http://suse/i386/update/10.1 </pre>
+</td><td class="col3"><pre class="code">zypper service-add http://suse/i386/update/10.3</pre>
+
+<p>
+oder
+</p>
+<pre class="code">zypper service-add http://suse/i386/update/10.3</pre>
+</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Repository-Daten aktualisieren</td><td class="col1"></td><td class="col2"><pre class="code">rug refresh</pre>
+</td><td class="col3"><pre class="code">zypper refresh</pre>
+</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Updates einspielen </td><td class="col1"><pre class="code">y2pmsh upgrade
+y2pmsh commit</pre>
+</td><td class="col2"><pre class="code">rug update</pre>
+</td><td class="col3"><pre class="code">zypper update</pre>
+</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Nach Paketen suchen</td><td class="col1"><pre class="code">y2pmsh search suchwort</pre>
+</td><td class="col2"><pre class="code">rug search suchwort</pre>
+</td><td class="col3"><pre class="code">zypper search suchwort</pre>
+</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Paketbeschreibung anzeigen:</td><td class="col1"><pre class="code">y2pmsh show paketname</pre>
+</td><td class="col2"><pre class="code">rug info paketname</pre>
+</td><td class="col3"><pre class="code">zypper info paketname</pre>
+</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">Paket installieren</td><td class="col1"><pre class="code">y2pmsh isc paketname</pre>
+
+<p>
+oder
+</p>
+<pre class="code">y2pmsh install paketname
+y2pmsh solve
+y2pmsh commit</pre>
+</td><td class="col2"><pre class="code">rug install paketname</pre>
+</td><td class="col3"><pre class="code">zypper install paketname</pre>
+</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">Paket entfernen</td><td class="col1"><pre class="code">y2pmsh remove paketname
+y2pmsh solve
+y2pmsh commit</pre>
+</td><td class="col2"><pre class="code">rug remove paketname</pre>
+</td><td class="col3"><pre class="code">zypper remove paketname</pre>
+</td>
+	</tr>
+</table></div>
+<!-- EDIT11 TABLE [4233-5417] -->
+<p>
+Die Paketverwaltung von YaST baut bis SuSE 10.0 / SLES 9 auf dem Programm <code>y2pmsh</code> auf, daß man hier auch an Stelle von yast benutzen kann. <code>y2pmsh</code> hat auch einen interaktiven Modus: einfach starten, und die oben angegebenen Befehle funktionieren incl. Tab-Completion
+</p>
+
+<p>
+y2pmsh/YaST/rug/zypper bietet die Möglichkeit verschiedene Repositories einzubinden. Eine Liste verfügbarer Repositories findet sich hier: <a href="http://www.opensuse.org/Additional_YaST_Package_Repositories" class="urlextern" title="http://www.opensuse.org/Additional_YaST_Package_Repositories"  rel="nofollow">http://www.opensuse.org/Additional_YaST_Package_Repositories</a>
+</p>
+
+<p>
+Hier ist beschrieben, wie man ein lokales Repository für YaST erstellt: <a href="http://en.opensuse.org/Network_Installation_Source" class="urlextern" title="http://en.opensuse.org/Network_Installation_Source"  rel="nofollow">http://en.opensuse.org/Network_Installation_Source</a>
+</p>
+
+</div>
+<!-- EDIT10 SECTION "yast, y2pmsh, rug und zypper" [4133-6020] -->
+<h2 class="sectionedit12" id="neues_repository_samt_schluessel_zu_debian_hinzufuegen">Neues Repository samt Schlüssel zu Debian hinzufügen</h2>
+<div class="level2">
+
+<p>
+Adresse des Repositories zu <code>/etc/apt/sources.list.d</code> hinzufügen.
+</p>
+
+<p>
+Aus diesem Repository das Paket <code>repositoryname-keyring</code> installieren, darin sind die Schlüssel enthalten.
+</p>
+
+<p>
+Oder: <code>apt-key add dateiname</code>, fügt die Schlüssel aus <code>dateiname</code> zum Schlüsselbund hinzu.
+</p>
+
+<p>
+Mit <code>apt-key export keyId</code> wird ein Schlüssel aus einem bestehenden Schlüsselbund von APT auf stdout exportiert.
+</p>
+
+<p>
+Mit <code>gnupg –export –armor keyId</code> wird ein Schlüssel aus einem privaten Schlüsselbund auf stdout exportiert.
+</p>
+
+</div>
+<!-- EDIT12 SECTION "Neues Repository samt Schlüssel zu Debian hinzufügen" [6021-6599] -->
+<h2 class="sectionedit13" id="dokumentation">Dokumentation</h2>
+<div class="level2">
+
+<p>
+<a href="http://docs.fedoraproject.org/yum/en/" class="urlextern" title="http://docs.fedoraproject.org/yum/en/"  rel="nofollow"> Fedora </a>
+<a href="http://docs.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/ch-yum.html" class="urlextern" title="http://docs.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/ch-yum.html"  rel="nofollow"> RedHat </a>
+<a href="http://www.debian.org/doc/manuals/apt-howto/index.de.html" class="urlextern" title="http://www.debian.org/doc/manuals/apt-howto/index.de.html"  rel="nofollow"> Debian </a>
+<a href="http://de.opensuse.org/Paketverwaltung" class="urlextern" title="http://de.opensuse.org/Paketverwaltung"  rel="nofollow"> openSuSE </a>
+</p>
+
+<p>
+<a href="http://yum.baseurl.org/wiki/Guides" class="urlextern" title="http://yum.baseurl.org/wiki/Guides"  rel="nofollow"> yum</a>
+</p>
+
+</div>
+<!-- EDIT13 SECTION "Dokumentation" [6600-6963] -->
+<h1 class="sectionedit14" id="zusaetzliche_repositories">Zusätzliche Repositories</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT14 SECTION "Zusätzliche Repositories" [6964-7003] -->
+<h2 class="sectionedit15" id="debian">Debian</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://backports.org" class="urlextern" title="http://backports.org"  rel="nofollow">http://backports.org</a> - neuere Versionen vieler Pakete für Debian stable</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://deb-multimedia.org/" class="urlextern" title="http://deb-multimedia.org/"  rel="nofollow">http://deb-multimedia.org/</a> - Software und Codecs für Multimedia</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT15 SECTION "Debian" [7004-7169] -->
+<h2 class="sectionedit16" id="ubuntu">Ubuntu</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://getdeb.net" class="urlextern" title="http://getdeb.net"  rel="nofollow">http://getdeb.net</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.medibuntu.org/" class="urlextern" title="http://www.medibuntu.org/"  rel="nofollow">http://www.medibuntu.org/</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT16 SECTION "Ubuntu" [7170-7241] -->
+<h2 class="sectionedit17" id="redhat_centos_scientific_linux">RedHat / Centos / Scientific Linux</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://wiki.centos.org/Repositories" class="urlextern" title="http://wiki.centos.org/Repositories"  rel="nofollow">http://wiki.centos.org/Repositories</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT17 SECTION "RedHat / Centos / Scientific Linux" [7242-7329] -->
+<h2 class="sectionedit18" id="opensuse">openSuSE</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="https://de.opensuse.org/Paket_Repositories" class="urlextern" title="https://de.opensuse.org/Paket_Repositories"  rel="nofollow">https://de.opensuse.org/Paket_Repositories</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT18 SECTION "openSuSE" [7330-7402] -->
+<h1 class="sectionedit19" id="rpm">rpm</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT19 SECTION "rpm" [7403-7420] -->
+<h2 class="sectionedit20" id="defragmentieren_der_rpm-datenbank">Defragmentieren der RPM-Datenbank</h2>
+<div class="level2">
+<pre class="code">rpm --rebuilddb</pre>
+
+</div>
+
+<h4 id="links">Links</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> <a href="http://de.opensuse.org/SDB:Paketverwaltungsstapelspeicher_beschleunigen#Extern_defragmentieren" class="urlextern" title="http://de.opensuse.org/SDB:Paketverwaltungsstapelspeicher_beschleunigen#Extern_defragmentieren"  rel="nofollow"> Tips zu rpm und zypper </a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT20 SECTION "Defragmentieren der RPM-Datenbank" [7421-7630] -->
+<h2 class="sectionedit21" id="einzelne_dateien_aus_einem_rpm-paket_rausfischen">Einzelne Dateien aus einem .rpm-Paket rausfischen</h2>
+<div class="level2">
+
+<p>
+Anzeigen welche Dateien drin sind: <sup><a href="#fn__6" id="fnt__6" class="fn_top">6)</a></sup>
+</p>
+<pre class="code">rpm2cpio nxclient-1.5.0-113.i386.rpm | cpio -i -t</pre>
+
+<p>
+Datei extrahieren:
+</p>
+<pre class="code">rpm2cpio nxclient-1.5.0-113.i386.rpm | cpio -id ./usr/NX/share/keys/server.id_dsa.key</pre>
+
+</div>
+<!-- EDIT21 SECTION "Einzelne Dateien aus einem .rpm-Paket rausfischen" [7631-7914] -->
+<h2 class="sectionedit22" id="paketbeschreibungen">Paketbeschreibungen</h2>
+<div class="level2">
+
+<p>
+Die Beschreibungen von Paketen bei Debian sind im Original auf Englisch.
+Deutsche (und anderssprachige) Übersetzungen werden mit Hilfe des Debian
+Description Translation Project <a href="http://ddtp.debian.net/" class="urlextern" title="http://ddtp.debian.net/"  rel="nofollow">http://ddtp.debian.net/</a> organisiert
+und bei nächtlichen Durchläufen mit beachtet.
+</p>
+
+</div>
+<!-- EDIT22 SECTION "Paketbeschreibungen" [7915-8216] -->
+<h1 class="sectionedit23" id="lokale_paketverwaltung1">lokale Paketverwaltung</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT23 SECTION "lokale Paketverwaltung" [8217-8253] -->
+<h2 class="sectionedit24" id="dpkg_und_rpm1">dpkg und rpm</h2>
+<div class="level2">
+<div class="table sectionedit25"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Funktion </th><th class="col1">Debian und Ubuntu </th><th class="col2">RedHat, Fedora und SuSE <sup><a href="#fn__7" id="fnt__7" class="fn_top">7)</a></sup> </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Anzeigen welche Pakete installiert sind: </td><td class="col1"> <pre class="code">dpkg -l 
+COLUMNS=150 dpkg -l </pre>
+</td><td class="col2"><pre class="code">rpm -qa</pre>
+</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Anzeigen zu welchem Paket die Datei <code>/usr/bin/top</code> gehoert: </td><td class="col1"> <pre class="code">dpkg -S /usr/bin/top</pre>
+</td><td class="col2"><pre class="code">rpm -qf /usr/bin/top</pre>
+</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Beschreibung zum Paket <em>procps</em> anzeigen: </td><td class="col1"><pre class="code">dpkg -s procps</pre>
+</td><td class="col2"><pre class="code">rpm -qi procps</pre>
+</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Anzeigen welche Dateien zum Paket <em>procps</em> gehoeren: </td><td class="col1"><pre class="code">dpkg -L procps</pre>
+</td><td class="col2"><pre class="code">rpm -ql procps</pre>
+</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Paket installieren <sup><a href="#fn__8" id="fnt__8" class="fn_top">8)</a></sup>: </td><td class="col1"><pre class="code">dpkg -i xskat_4.0-1_i386.deb</pre>
+</td><td class="col2"><pre class="code">rpm -i datei.rpm</pre>
+</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">Paket loeschen: <sup><a href="#fn__9" id="fnt__9" class="fn_top">9)</a></sup> </td><td class="col1"><pre class="code">dpkg --remove paket
+dpkg --purge paket</pre>
+</td><td class="col2"><pre class="code">rpm -e &lt;paket&gt;</pre>
+</td>
+	</tr>
+</table></div>
+<!-- EDIT25 TABLE [8279-9146] --><div class="table sectionedit26"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Funktion </th><th class="col1">Debian und Ubuntu </th><th class="col2">RedHat, Fedora und SuSE <sup><a href="#fn__10" id="fnt__10" class="fn_top">10)</a></sup> </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Pakete nach Größe sortiert ausgeben: </td><td class="col1"><pre class="code">dpkg-query -W --showformat=&#039;${Installed-Size} \
+${Package}\n&#039; | sort -n</pre>
+</td><td class="col2"><pre class="code">rpm -qa --queryformat &#039;%{SIZE} %{NAME}\n&#039; | sort -n</pre>
+</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Geaenderte Dateien suchen </td><td class="col1"><pre class="code">debsums -e procps</pre>
+</td><td class="col2"><pre class="code">rpm -V procps</pre>
+</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> Geänderte Konfigurationsdateien suchen </td><td class="col1"><pre class="code">debsums -ec</pre>
+</td><td class="col2"><pre class="code">rpm -qac --dump | perl -naF&#039;\s+&#039; -e &#039;print $F[0], $/ if -f $F[0] and not -l $F[0] and (split /\s+/, `md5sum $F[0]`)[0] ne $F[3]&#039; </pre>
+</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> Konfigurationsdatei wiederherstellen </td><td class="col1"><pre class="code">cd /var/cache/apt/archives/
+dpkg -i --force-confmiss dokuwiki_0.0.20120125b-2_all.deb</pre>
+</td><td class="col2"></td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> Zuletzt installierte Pakete anzeigen: </td><td class="col1"><pre class="code">grep &#039;status installed&#039; /var/log/dpkg.log</pre>
+</td><td class="col2"><pre class="code">rpm -qa --last | tac</pre>
+</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> Datenverzeichnis für Dienst <em>apache</em> finden: </td><td class="col1"><pre class="code">dpkg -S var/ | grep apache</pre>
+</td><td class="col2"></td>
+	</tr>
+</table></div>
+<!-- EDIT26 TABLE [9148-10077] -->
+</div>
+<!-- EDIT24 SECTION "dpkg und rpm" [8254-10078] -->
+<h3 class="sectionedit27" id="abhaengigkeiten_rpm1">Abhängigkeiten (rpm)</h3>
+<div class="level3">
+
+<p>
+Von welchen Eigenschaften hängt das Paket <em>cups-libs</em> ab?
+</p>
+<pre class="code">rpm -q --requires cups</pre>
+
+<p>
+Welche Eigenschaften stellt das Paket <em>cups-libs</em> anderen Paketen zur Verfügung?
+</p>
+<pre class="code">rpm -q --provides paket</pre>
+
+<p>
+Welche Pakete hängen von der Eigenschaft <em>libcups.so.2</em> ab?
+</p>
+<pre class="code">rpm -q --whatrequires libcups.so.2</pre>
+
+<p>
+Welches Paket stellt die Eigenschaft <em>libcups.so.2</em> zur Verfügung?
+</p>
+<pre class="code">rpm -q --whatprovides libcups.so.2</pre>
+
+<p>
+Bei <em>dpkg</em> sind Pakete direkt von anderen Paketen abhängig.
+</p>
+
+</div>
+<!-- EDIT27 SECTION "Abhängigkeiten (rpm)" [10079-10578] -->
+<h1 class="sectionedit28" id="repository_basierte_paketverwaltung1">Repository basierte Paketverwaltung</h1>
+<div class="level1">
+
+<p>
+TODO:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://mvogt.wordpress.com/2014/04/" class="urlextern" title="https://mvogt.wordpress.com/2014/04/"  rel="nofollow">apt</a> ist neu in debian 8.0 (jessie). Dieses Kapitel überarbeiten, sobald debian 7 nicht mehr supportet wird. </div>
+</li>
+<li class="level1"><div class="li"> <a href="http://dnf.readthedocs.org/en/latest/cli_vs_yum.html" class="urlextern" title="http://dnf.readthedocs.org/en/latest/cli_vs_yum.html"  rel="nofollow">dnf</a> statt yum, sobald das in CentOS ist. </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT28 SECTION "Repository basierte Paketverwaltung" [10579-10893] -->
+<h2 class="sectionedit29" id="apt_yum_und_zypper1">apt, yum und zypper</h2>
+<div class="level2">
+<div class="table sectionedit30"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Funktion</th><th class="col1">Debian </th><th class="col2">RedHat </th><th class="col3">SuSE </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0">Repositories einbinden </td><td class="col1"> <pre class="code">apt-setup</pre>
+
+<p>
+<code>/etc/apt/sources.list</code> 
+</p>
+</td><td class="col2"> <code>/etc/yum.repos.d/*.repo</code> </td><td class="col3"> <code>/etc/zypp/repos.d/*.repo</code> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Repository-Daten aktualisieren</td><td class="col1"><pre class="code">aptitude update</pre>
+</td><td class="col2"><pre class="code">yum check-update</pre>
+</td><td class="col3"><pre class="code">zypper refresh</pre>
+</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Updates einspielen </td><td class="col1"><pre class="code">aptitude safe-upgrade</pre>
+
+<p>
+oder
+</p>
+<pre class="code">apt-get upgrade</pre>
+</td><td class="col2"><pre class="code">yum update</pre>
+</td><td class="col3"><pre class="code">zypper update</pre>
+</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Distributions upgrade </td><td class="col1"><pre class="code">aptitude full-upgrade</pre>
+
+<p>
+oder
+</p>
+<pre class="code">apt-get dist-upgrade</pre>
+</td><td class="col2"><pre class="code">yum upgrade</pre>
+</td><td class="col3"><pre class="code">zypper dup</pre>
+</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Nach Paketen suchen</td><td class="col1"><pre class="code">aptitude search suchwort
+apt-cache search suchwort</pre>
+</td><td class="col2"><pre class="code">yum search suchwort
+yum list | grep paketname</pre>
+</td><td class="col3"><pre class="code">zypper search suchwort</pre>
+</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">Beschreibung zu einem Paket anzeigen:</td><td class="col1"><pre class="code">aptitude show paketname</pre>
+</td><td class="col2"><pre class="code">yum info paketname</pre>
+</td><td class="col3"><pre class="code">zypper info paketname</pre>
+</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">Paket installieren</td><td class="col1"><pre class="code">aptitude install paketname
+apt-get install paketname</pre>
+</td><td class="col2"><pre class="code">yum install paketname</pre>
+</td><td class="col3"><pre class="code">zypper install paketname</pre>
+</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0">Paket erneut installieren</td><td class="col1"> TODO </td><td class="col2"><pre class="code">yum reinstall paketname</pre>
+</td><td class="col3"> TODO </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0">Paket entfernen</td><td class="col1"><pre class="code">aptitude remove paketname
+aptitude purge paketname
+apt-get [--purge] remove paketname</pre>
+</td><td class="col2"><pre class="code">yum remove paketname</pre>
+</td><td class="col3"></td>
+	</tr>
+	<tr class="row10">
+		<td class="col0">Paket für Datei <code>samba.schema</code> im Repository suchen</td><td class="col1"><pre class="code">apt-file update
+apt-file search samba.schema</pre>
+</td><td class="col2"> <pre class="code">yum provides */samba.schema</pre>
+</td><td class="col3"></td>
+	</tr>
+</table></div>
+<!-- EDIT30 TABLE [10926-12151] -->
+</div>
+<!-- EDIT29 SECTION "apt, yum und zypper" [10894-12152] -->
+<h3 class="sectionedit31" id="abhaengigkeiten_dpkg_und_apt1">Abhängigkeiten (dpkg und apt)</h3>
+<div class="level3">
+
+<p>
+Von welchen Paketen ist das Paket <em>cups</em> abhängig?
+</p>
+<pre class="code">apt-cache depends cups</pre>
+
+<p>
+Welche Pakete sind vom Paket <em>cups</em> abhängig?
+</p>
+<pre class="code">apt-cache rdepends cups</pre>
+
+</div>
+<!-- EDIT31 SECTION "Abhängigkeiten (dpkg und apt)" [12153-12348] -->
+<h3 class="sectionedit32" id="yast_y2pmsh_rug_und_zypper1">yast, y2pmsh, rug und zypper</h3>
+<div class="level3">
+
+<p>
+YaST, y2pmsh, rug und zypper sind nur für SuSE verfügbar.
+</p>
+<div class="table sectionedit33"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Funktion </th><th class="col1">y2pmsh ( SuSE 9.2 bis 10.1 / SLES 9 &amp; 10 ) <sup><a href="#fn__11" id="fnt__11" class="fn_top">11)</a></sup> </th><th class="col2">rug ( SuSE 10.1 bis 10.2 / SLES 10 ) </th><th class="col3">zypper ( ab SuSE 10.2) </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> Repositories einbinden </td><td class="col1"> <pre class="code">y2pmsh source --add http://suse/i386/update/10.1</pre>
+
+<p>
+oder
+</p>
+<pre class="code">y2pmsh source -a http://suse/i386/update/10.1</pre>
+</td><td class="col2"> <pre class="code">rug service-add -t zypp http://suse/i386/update/10.1 </pre>
+
+<p>
+oder
+</p>
+<pre class="code">rug sa -t zypp http://suse/i386/update/10.1 </pre>
+</td><td class="col3"><pre class="code">zypper service-add http://suse/i386/update/10.3</pre>
+
+<p>
+oder
+</p>
+<pre class="code">zypper service-add http://suse/i386/update/10.3</pre>
+</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">Repository-Daten aktualisieren</td><td class="col1"></td><td class="col2"><pre class="code">rug refresh</pre>
+</td><td class="col3"><pre class="code">zypper refresh</pre>
+</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">Updates einspielen </td><td class="col1"><pre class="code">y2pmsh upgrade
+y2pmsh commit</pre>
+</td><td class="col2"><pre class="code">rug update</pre>
+</td><td class="col3"><pre class="code">zypper update</pre>
+</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">Nach Paketen suchen</td><td class="col1"><pre class="code">y2pmsh search suchwort</pre>
+</td><td class="col2"><pre class="code">rug search suchwort</pre>
+</td><td class="col3"><pre class="code">zypper search suchwort</pre>
+</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">Paketbeschreibung anzeigen:</td><td class="col1"><pre class="code">y2pmsh show paketname</pre>
+</td><td class="col2"><pre class="code">rug info paketname</pre>
+</td><td class="col3"><pre class="code">zypper info paketname</pre>
+</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">Paket installieren</td><td class="col1"><pre class="code">y2pmsh isc paketname</pre>
+
+<p>
+oder
+</p>
+<pre class="code">y2pmsh install paketname
+y2pmsh solve
+y2pmsh commit</pre>
+</td><td class="col2"><pre class="code">rug install paketname</pre>
+</td><td class="col3"><pre class="code">zypper install paketname</pre>
+</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">Paket entfernen</td><td class="col1"><pre class="code">y2pmsh remove paketname
+y2pmsh solve
+y2pmsh commit</pre>
+</td><td class="col2"><pre class="code">rug remove paketname</pre>
+</td><td class="col3"><pre class="code">zypper remove paketname</pre>
+</td>
+	</tr>
+</table></div>
+<!-- EDIT33 TABLE [12449-13633] -->
+<p>
+Die Paketverwaltung von YaST baut bis SuSE 10.0 / SLES 9 auf dem Programm <code>y2pmsh</code> auf, daß man hier auch an Stelle von yast benutzen kann. <code>y2pmsh</code> hat auch einen interaktiven Modus: einfach starten, und die oben angegebenen Befehle funktionieren incl. Tab-Completion
+</p>
+
+<p>
+y2pmsh/YaST/rug/zypper bietet die Möglichkeit verschiedene Repositories einzubinden. Eine Liste verfügbarer Repositories findet sich hier: <a href="http://www.opensuse.org/Additional_YaST_Package_Repositories" class="urlextern" title="http://www.opensuse.org/Additional_YaST_Package_Repositories"  rel="nofollow">http://www.opensuse.org/Additional_YaST_Package_Repositories</a>
+</p>
+
+<p>
+Hier ist beschrieben, wie man ein lokales Repository für YaST erstellt: <a href="http://en.opensuse.org/Network_Installation_Source" class="urlextern" title="http://en.opensuse.org/Network_Installation_Source"  rel="nofollow">http://en.opensuse.org/Network_Installation_Source</a>
+</p>
+
+</div>
+<!-- EDIT32 SECTION "yast, y2pmsh, rug und zypper" [12349-14236] -->
+<h2 class="sectionedit34" id="neues_repository_samt_schluessel_zu_debian_hinzufuegen1">Neues Repository samt Schlüssel zu Debian hinzufügen</h2>
+<div class="level2">
+
+<p>
+Adresse des Repositories zu <code>/etc/apt/sources.list.d</code> hinzufügen.
+</p>
+
+<p>
+Aus diesem Repository das Paket <code>repositoryname-keyring</code> installieren, darin sind die Schlüssel enthalten.
+</p>
+
+<p>
+Oder: <code>apt-key add dateiname</code>, fügt die Schlüssel aus <code>dateiname</code> zum Schlüsselbund hinzu.
+</p>
+
+<p>
+Mit <code>apt-key export keyId</code> wird ein Schlüssel aus einem bestehenden Schlüsselbund von APT auf stdout exportiert.
+</p>
+
+<p>
+Mit <code>gnupg –export –armor keyId</code> wird ein Schlüssel aus einem privaten Schlüsselbund auf stdout exportiert.
+</p>
+
+</div>
+<!-- EDIT34 SECTION "Neues Repository samt Schlüssel zu Debian hinzufügen" [14237-14815] -->
+<h2 class="sectionedit35" id="dokumentation1">Dokumentation</h2>
+<div class="level2">
+
+<p>
+<a href="http://docs.fedoraproject.org/yum/en/" class="urlextern" title="http://docs.fedoraproject.org/yum/en/"  rel="nofollow"> Fedora </a>
+<a href="http://docs.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/ch-yum.html" class="urlextern" title="http://docs.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/ch-yum.html"  rel="nofollow"> RedHat </a>
+<a href="http://www.debian.org/doc/manuals/apt-howto/index.de.html" class="urlextern" title="http://www.debian.org/doc/manuals/apt-howto/index.de.html"  rel="nofollow"> Debian </a>
+<a href="http://de.opensuse.org/Paketverwaltung" class="urlextern" title="http://de.opensuse.org/Paketverwaltung"  rel="nofollow"> openSuSE </a>
+</p>
+
+<p>
+<a href="http://yum.baseurl.org/wiki/Guides" class="urlextern" title="http://yum.baseurl.org/wiki/Guides"  rel="nofollow"> yum</a>
+</p>
+
+</div>
+<!-- EDIT35 SECTION "Dokumentation" [14816-15179] -->
+<h1 class="sectionedit36" id="zusaetzliche_repositories1">Zusätzliche Repositories</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT36 SECTION "Zusätzliche Repositories" [15180-15219] -->
+<h2 class="sectionedit37" id="debian1">Debian</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://backports.org" class="urlextern" title="http://backports.org"  rel="nofollow">http://backports.org</a> - neuere Versionen vieler Pakete für Debian stable</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://deb-multimedia.org/" class="urlextern" title="http://deb-multimedia.org/"  rel="nofollow">http://deb-multimedia.org/</a> - Software und Codecs für Multimedia</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT37 SECTION "Debian" [15220-15385] -->
+<h2 class="sectionedit38" id="ubuntu1">Ubuntu</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://getdeb.net" class="urlextern" title="http://getdeb.net"  rel="nofollow">http://getdeb.net</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.medibuntu.org/" class="urlextern" title="http://www.medibuntu.org/"  rel="nofollow">http://www.medibuntu.org/</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT38 SECTION "Ubuntu" [15386-15457] -->
+<h2 class="sectionedit39" id="redhat_centos_scientific_linux1">RedHat / Centos / Scientific Linux</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://wiki.centos.org/Repositories" class="urlextern" title="http://wiki.centos.org/Repositories"  rel="nofollow">http://wiki.centos.org/Repositories</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT39 SECTION "RedHat / Centos / Scientific Linux" [15458-15545] -->
+<h2 class="sectionedit40" id="opensuse1">openSuSE</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="https://de.opensuse.org/Paket_Repositories" class="urlextern" title="https://de.opensuse.org/Paket_Repositories"  rel="nofollow">https://de.opensuse.org/Paket_Repositories</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT40 SECTION "openSuSE" [15546-15618] -->
+<h1 class="sectionedit41" id="rpm1">rpm</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT41 SECTION "rpm" [15619-15636] -->
+<h2 class="sectionedit42" id="defragmentieren_der_rpm-datenbank1">Defragmentieren der RPM-Datenbank</h2>
+<div class="level2">
+<pre class="code">rpm --rebuilddb</pre>
+
+</div>
+
+<h4 id="links1">Links</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> <a href="http://de.opensuse.org/SDB:Paketverwaltungsstapelspeicher_beschleunigen#Extern_defragmentieren" class="urlextern" title="http://de.opensuse.org/SDB:Paketverwaltungsstapelspeicher_beschleunigen#Extern_defragmentieren"  rel="nofollow"> Tips zu rpm und zypper </a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT42 SECTION "Defragmentieren der RPM-Datenbank" [15637-15846] -->
+<h2 class="sectionedit43" id="einzelne_dateien_aus_einem_rpm-paket_rausfischen1">Einzelne Dateien aus einem .rpm-Paket rausfischen</h2>
+<div class="level2">
+
+<p>
+Anzeigen welche Dateien drin sind: <sup><a href="#fn__12" id="fnt__12" class="fn_top">12)</a></sup>
+</p>
+<pre class="code">rpm2cpio nxclient-1.5.0-113.i386.rpm | cpio -i -t</pre>
+
+<p>
+Datei extrahieren:
+</p>
+<pre class="code">rpm2cpio nxclient-1.5.0-113.i386.rpm | cpio -id ./usr/NX/share/keys/server.id_dsa.key</pre>
+
+</div>
+<!-- EDIT43 SECTION "Einzelne Dateien aus einem .rpm-Paket rausfischen" [15847-16130] -->
+<h2 class="sectionedit44" id="paketbeschreibungen1">Paketbeschreibungen</h2>
+<div class="level2">
+
+<p>
+Die Beschreibungen von Paketen bei Debian sind im Original auf Englisch.
+Deutsche (und anderssprachige) Übersetzungen werden mit Hilfe des Debian
+Description Translation Project <a href="http://ddtp.debian.net/" class="urlextern" title="http://ddtp.debian.net/"  rel="nofollow">http://ddtp.debian.net/</a> organisiert
+und bei nächtlichen Durchläufen mit beachtet.
+</p>
+
+</div>
+<!-- EDIT44 SECTION "Paketbeschreibungen" [16131-] --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+, <sup><a href="#fnt__4" id="fn__4" class="fn_bot">4)</a></sup> 
+, <sup><a href="#fnt__7" id="fn__7" class="fn_bot">7)</a></sup> 
+, <sup><a href="#fnt__10" id="fn__10" class="fn_bot">10)</a></sup> 
+ OK, rpm ist auch für debian verfügbar, aber sollte da nur in besonderen Fällen eingesetzt werden </div>
+<div class="fn"><sup><a href="#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+, <sup><a href="#fnt__8" id="fn__8" class="fn_bot">8)</a></sup> 
+ das macht man normalerweise mit <em>apt-get</em>, <em>yum</em>, <em>zypper</em> oder <em>yast</em> </div>
+<div class="fn"><sup><a href="#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+, <sup><a href="#fnt__9" id="fn__9" class="fn_bot">9)</a></sup> 
+ auch das geht mit <em>apt-get</em>, <em>yum</em>, <em>zypper</em> oder <em>yast</em> </div>
+<div class="fn"><sup><a href="#fnt__5" id="fn__5" class="fn_bot">5)</a></sup> 
+, <sup><a href="#fnt__11" id="fn__11" class="fn_bot">11)</a></sup> 
+ nicht offiziell unterstützt - aber brauchbar </div>
+<div class="fn"><sup><a href="#fnt__6" id="fn__6" class="fn_bot">6)</a></sup> 
+, <sup><a href="#fnt__12" id="fn__12" class="fn_bot">12)</a></sup> 
+mehr zu <a href="/doku.php?id=cpio" class="wikilink2" title="cpio" rel="nofollow">cpio</a></div>
+</div>

@@ -1,0 +1,5 @@
+*<span class="kw2">&lt;?php</span><span class="sy0">*</span>
+<span class="sy0">*</span><span class="re0">$name</span> <span class="sy0">=</span> <span class="st0">&quot; Hans-Heinerich &quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="re0">$laenge</span> <span class="sy0">=</span> <a href="http://php.net/strlen"><span class="kw3">strlen</span></a><span class="br0">&#40;</span><span class="re0">$name</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;<span class="es4">$name</span> ist <span class="es4">$laenge</span> Zeichen lang (inklusive Leerzeichen)&lt;br /&gt;<span class="es1">\n</span>&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="sy1">?&gt;</span>*

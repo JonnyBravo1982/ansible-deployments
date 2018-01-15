@@ -1,0 +1,158 @@
+
+<h1 class="sectionedit1" id="namensaufloesung">Namensauflösung</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Namensauflösung" [1-31] -->
+<h2 class="sectionedit2" id="mdns_abschalten">mdns abschalten</h2>
+<div class="level2">
+
+<p>
+Ubuntu 14.04:
+</p>
+<pre class="code">apt-get --purge remove avahi-daemon</pre>
+
+</div>
+<!-- EDIT2 SECTION "mdns abschalten" [32-112] -->
+<h2 class="sectionedit3" id="resolvconf_abschalten">resolvconf abschalten</h2>
+<div class="level2">
+
+<p>
+Ubuntu 14.04:
+</p>
+<pre class="code">apt-get --purge remove resolvconf</pre>
+
+</div>
+<!-- EDIT3 SECTION "resolvconf abschalten" [113-197] -->
+<h2 class="sectionedit4" id="eigenen_rechnernamen_einstellen">Eigenen Rechnernamen einstellen</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT4 SECTION "Eigenen Rechnernamen einstellen" [198-241] -->
+<h3 class="sectionedit5" id="temporaer">Temporär</h3>
+<div class="level3">
+<pre class="code">hostname &lt;name&gt;</pre>
+
+</div>
+<!-- EDIT5 SECTION "Temporär" [242-280] -->
+<h3 class="sectionedit6" id="dauerhaft">Dauerhaft</h3>
+<div class="level3">
+
+<p>
+<code>/etc/HOSTNAME</code> ( SuSE )
+<sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup>
+</p>
+
+<p>
+<code>/etc/hostname</code> ( Debian )
+<pre class="file">notebook13</pre>
+
+<sup><a href="#fn__2" id="fnt__2" class="fn_top">2)</a></sup>
+</p>
+
+<p>
+<code>/etc/sysconfig/network</code> : ( RedHat )
+<sup><a href="#fn__3" id="fnt__3" class="fn_top">3)</a></sup>
+<pre class="file">HOSTNAME=notebook13.linuxhotel.de</pre>
+
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Dauerhaft" [281-891] -->
+<h2 class="sectionedit7" id="dns_client">DNS Client</h2>
+<div class="level2">
+
+<p>
+Wie und in welcher Reihenfolge sollen Netzwerknamen aufgelöst werden? 
+Mit Hilfe der Datei <code>/etc/hosts</code> und/oder eines Nameservers ?
+</p>
+
+<p>
+<code>/etc/nsswitch.conf</code>
+<pre class="file">hosts:      files dns</pre>
+
+</p>
+
+<p>
+Netzwerknamen fest einstellen:
+</p>
+
+<p>
+<code>/etc/hosts</code> :
+<pre class="file">127.0.0.1       localhost.localdomain localhost
+::1             localhost6.localdomain6 localhost6
+192.168.1.225   notebook25</pre>
+
+</p>
+
+<p>
+<abbr title="Domain Name System">DNS</abbr> Client Einstellungen:
+</p>
+
+<p>
+<code>/etc/resolv.conf</code>
+<pre class="file">search linuxhotel.de
+nameserver 192.168.1.7
+nameserver 192.168.1.6</pre>
+
+</p>
+
+</div>
+<!-- EDIT7 SECTION "DNS Client" [892-1432] -->
+<h3 class="sectionedit8" id="ubuntu_1204">Ubuntu 12.04</h3>
+<div class="level3">
+
+<p>
+<abbr title="Domain Name System">DNS</abbr> Client Einstellungen:
+</p>
+
+<p>
+<code>/etc/resolv.conf</code> nicht anfassen
+</p>
+
+<p>
+<pre class="file">auto eth0
+iface eth0 inet static
+    address 192.168.1.201
+    netmask 255.255.255.0
+    gateway 192.168.1.5
+    dns-nameservers 192.168.1.17
+    dns-search linuxhotel.de</pre>
+
+</p>
+
+<p>
+<code>/etc/dhcp/dhclient-enter-hooks.d/resolvconf</code>
+</p>
+
+<p>
+siehe
+</p>
+<pre class="code">man resolvconf</pre>
+
+</div>
+<!-- EDIT8 SECTION "Ubuntu 12.04" [1433-1807] -->
+<h2 class="sectionedit9" id="testen">Testen</h2>
+<div class="level2">
+
+<p>
+Clientseitig Namensauflösung testen:
+</p>
+<pre class="code">getent hosts $(hostname)
+getent hosts $(hostname -f)
+getent hosts 192.168.1.219</pre>
+
+<p>
+Nameserver abfragen:
+</p>
+<pre class="code">host &lt;name&gt; &lt;dns-server&gt;</pre>
+
+</div>
+<!-- EDIT9 SECTION "Testen" [1808-] --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+ TODO: SuSE Versionen, die systemd nutzen, verwenden möglicherweise auch <code>/etc/hostname</code>: <a href="http://0pointer.de/blog/projects/the-new-configuration-files.html" class="urlextern" title="http://0pointer.de/blog/projects/the-new-configuration-files.html"  rel="nofollow">http://0pointer.de/blog/projects/the-new-configuration-files.html</a> </div>
+<div class="fn"><sup><a href="#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+ FQDN wird aus <code>hostname</code> und <code>/etc/hosts</code> bzw. <code>/etc/resolv.conf</code> gebildet </div>
+<div class="fn"><sup><a href="#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+ TODO: RedHat Versionen, die systemd nutzen, verwenden möglicherweise auch <code>/etc/hostname</code>: <a href="http://0pointer.de/blog/projects/the-new-configuration-files.html" class="urlextern" title="http://0pointer.de/blog/projects/the-new-configuration-files.html"  rel="nofollow">http://0pointer.de/blog/projects/the-new-configuration-files.html</a> </div>
+</div>

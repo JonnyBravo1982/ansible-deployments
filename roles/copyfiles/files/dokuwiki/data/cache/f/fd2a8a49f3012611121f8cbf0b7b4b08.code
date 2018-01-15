@@ -1,0 +1,3 @@
+<span class="kw1">UPDATE</span> CMPG_CUSTOMPMSETTINGSRD
+<span class="kw1">SET</span>		Prima <span class="sy0">=</span> <span class="st0">'Standard'</span>
+<span class="kw1">WHERE</span>	Prima <span class="sy0">=</span> <span class="nu0">30</span>

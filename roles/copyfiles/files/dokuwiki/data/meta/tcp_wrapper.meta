@@ -1,0 +1,21 @@
+a:2:{s:7:"current";a:8:{s:4:"date";a:2:{s:7:"created";i:1461924941;s:8:"modified";i:1461924941;}s:7:"creator";s:10:"JonnyBravo";s:4:"user";s:10:"jonnybravo";s:11:"last_change";a:7:{s:4:"date";i:1461924941;s:2:"ip";s:14:"79.228.211.104";s:4:"type";s:1:"C";s:2:"id";s:11:"tcp_wrapper";s:4:"user";s:10:"jonnybravo";s:3:"sum";s:8:"angelegt";s:5:"extra";s:0:"";}s:5:"title";s:40:"netzwerk ps per tcpwrapper einschränken";s:11:"description";a:2:{s:15:"tableofcontents";a:6:{i:0;a:4:{s:3:"hid";s:40:"netzwerk_ps_per_tcpwrapper_einschraenken";s:5:"title";s:40:"netzwerk ps per tcpwrapper einschränken";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:23:"einen_rechner_verbieten";s:5:"title";s:23:"Einen Rechner verbieten";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:2;a:4:{s:3:"hid";s:45:"einen_rechner_erlauben_alle_anderen_verbieten";s:5:"title";s:46:"Einen Rechner erlauben, alle anderen verbieten";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:3;a:4:{s:3:"hid";s:34:"bei_zugriff_einen_aktion_ausloesen";s:5:"title";s:34:"Bei Zugriff einen Aktion auslösen";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:4;a:4:{s:3:"hid";s:35:"bei_zugriff_einen_aktion_ausloesen1";s:5:"title";s:34:"Bei Zugriff einen Aktion auslösen";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:5;a:4:{s:3:"hid";s:4:"doku";s:5:"title";s:4:"Doku";s:4:"type";s:2:"ul";s:5:"level";i:1;}}s:8:"abstract";s:267:"netzwerk ps per tcpwrapper einschränken
+
+Vorraussetzung: inetd
+
+Einen Rechner verbieten
+
+/etc/hosts.deny :
+
+
+ps : notebook04.linuxhotel.de
+
+
+
+evtl. Dienst neu starten
+
+Einen Rechner erlauben, alle anderen verbieten
+
+/etc/hosts.allow :
+
+
+ps : notebook04.linuxhotel.de";}s:8:"relation";a:2:{s:10:"references";a:1:{s:5:"inetd";b:0;}s:10:"firstimage";s:0:"";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}}s:10:"persistent";a:4:{s:4:"date";a:1:{s:7:"created";i:1461924941;}s:7:"creator";s:10:"JonnyBravo";s:4:"user";s:10:"jonnybravo";s:11:"last_change";a:7:{s:4:"date";i:1461924941;s:2:"ip";s:14:"79.228.211.104";s:4:"type";s:1:"C";s:2:"id";s:11:"tcp_wrapper";s:4:"user";s:10:"jonnybravo";s:3:"sum";s:8:"angelegt";s:5:"extra";s:0:"";}}}

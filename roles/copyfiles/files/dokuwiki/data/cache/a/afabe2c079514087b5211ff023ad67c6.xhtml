@@ -1,0 +1,147 @@
+
+<p>
+Overcoming hanging Note that nohupping backgrounded jobs is typically used to avoid terminating them when logging off from a remote SSH session. A different issue that often arises in this situation is that ssh is refusing to log off („hangs“), since it refuses to lose any data from/to the background job(s).[6][7] This problem can also be overcome by redirecting all three I/O streams:
+</p>
+<pre class="code"> $ nohup ./myprogram &gt; foo.out 2&gt; foo.err &lt; /dev/null &amp;</pre>
+
+<p>
+Also note that a closing SSH session does not always send a HUP signal to depending processes. Among others, this depends on whether a pseudo-terminal was allocated or not.[8]AlternativesThe screen or tmux command can also detach a process from the current shell. It allows to reattach to the process later on.e.g. the following call will run somescript.sh detached from SIGHUP and in the background:
+</p>
+<pre class="code"> $screen -A -m -d -S somename ./somescript.sh &amp;</pre>
+
+<p>
+The disown command is used to remove jobs from the job table, or to mark jobs so that a SIGHUP signal is not sent
+</p>
+
+<p>
+Die Nachricht des Tages steht in der „/etc/motd“ Datei und kann geändert werden.
+</p>
+
+<p>
+Neueste Dateien mit find
+</p>
+
+<p>
+find hat auch einige nützliche Optionen zum Auffinden der neuesten Dateien. find -mtime, -atime, -ctime
+</p>
+<pre class="code">find . -mtime -5 -type f</pre>
+
+<p>
+Findet alle Dateien, die innerhalb der letzten 5 Tage geändert wurden. Neben der modificationtime (-mtime) kann auch noch die acesstime (-atime) und die changetime (-ctime) verwendet werden. mtime bezieht sich auf den Inhalt der Datei (Wann wurde der Dateinhalt geändert?). ctime bezieht sich auf den inode (“Verzeichniseintrag”) und nicht direkt auf den Inhalt. Die ctime wird z.B. bei einem chown (change owner) oder chmod geändert. Anzeigen lässt sich die ctime mit “ls -lc“.
+</p>
+
+<p>
+Mit -mtime +5 findet man alle Dateien und Verzeichnisse, die älter als 5 Tage sind.
+</p>
+<pre class="code"># Dateien und Verz. älter als 5 Tage im Archiv löschen
+# in einer ( subshell )
+( cd ~/archiv &amp;&amp; find . -mtime +5 | xargs rm -rf )</pre>
+
+<p>
+Das funktioniert dank xargs auch, wenn sehr viele Dateien zu löschen sind.
+</p>
+
+<p>
+find -newer
+</p>
+
+<p>
+Welche Dateien schreibt das Programm xyz? Welche Dateien werden bei der Installation eines Programmes angelegt? Was habe ich alles geändert?
+</p>
+
+<p>
+Die Antwort auf diese Fragen bekommt man sehr schnell, wenn man vorher eine Zeitstempel-Datei als Referenz angelegt hat.
+</p>
+
+<p>
+ touch /tmp/my-timestamp   # Referenzdatei
+ …
+ # Programm starten, ….
+ …
+ # welche Dateien / Verzeichnisse wurden geändert?
+ find . -newer /tmp/my-timestamp | tee /tmp/newer.lst 
+ vi /tmp/newer.lst        # Inhalt kontrollieren
+ tar czf /tmp/newer.tgz `cat /tmp/newer.lst` # Pack &amp; Go
+</p>
+
+<p>
+Vorsicht: Der Inhalt des Listings sollte man unbedingt vor dem Einpacken kontrollieren, weil eventuell Devices (/dev/…) oder von anderen Benutzern geänderte Dateien mit enthalten sind, die nicht in so ein Archiv gehören.
+</p>
+
+<p>
+Die neuesten Dateien finden
+</p>
+
+<p>
+Wie finde ich die neuesten Dateien unter Linux?Ein Programm schreibt jedem Menge Logdateien mit cryptischen Dateinamen. Wie findet man die letzte Logdatei? Wie finde ich die letzten Dateien in meinem Browser-Cache?
+</p>
+<pre class="code">ls -ltr</pre>
+
+<p>
+Der ls-Befehl kann Dateien nach dem (Modifikations-) Datum (time) sortieren (Option -t). Die Option -r /reverse) dreht das Ergebnis einfach um.
+</p>
+
+<p>
+Mit
+</p>
+<pre class="code">ls -ltr</pre>
+
+<p>
+werden einfach alle Dateien in einem Verzeichnis umgekehrt nach der Zeit sortiert. Die neuesten (und wichtigsten) Dateien stehen dann am Ende des Listings. Wenn das Verzeichnis viele Dateien enthält, lässt man das Listing einfach an sich ‘vorbeirauschen’, die wichtigsten Dateien stehen unten.
+</p>
+
+<p>
+Analog findet
+</p>
+
+<p>
+ ls -lSr
+</p>
+
+<p>
+übrigens die größten Dateien (-S: sort by size). Nur die letzte Datei finden
+</p>
+
+<p>
+Die neueste Datei findet man z.B. in shell-Skripten zusammen mit tail. Die -l (long) Option stört an dieser Stelle und macht es nur kompliziert.
+</p>
+<pre class="code">last=`ls -tr | tail -1`
+if [ -z &quot;$last&quot; ]
+then
+       echo &quot;keine Datei gefunden&quot;
+else
+       echo &quot;letzte Datei: $last&quot;
+fi</pre>
+
+<p>
+Suchen in Unterverzeichnissen
+</p>
+
+<p>
+Bei der Suche in Unterverzeichnissen helfen find und xargs. Firefox organisiert seinen Cache in Unterverzeichnissen. Welches ist die zuletzt heruntergeladene Datei?
+</p>
+<pre class="code">cd ~/.mozilla/firefox/*/Cache           # In das Cache Verzeichnis wechseln
+find .  -type d | xargs ls -ltrd    # nur neueste Verzeichnisse suchen
+                                        # (ls -d: Verzeichnisinhalt nicht anzeigen)
+find .  -type f | xargs ls -ltr     # neueste Dateien finden
+...
+-rw------- 1 nie nie   16870 2011-04-15 20:35 ./2/6B/198B8d01
+-rw------- 1 nie nie  104418 2011-04-15 23:29 ./B/A5/8802Ad01
+-rw------- 1 nie nie   59192 2011-04-16 00:00 ./C/2D/B97F3d01
+-rw------- 1 nie nie  696680 2011-04-16 07:42 ./_CACHE_002_
+-rw------- 1 nie nie  525620 2011-04-16 07:42 ./_CACHE_001_
+-rw------- 1 nie nie 1934349 2011-04-16 07:42 ./_CACHE_003_</pre>
+<pre class="code">find . -type f</pre>
+
+<p>
+sucht nur nach Dateien (f), nicht nach Verzeichnissen (-type d). Vorsicht: Wenn viele Dateien an xargs übergeben werden, ruft das Programm ls mehrfach auf (Beschränkung der Kommandozeile) und das Ergebnis ist nicht 100% korrekt.
+</p>
+
+<p>
+In den meisten Fällen kann man sich aber schnell einen Überblick verschaffen.
+</p>
+
+<p>
+Splitet einen String bei den Wort key.
+</p>
+<pre class="code">echo ${CookieFileSplit##*key}</pre>

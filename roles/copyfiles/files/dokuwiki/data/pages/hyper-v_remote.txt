@@ -1,0 +1,14 @@
+Um eine Hyper-V Remoteverbindung unter Windows 10 aufzubauen muss winrm auf Server und Client aktiviert sein. Des Weiteren muss eine CredSSP Verbindung aufgebaut werden. 
+
+Server 
+<code powershell>
+SET-WSManQuickConfig 
+Enable-WSManCredSSP -Role Server
+</code>
+
+Client 
+<code powershell>
+SET-WSManQuickConfig 
+Enable-WSManCredSSP -Role Client -DelegateComputer "<ServerName>"
+</code>
+

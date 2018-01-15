@@ -1,0 +1,1 @@
+<span class="kw1">DELETE</span> <span class="kw1">FROM</span> SEDO_LockState <span class="kw1">WHERE</span> LockID <span class="sy0">=</span> <span class="st0">'&lt;LockID of the record identified in the previous query&gt;'</span>

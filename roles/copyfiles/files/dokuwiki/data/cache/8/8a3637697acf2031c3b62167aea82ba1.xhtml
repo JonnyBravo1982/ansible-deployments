@@ -1,0 +1,35 @@
+
+<p>
+Workaround:
+</p>
+<pre class="code">  First run slmgr.vbs /dlv and check the re-arm counter towards the bottom is zero
+  If it is not zero then you may be able to get away with running slmgr.vbs –rearm else you will need to use an unattend.xml file
+  Either add the below to your existing unattend.xml or there is an example unattend.xml at the bottom of his post. Save the unattend.xml file to C:\Windows System32\sysprep</pre>
+
+<p>
+XHTML
+&lt;settings pass=„generalize“&gt;
+&lt;component name=„Microsoft-Windows-Security-SPP“ processorArchitecture=„amd64“ publicKeyToken=„31bf3856ad364e35“ language=„neutral“ versionScope=„nonSxS“ xmlns:wcm=„<a href="http://schemas.microsoft.com/WMIConfig/2002/State" class="urlextern" title="http://schemas.microsoft.com/WMIConfig/2002/State"  rel="nofollow">http://schemas.microsoft.com/WMIConfig/2002/State</a>“ xmlns:xsi=„<a href="http://www.w3.org/2001/XMLSchema-instance" class="urlextern" title="http://www.w3.org/2001/XMLSchema-instance"  rel="nofollow">http://www.w3.org/2001/XMLSchema-instance</a>“&gt;
+&lt;SkipRearm&gt;1&lt;/SkipRearm&gt;
+&lt;/component&gt;
+&lt;/settings&gt;
+1
+2
+3
+4
+5
+</p>
+
+<p>
+&lt;settings pass=„generalize“&gt;
+&lt;component name=„Microsoft-Windows-Security-SPP“ processorArchitecture=„amd64“ publicKeyToken=„31bf3856ad364e35“ language=„neutral“ versionScope=„nonSxS“ xmlns:wcm=„<a href="http://schemas.microsoft.com/WMIConfig/2002/State" class="urlextern" title="http://schemas.microsoft.com/WMIConfig/2002/State"  rel="nofollow">http://schemas.microsoft.com/WMIConfig/2002/State</a>“ xmlns:xsi=„<a href="http://www.w3.org/2001/XMLSchema-instance" class="urlextern" title="http://www.w3.org/2001/XMLSchema-instance"  rel="nofollow">http://www.w3.org/2001/XMLSchema-instance</a>“&gt;
+&lt;SkipRearm&gt;1&lt;/SkipRearm&gt;
+&lt;/component&gt;
+&lt;/settings&gt;
+</p>
+<pre class="code">  Run slmgr.vbs –rearm
+  Use regedit and navigate to HKEY_LOCAL_MACHINE\SYSTEM\Setup\Status\SysprepStatus\GeneralizationState\ and change CleanupState to 2 and GeneralizationState to 7
+  Start =&gt; Run : msdtc -uninstall (wait few seconds)
+  Start =&gt; Run : msdtc -install (wait few seconds)
+  Restart the computer
+  Try Sysprep or SCCM again and you should be OK</pre>

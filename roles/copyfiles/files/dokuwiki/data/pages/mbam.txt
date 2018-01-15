@@ -1,0 +1,8 @@
+MBAM Installation Short and Dirty 
+
+Attation : 
+
+<code bash>
+setspn -s http/APMBAM01.apexxxx.xx dorheine\admin_mbam
+setspn -s http/APMBAM01 dorheine\admin_mbam
+</code>

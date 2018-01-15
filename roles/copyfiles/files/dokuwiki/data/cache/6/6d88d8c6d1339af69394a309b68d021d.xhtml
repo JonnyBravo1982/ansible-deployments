@@ -1,0 +1,16 @@
+
+<p>
+Manchmal kommt es vor das sich die SCCM Konsole nicht bearbeiten lässt da bereits ein andere Benutzer diese bearbeitet. Um die Bearbeitung zu entfernen muss ein delete in der Datenbank ausgeführt werden. 
+</p>
+
+<p>
+auslesen welche Benutzer in Bearbeitung sind :  
+<pre class="code sql"> <span class="kw1">SELECT</span> <span class="sy0">*</span> <span class="kw1">FROM</span> SEDO_LockState <span class="kw1">WHERE</span> LockStateID <span class="sy0">&lt;&gt;</span> <span class="nu0">0</span></pre>
+
+</p>
+
+<p>
+löschen eines Eintrags 
+<pre class="code sql"><span class="kw1">DELETE</span> <span class="kw1">FROM</span> SEDO_LockState <span class="kw1">WHERE</span> LockID <span class="sy0">=</span> <span class="st0">'&lt;LockID of the record identified in the previous query&gt;'</span></pre>
+
+</p>

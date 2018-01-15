@@ -1,0 +1,131 @@
+  <span class="co0">#!/bin/bash</span>
+  PaketInstall<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">if</span> <span class="kw2">dpkg</span> <span class="re5">-l</span> <span class="re4">$1</span> <span class="nu0">2</span><span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null
+  <span class="kw1">then</span>
+      <span class="kw3">echo</span>  <span class="re4">$1</span><span class="st0">&quot; ist bereits Installiert&quot;</span> 
+  <span class="kw1">else</span>
+      <span class="kw1">if</span> <span class="kw2">apt-get install</span> <span class="re4">$1</span> <span class="re5">-qq</span> <span class="re5">-y</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null
+      <span class="kw1">then</span> 
+              <span class="kw3">echo</span> <span class="re4">$1</span> <span class="st0">&quot;wurde erfolgreich Installiert&quot;</span>
+      <span class="kw1">else</span>
+              <span class="kw3">echo</span> <span class="re4">$1</span> <span class="st0">&quot;konnte nicht installiert werden&quot;</span>
+      <span class="kw1">fi</span> 
+ <span class="kw1">fi</span>
+ <span class="br0">&#125;</span>
+  <span class="co0"># Generate a random password</span>
+  <span class="co0">#  $1 = number of characters; defaults to 32</span>
+  <span class="co0">#  $2 = include special characters; 1 = yes, 0 = no; defaults to 1</span>
+  <span class="kw1">function</span> randpass<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ <span class="br0">&#91;</span> <span class="st0">&quot;$2&quot;</span> == <span class="st0">&quot;0&quot;</span> <span class="br0">&#93;</span> <span class="sy0">&amp;&amp;</span> <span class="re2">CHAR</span>=<span class="st0">&quot;[:alnum:]&quot;</span> <span class="sy0">||</span> <span class="re2">CHAR</span>=<span class="st0">&quot;[:graph:]&quot;</span>
+   <span class="re2">randomPassword</span>=<span class="sy0">`</span><span class="kw2">cat</span> <span class="sy0">/</span>dev<span class="sy0">/</span>urandom <span class="sy0">|</span> <span class="kw2">tr</span> <span class="re5">-cd</span> <span class="st0">&quot;<span class="es2">$CHAR</span>&quot;</span> <span class="sy0">|</span> <span class="kw2">head</span> <span class="re5">-c</span> <span class="co1">${1:-32}</span><span class="sy0">`</span>
+   <span class="kw3">echo</span>    
+  <span class="br0">&#125;</span>
+  <span class="co0">#####Modify New sources from drupal###### </span>
+  <span class="re2">DownloadLink</span>=<span class="st0">&quot;http://ftp.drupal.org/files/projects/drupal-7.37.tar.gz&quot;</span>
+  <span class="re2">TranslateFileDE</span>=<span class="st0">&quot;http://ftp.drupal.org/files/translations/7.x/drupal/drupal-7.0-alpha2.de.po&quot;</span>
+  <span class="co0">#################################</span>
+ <span class="kw1">if</span> <span class="br0">&#91;</span> <span class="re4">$#</span> <span class="sy0">!</span>= <span class="nu0">1</span> <span class="br0">&#93;</span>
+ <span class="kw1">then</span>
+      <span class="kw3">echo</span> <span class="st0">&quot;Es muss ein Argument Eingeben werden &quot;</span>
+      <span class="kw3">echo</span> <span class="st0">&quot;-install --Installiert drupal 7 mit mysql &quot;</span> 
+      <span class="kw3">echo</span> <span class="st0">&quot;-new-instance --legt eine neue drupal Instance an ohne Pakete&quot;</span>
+      <span class="kw3">exit</span>
+      <span class="kw1">else</span>
+      <span class="kw1">if</span> <span class="br0">&#91;</span> <span class="re4">$1</span> == <span class="st0">&quot;-install&quot;</span> <span class="br0">&#93;</span>
+      <span class="kw1">then</span> 
+              <span class="kw3">echo</span> <span class="st0">&quot;es werden alle benötigten Programme installiert php5 php5-gd php5-mysql apach2 mysql-server&quot;</span>
+              PaketInstall php5
+              PaketInstall php5-gd
+              PaketInstall php5-mysql
+              PaketInstall apache2 
+                       <span class="kw1">if</span> <span class="kw2">dpkg</span> <span class="re5">-l</span> mysql-server <span class="nu0">2</span><span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null
+                           <span class="kw1">then</span> 
+                                 <span class="kw3">echo</span>  <span class="st0">&quot;mysql-server ist bereits Installiert&quot;</span> 
+                                 <span class="kw3">echo</span> <span class="st0">&quot;Gib das MySQL Passwot ein : &quot;</span> 
+                                 <span class="kw2">read</span> <span class="re5">-s</span> password
+                            <span class="kw1">else</span>
+                                   <span class="kw3">echo</span> <span class="st0">&quot;Gib das MySQL Passwot ein : &quot;</span> 
+                             <span class="kw2">read</span> <span class="re5">-s</span> password 
+                             <span class="kw3">echo</span> <span class="st0">&quot;mysql mysql-server/root_password string <span class="es2">$password</span>&quot;</span> <span class="sy0">|</span> debconf-set-selections
+                             <span class="kw3">echo</span> <span class="st0">&quot;mysql mysql-server/root_password_again string <span class="es2">$password</span>&quot;</span> <span class="sy0">|</span> debconf-set-selections
+                             <span class="re2">DEBIAN_PRIORITY</span>=critical <span class="kw2">apt-get</span> <span class="re5">-qq</span> <span class="re5">-y</span> <span class="kw2">install</span> mysql-server
+                         <span class="kw1">fi</span>   
+              <span class="kw3">echo</span> <span class="st0">&quot;Download Drupal 7.37&quot;</span>
+              <span class="kw1">if</span> <span class="kw2">wget</span> <span class="re1">$DownloadLink</span>
+              <span class="kw1">then</span>
+                      <span class="kw3">echo</span> Drupal erfolgreich herruntergeladen <span class="sy0">!!</span> 
+              <span class="kw1">else</span>
+                      <span class="kw3">echo</span> Drupal konnte nicht herruntergeladen werden <span class="kw2">pr</span>üfe deine Internetverbindung
+              <span class="kw1">fi</span>
+              <span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;Wie heißt die neue Instance :&quot;</span> instance
+              randpass <span class="nu0">10</span> <span class="nu0">0</span> 
+              mysql <span class="re5">-u</span> root <span class="re5">--password</span>=<span class="re1">$password</span> <span class="re5">--execute</span>=<span class="st0">&quot;create database if not exists <span class="es2">$instance</span>;&quot;</span>
+              mysql <span class="re5">-u</span> root <span class="re5">--password</span>=<span class="re1">$password</span> <span class="re5">--execute</span>=<span class="st0">&quot;create user '<span class="es2">$instance</span>'@'localhost' identified by '<span class="es2">$randomPassword</span>';&quot;</span>
+              mysql <span class="re5">-u</span> root <span class="re5">--password</span>=<span class="re1">$password</span> <span class="re5">--execute</span>=<span class="st0">&quot;grant usage on *.* to '<span class="es2">$instance</span>'@'localhost' identified by '<span class="es2">$randomPassword</span>';&quot;</span>
+              mysql <span class="re5">-u</span> root <span class="re5">--password</span>=<span class="re1">$password</span> <span class="re5">--execute</span>=<span class="st0">&quot;grant all privileges on <span class="es2">$instance</span>.* to '<span class="es2">$instance</span>'@'localhost';&quot;</span>
+              mysql <span class="re5">-u</span> root <span class="re5">--password</span>=<span class="re1">$password</span> <span class="re5">--execute</span>=<span class="st0">&quot;flush privileges;&quot;</span>
+              <span class="kw1">if</span> <span class="kw2">tar</span> <span class="re5">-xzf</span> drupal-<span class="nu0">7.37</span>.tar<span class="sy0">*</span> <span class="re5">-C</span> <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>
+              <span class="kw1">then</span> 
+                      <span class="kw2">mv</span> <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>drupal-<span class="nu0">7.37</span> <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span><span class="re1">$instance</span>
+                      <span class="kw2">rm</span> drupal-<span class="nu0">7.37</span>.tar<span class="sy0">*</span>
+                      <span class="kw2">chown</span> <span class="re5">-R</span> www-data:www-data <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span><span class="re1">$instance</span>
+                      <span class="kw1">if</span> <span class="kw2">wget</span> <span class="re1">$TranslateFileDE</span>
+                      <span class="kw1">then</span> 
+                      <span class="co0">#####noch ändern split dircetory</span>
+                      <span class="kw2">mv</span> .<span class="sy0">/</span>drupal-<span class="nu0">7.0</span>-alpha2.de.po <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span><span class="re1">$instance</span><span class="sy0">/</span>profiles<span class="sy0">/</span>standard<span class="sy0">/</span>translations<span class="sy0">/</span>drupal-<span class="nu0">7.0</span>-alpha2.de.po
+                      <span class="kw1">else</span>
+                           <span class="kw3">echo</span> <span class="st0">&quot;prüfe Deine Verbindung zum i.net :)&quot;</span>             
+                      <span class="kw1">fi</span>
+                      <span class="kw3">echo</span> <span class="st0">&quot;bitte folgen sie den Anweisungen unter http://localhost/<span class="es2">$instance</span>&quot;</span>
+                      <span class="kw3">echo</span> <span class="st0">&quot;Datenbankname :<span class="es2">$instance</span>&quot;</span>
+                      <span class="kw3">echo</span> <span class="st0">&quot;Der Datenbank User lautet :<span class="es2">$instance</span>&quot;</span>
+                      <span class="kw3">echo</span> <span class="st0">&quot;Passwort :<span class="es2">$randomPassword</span>&quot;</span>
+                <span class="kw1">else</span>
+                      <span class="kw3">echo</span> <span class="st0">&quot;prüfe Deine Verbindung zum i.net :)&quot;</span>
+                <span class="kw1">fi</span>
+      <span class="kw1">elif</span> <span class="br0">&#91;</span> <span class="re4">$1</span> == <span class="st0">&quot;-new-instance&quot;</span> <span class="br0">&#93;</span>
+      <span class="kw1">then</span> 
+          <span class="kw3">echo</span> <span class="st0">&quot;Gib das MySQL Passwot ein : &quot;</span> 
+              <span class="kw2">read</span> <span class="re5">-s</span> password 
+              <span class="kw3">echo</span> <span class="st0">&quot;mysql mysql-server/root_password string <span class="es2">$password</span>&quot;</span> <span class="sy0">|</span> debconf-set-selections
+              <span class="kw3">echo</span> <span class="st0">&quot;mysql mysql-server/root_password_again string <span class="es2">$password</span>&quot;</span> <span class="sy0">|</span> debconf-set-selections
+              <span class="re2">DEBIAN_PRIORITY</span>=critical <span class="kw2">apt-get</span> <span class="re5">-qq</span> <span class="re5">-y</span> <span class="kw2">install</span> mysql-server
+              <span class="kw3">echo</span> <span class="st0">&quot;Download Drupal 7.37&quot;</span>
+              <span class="kw1">if</span> <span class="kw2">wget</span> <span class="re1">$DownloadLink</span>
+              <span class="kw1">then</span>
+                      <span class="kw3">echo</span> Drupal erfolgreich herruntergeladen <span class="sy0">!!</span> 
+              <span class="kw1">else</span>
+                      <span class="kw3">echo</span> Drupal konnte nicht herruntergeladen werden <span class="kw2">pr</span>üfe deine Internetverbindung
+              <span class="kw1">fi</span>
+              <span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;Wie heißt die neue Instance :&quot;</span> instance
+              randpass <span class="nu0">10</span> <span class="nu0">0</span> 
+              mysql <span class="re5">-u</span> root <span class="re5">--password</span>=<span class="re1">$password</span> <span class="re5">--execute</span>=<span class="st0">&quot;create database if not exists <span class="es2">$instance</span>;&quot;</span>
+              mysql <span class="re5">-u</span> root <span class="re5">--password</span>=<span class="re1">$password</span> <span class="re5">--execute</span>=<span class="st0">&quot;create user '<span class="es2">$instance</span>'@'localhost' identified by '<span class="es2">$randomPassword</span>';&quot;</span>
+              mysql <span class="re5">-u</span> root <span class="re5">--password</span>=<span class="re1">$password</span> <span class="re5">--execute</span>=<span class="st0">&quot;grant usage on *.* to '<span class="es2">$instance</span>'@'localhost' identified by '<span class="es2">$randomPassword</span>';&quot;</span>
+              mysql <span class="re5">-u</span> root <span class="re5">--password</span>=<span class="re1">$password</span> <span class="re5">--execute</span>=<span class="st0">&quot;grant all privileges on <span class="es2">$instance</span>.* to '<span class="es2">$instance</span>'@'localhost';&quot;</span>
+              mysql <span class="re5">-u</span> root <span class="re5">--password</span>=<span class="re1">$password</span> <span class="re5">--execute</span>=<span class="st0">&quot;flush privileges;&quot;</span>
+              <span class="kw1">if</span> <span class="kw2">tar</span> <span class="re5">-xzf</span> drupal-<span class="nu0">7.37</span>.tar<span class="sy0">*</span> <span class="re5">-C</span> <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span> <span class="sy0">&gt;&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null
+              <span class="kw1">then</span> 
+                      <span class="kw2">mv</span> <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>drupal-<span class="nu0">7.37</span> <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span><span class="re1">$instance</span>
+                      <span class="kw2">rm</span> drupal-<span class="nu0">7.37</span>.tar<span class="sy0">*</span>
+                      <span class="kw2">chown</span> <span class="re5">-R</span> www-data:www-data <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span><span class="re1">$instance</span>
+                      <span class="kw1">if</span> <span class="kw2">wget</span> <span class="re1">$TranslateFileDE</span> 
+                      <span class="kw1">then</span> 
+                      <span class="co0">#####noch ändern split dircetory</span>
+                      <span class="kw2">mv</span> .<span class="sy0">/</span>drupal-<span class="nu0">7.0</span>-alpha2.de.po <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span><span class="re1">$instance</span><span class="sy0">/</span>profiles<span class="sy0">/</span>standard<span class="sy0">/</span>translations<span class="sy0">/</span>drupal-<span class="nu0">7.0</span>-alpha2.de.po
+                      <span class="kw1">else</span>
+                           <span class="kw3">echo</span> <span class="st0">&quot;prüfe Deine Verbindung zum i.net :)&quot;</span>             
+                      <span class="kw1">fi</span>
+                      <span class="kw3">echo</span> <span class="st0">&quot;bitte folgen sie den Anweisungen unter http://localhost/<span class="es2">$instance</span>&quot;</span>
+                      <span class="kw3">echo</span> <span class="st0">&quot;Datenbankname :<span class="es2">$instance</span>&quot;</span>
+                      <span class="kw3">echo</span> <span class="st0">&quot;Der Datenbank User lautet :<span class="es2">$instance</span>&quot;</span>
+                      <span class="kw3">echo</span> <span class="st0">&quot;Passwort :<span class="es2">$randomPassword</span>&quot;</span>
+                <span class="kw1">else</span>
+                      <span class="kw3">echo</span> <span class="st0">&quot;prüfe Deine Verbindung zum i.net :)&quot;</span>
+                <span class="kw1">fi</span>
+      <span class="kw1">else</span> 
+              <span class="kw3">echo</span> <span class="re4">$1</span> <span class="st0">&quot;ist kein gültiges Argument&quot;</span>
+              <span class="kw3">echo</span> <span class="st0">&quot;-install --Installiert drupal 7 mit mysql &quot;</span> 
+              <span class="kw3">echo</span> <span class="st0">&quot;-new-instance --legt eine neue drupal Instance an ohne Pakete&quot;</span>
+    <span class="kw1">fi</span>
+  <span class="kw1">fi</span>

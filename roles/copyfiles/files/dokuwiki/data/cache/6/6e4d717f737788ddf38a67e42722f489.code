@@ -1,0 +1,10 @@
+&lt;IfModule mod_ssl.c&gt;
+    Listen 443
+&lt;/IfModule&gt;
+&lt;code&gt;
+&nbsp;
+&nbsp;
+4. Das SSL-Modul  wird installiert
+&lt;code linux&gt;
+sudo a2enmod ssl
+service apache2 force-reload 

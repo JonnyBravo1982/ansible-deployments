@@ -1,0 +1,84 @@
+===== sendmail Emulationsbefehle =====
+Auswahl von sendmail Emulationsbefehlen, die postfix beherrscht.
+==== Mail versenden ====
+Beispiel: Mail an root@localhost versenden
+=== mit sendmail ===
+  /usr/sbin/sendmail -bm root@localhost
+oder
+  /usr/sbin/sendmail root@localhost
+
+<file>
+Subject: testmail2
+
+test
+.
+</file>
+
+=== mit mail ===
+  mail -s 'willkommensmail' root@localhost
+
+<file>
+test
+.
+</file>
+
+==== Mail lesen ====
+Beispiel: Mail an root lesen
+  cat /var/spool/mail/root
+oder
+  mail
+
+==== Alias Datenbank aus /etc/aliases neu erzeugen ====
+Beispiel: Mails an admin weiterleiten an nutzer18
+
+''/etc/aliases'' :
+<file>
+admin: nutzer18
+</file>
+  newaliases
+oder
+  sendmail -bi
+oder
+  sendmail -I
+
+
+
+==== Mail weiterleiten ====
+Beispiel: Mail an den aktuellen Nutzer weiterleiten an nutzer02
+
+''~/.forward'' :
+<file>
+nutzer02
+</file>
+  chmod 600 .forward
+
+==== Testmail ====
+Beispiel: Testmail erzeugen die anzeigt, an welche Empfänger eine Mail wirklich gehen würde: 
+  sendmail -bv admin@localhost
+
+Z.B. in Kombination mit ''/etc/aliases'' sinnvoll.
+
+==== MTA starten ====
+Macht man in der Praxis eher mit dem Startskript, aber es geht auch so:
+  sendmail -bd
+
+==== Mail Server Chat ====
+Mit dem MTA über SMTP Befehle kommunizieren:
+  sendmail -bs
+
+==== Mail Warteschlange anzeigen ====
+  sendmail -bp
+oder 
+  mailq
+
+==== Mails aus Warteschlange versenden ====
+  sendmail -q
+
+==== Bestimmte Mail aus Warteschlange versenden ====
+  sendmail -qI23
+
+==== Mail an Domain aus Warteschlange versenden ====
+  sendmail -qRlinuxhotel.de
+
+==== Weitere Optionen ====
+  man sendmail

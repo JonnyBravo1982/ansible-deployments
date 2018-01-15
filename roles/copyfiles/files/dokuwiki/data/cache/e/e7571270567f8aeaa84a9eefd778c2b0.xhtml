@@ -1,0 +1,393 @@
+
+<h1 class="sectionedit1" id="rsyslog">rsyslog</h1>
+<div class="level1">
+
+<p>
+Beispiel: Logdaten von einem Rechner auf den nächsten übertragen
+</p>
+
+</div>
+<!-- EDIT1 SECTION "rsyslog" [1-89] -->
+<h2 class="sectionedit2" id="zielrechner">Zielrechner:</h2>
+<div class="level2">
+
+<p>
+Zielrechner netzwerkfähig machen:
+Passende Nachrichten in Datei <code>/var/log/beispiel</code> schreiben:
+</p>
+
+</div>
+
+<h4 id="debian_centos">Debian, CentOS</h4>
+<div class="level4">
+
+<p>
+<code>/etc/rsyslog.conf</code>: ( debian 5.0, centos 6.0 )
+<pre class="file">  $ModLoad imudp
+  $UDPServerRun 514
+  local5.info     -/var/log/beispiel</pre>
+
+</p>
+
+<p>
+Syntax der Konfigurationsdatei überprüfen:
+</p>
+<pre class="code">rsyslogd -N1</pre>
+
+<p>
+<sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup>
+</p>
+
+<p>
+Syslog neu starten:
+</p>
+<pre class="code">service rsyslog restart</pre>
+
+</div>
+
+<h4 id="suse">SuSE</h4>
+<div class="level4">
+
+<p>
+<code>/etc/rsyslog.d/remote.conf</code>: ( sles 11 SP 1 )
+<pre class="file">  $ModLoad imudp
+  $UDPServerRun 514</pre>
+
+<code>/etc/rsyslog.conf</code>: ( debian 5.0 )
+</p>
+
+<p>
+<pre class="file">  local5.info     -/var/log/beispiel</pre>
+
+</p>
+
+<p>
+Syslog neu starten:
+</p>
+<pre class="code">/etc/init.d/syslog restart</pre>
+
+</div>
+<!-- EDIT2 SECTION "Zielrechner:" [90-796] -->
+<h2 class="sectionedit3" id="absender-rechner">Absender-Rechner:</h2>
+<div class="level2">
+
+<p>
+<code>/etc/rsyslog.d/local5.conf</code> :
+<pre class="file">  local5.info     @zielrechner</pre>
+
+</p>
+
+<p>
+Syslog neu einlesen:
+</p>
+<pre class="code">/etc/init.d/rsyslog restart</pre>
+
+<p>
+Testen: Meldung abschicken:
+</p>
+<pre class="code">logger -p local5.info &quot;Testmeldung&quot;</pre>
+
+</div>
+<!-- EDIT3 SECTION "Absender-Rechner:" [797-1025] -->
+<h2 class="sectionedit4" id="property_based_filter">property based filter</h2>
+<div class="level2">
+
+<p>
+Auf dem Zielrechner:
+<pre class="file">
+:syslogtag, isequal, &quot;ingo:&quot;          /var/log/ingo.log
+&amp; ~ # in der vorherigen Zeile ausgegebene Meldungen nicht erneut ausgeben
+:source , !isequal , &quot;notebook02&quot;     ~</pre>
+
+</p>
+
+</div>
+<!-- EDIT4 SECTION "property based filter" [1026-1306] -->
+<h1 class="sectionedit5" id="syslog">syslog</h1>
+<div class="level1">
+
+<p>
+Beispiel: Logdaten von einem Rechner auf den nächsten übertragen
+</p>
+
+</div>
+<!-- EDIT5 SECTION "syslog" [1307-1395] -->
+<h2 class="sectionedit6" id="zielrechner1">Zielrechner:</h2>
+<div class="level2">
+
+<p>
+Zielrechner netzwerkfähig machen:
+</p>
+
+<p>
+<code>/etc/sysconfig/syslog</code> : ( Centos 5 )
+<pre class="file">SYSLOGD_OPTIONS=&quot;-m 0 -r&quot;</pre>
+
+</p>
+
+<p>
+<code>/etc/sysconfig/syslog</code>: ( openSuSE 11.1 )
+<pre class="code bash">  <span class="re2">SYSLOGD_PARAMS</span>=<span class="st0">&quot;-r&quot;</span></pre>
+
+</p>
+
+<p>
+<code>/etc/default/syslogd</code>: ( debian 4.0 )
+<pre class="code bash">  <span class="re2">SYSLOGD</span>=<span class="st0">&quot;-r&quot;</span></pre>
+
+</p>
+
+<p>
+Passende Nachrichten in Datei &#039;/var/log/beispiel&#039; schreiben:
+</p>
+
+<p>
+<code>/etc/syslog.conf</code> :
+<pre class="file">local5.info     -/var/log/beispiel</pre>
+
+</p>
+
+<p>
+Syslog neu starten:
+</p>
+<pre class="code">/etc/init.d/sysklogd restart</pre>
+
+</div>
+<!-- EDIT6 SECTION "Zielrechner:" [1396-1892] -->
+<h2 class="sectionedit7" id="absender-rechner1">Absender-Rechner:</h2>
+<div class="level2">
+
+<p>
+/etc/syslog.conf:
+</p>
+<pre class="code">local5.info     @zielrechner</pre>
+
+<p>
+Syslog neu einlesen:
+</p>
+<pre class="code">/etc/init.d/sysklogd restart</pre>
+
+<p>
+Testen: Meldung abschicken:
+</p>
+<pre class="code">logger -p local5.info &quot;Testmeldung&quot;</pre>
+
+</div>
+<!-- EDIT7 SECTION "Absender-Rechner:" [1893-2092] -->
+<h1 class="sectionedit8" id="syslog-ng">syslog-ng</h1>
+<div class="level1">
+
+<p>
+Beispiel: Eine eigene log-Regel schreiben:
+</p>
+
+<p>
+<code>/etc/syslog-ng/syslog-ng.conf.in</code>: (SuSE bis 10.1)
+</p>
+
+<p>
+<code>/etc/syslog-ng/syslog-ng.conf</code>: (SuSE ab 10.2)
+<pre class="file">filter f_ingo { 
+  level(warn) and program(logger); 
+};
+destination ingo_log { 
+  file(&quot;/var/log/ingo.log&quot;); 
+};
+log { 
+  source(src); 
+  filter(f_ingo); 
+  destination(ingo_log); 
+};</pre>
+
+Configdatei überprüfen:
+</p>
+<pre class="code">syslog-ng -s</pre>
+
+<p>
+Dienst neu starten und evtl. SuSEconfig glücklich machen
+</p>
+<pre class="code">/sbin/conf.d/SuSEconfig.syslog-ng
+/etc/init.d/syslog restart</pre>
+
+<p>
+Testen:
+</p>
+<pre class="code">logger -p local1.warn -t logger &quot;Dies ist eine Testmeldung&quot;</pre>
+
+<p>
+Beispiel: Logdaten von einem Rechner auf den nächsten übertragen
+</p>
+
+</div>
+<!-- EDIT8 SECTION "syslog-ng" [2093-2769] -->
+<h2 class="sectionedit9" id="zielrechner2">Zielrechner:</h2>
+<div class="level2">
+
+<p>
+Zielrechner netzwerkfähig machen :
+</p>
+
+<p>
+<code>/etc/syslog-ng/syslog-ng.conf.in</code>: (SuSE bis 10.1)
+</p>
+
+<p>
+<code>/etc/syslog-ng/syslog-ng.conf</code>: (SuSE ab 10.2)
+</p>
+
+<p>
+<pre class="file">source src{
+
+  ...
+
+  udp(ip(&quot;0.0.0.0&quot;) port(514));
+
+};  </pre>
+
+</p>
+
+<p>
+Meldungen bestimmter Log-Facilities und Log-Priorities werden durch Filter und Destination definiert
+</p>
+
+<p>
+<pre class="file">filter f_local5 { 
+  level(info) and facility(local5); 
+}; 
+
+destination d_local5 { 
+  file(&quot;/var/log/beispiel&quot;); 
+};
+
+log { 
+  source(src) ; 
+  filter(f_local5) ; 
+  destination(d_local5); 
+};  </pre>
+
+</p>
+
+<p>
+Danach <code>SuSEconfig</code> oder <code>/sbin/conf.d/SuSEconfig.syslog-ng</code> aufrufen um die Änderungen permanent zu übertragen und syslog-ng reloaden.
+</p>
+<pre class="code">rcsyslog reload</pre>
+
+</div>
+<!-- EDIT9 SECTION "Zielrechner:" [2770-3487] -->
+<h2 class="sectionedit10" id="absender-rechner2">Absender-Rechner</h2>
+<div class="level2">
+
+<p>
+<code>/etc/syslog-ng/syslog-ng.conf.in</code>: (SuSE bis 10.1)
+</p>
+
+<p>
+<code>/etc/syslog-ng/syslog-ng.conf</code>: (SuSE ab 10.2)
+</p>
+
+<p>
+<pre class="file">destination d_ziel { udp( &quot;Zielrechner&quot; port(514) ); };
+
+log { source(src); destination(d_ziel);  };</pre>
+
+</p>
+
+<p>
+<code>SuSEconfig</code> aufrufen zum Ändern der Konfigdatei und syslog reloaden
+</p>
+
+<p>
+  rcsyslog reload
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Absender-Rechner" [3488-3832] -->
+<h1 class="sectionedit11" id="doku">Doku</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> Facility:</div>
+</li>
+</ul>
+
+<p>
+Nicht jedes Linux/Unix hat alle Facilities:
+<pre class="file">  Facility        Description              
+  ----------------------------                                                        
+  auth/security   Activity related to requesting name and password (getty, su, login)              
+  authpriv        Same as auth but logged to a file that can only be read by selected users        
+  console         Used to capture messages that would generally be directed to the system console  
+  cron            Messages from the cron system scheduler                                          
+  daemon          System daemon catch-all                                                          
+  ftp             Messages relating to the ftp daemon                                              
+  kern            Kernel messages                                                                  
+  local0.local7   &lt;Local facilities defined per site                                               
+  lpr             Messages from the line printing system                                           
+  mail            Messages relating to the mail system                                             
+  mark            Pseudo event used to generate timestamps in log files                            
+  news            Messages relating to network news protocol (nntp)                                
+  ntp             Messages relating to network time protocol                                       
+  syslog          Syslog service
+  user            Regular user processes                                                           
+  uucp            UUCP subsystem      </pre>
+
+</p>
+<ul>
+<li class="level1"><div class="li"> Level (Severity): </div>
+</li>
+</ul>
+
+<p>
+<pre class="file">emerg    Emergency condition, such as an imminent system crash, usually broadcast to all users
+alert    Condition that should be corrected immediately, such as a corrupted system database
+crit     Critical condition, such as a hardware error
+err      Ordinary error
+warning  Warning
+notice   Condition that is not an error, but possibly should be handled in a special way
+info     Informational message
+debug    Messages that are used when debugging programs
+none     Pseudo level used to specify not to log messages.</pre>
+
+<code>debug, info, notice, warning, warn (same as warning), err, error (same as err), crit, alert, emerg,  panic  (same  as  emerg)</code>
+</p>
+
+<p>
+<sup><a href="#fn__2" id="fnt__2" class="fn_top">2)</a></sup>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Doku" [3833-6530] -->
+<h2 class="sectionedit12" id="syslog1">Syslog</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://de.linwiki.org/wiki/Linuxfibel_-_System-Administration_-_Protokollierung" class="urlextern" title="http://de.linwiki.org/wiki/Linuxfibel_-_System-Administration_-_Protokollierung"  rel="nofollow">http://de.linwiki.org/wiki/Linuxfibel_-_System-Administration_-_Protokollierung</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT12 SECTION "Syslog" [6531-6634] -->
+<h2 class="sectionedit13" id="syslog-ng1">Syslog-NG</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.linux-magazin.de/Artikel/ausgabe/2003/11/tagebuch/tagebuch.html" class="urlextern" title="http://www.linux-magazin.de/Artikel/ausgabe/2003/11/tagebuch/tagebuch.html"  rel="nofollow">http://www.linux-magazin.de/Artikel/ausgabe/2003/11/tagebuch/tagebuch.html</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.wikidorf.de/reintechnisch/Inhalt/SyslogNGEinfuehrung" class="urlextern" title="http://www.wikidorf.de/reintechnisch/Inhalt/SyslogNGEinfuehrung"  rel="nofollow">http://www.wikidorf.de/reintechnisch/Inhalt/SyslogNGEinfuehrung</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.balabit.com/products/syslog_ng/reference-1.6/syslog-ng.html/book1.html" class="urlextern" title="http://www.balabit.com/products/syslog_ng/reference-1.6/syslog-ng.html/book1.html"  rel="nofollow">http://www.balabit.com/products/syslog_ng/reference-1.6/syslog-ng.html/book1.html</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT13 SECTION "Syslog-NG" [6635-] --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+<a href="http://www.rsyslog.com/how-can-i-check-the-config/" class="urlextern" title="http://www.rsyslog.com/how-can-i-check-the-config/"  rel="nofollow">http://www.rsyslog.com/how-can-i-check-the-config/</a> </div>
+<div class="fn"><sup><a href="#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+
+Testskript für Alles
+<pre class="file">for fac in auth authpriv cron daemon ftp kern lpr mail mark news syslog user uucp local0 local1 local2 local3 local4 local5 local6 local7; do 
+  for lev in debug info notice warning err crit alert emerg; do 
+    logger -p &quot;${fac}.${lev}&quot; &quot;${fac}.${lev}&quot;
+  done
+done</pre>
+
+</div>
+</div>

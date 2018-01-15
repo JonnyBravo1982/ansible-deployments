@@ -1,0 +1,196 @@
+
+<h1 class="sectionedit1" id="glusterfs">GlusterFS</h1>
+<div class="level1">
+
+<p>
+GlusterFS ist ein verteiltes Dateisystem, das Speicherelemente von mehreren Servern als einheitliches Dateisystem präsentiert. Die verschiedenen Server, auch Cluster-Nodes (englisch node ‚Knoten‘) genannt, bilden eine Client-Server-Architektur über TCP/IP. Als Besonderheit können NAS-Systeme über Infiniband direkt in den Cluster eingebunden werden, auch eine redundante Anbindung von Speichermedien über TCP/IP, Infiniband Verbs oder InfiniBand SDP (Socket Direct Protocol) ist möglich. Die Daten auf allen Cluster-Nodes können gleichzeitig gelesen und geschrieben werden, wobei alle Änderungen an Dateien auf allen Servern augenblicklich umgesetzt werden. Das Dateisystem wird über ein FUSE-Kernel-Modul eingebunden und wird von POSIX-fähigen Betriebssystemen unterstützt, zum Beispiel Linux, FreeBSD, OpenSolaris und Mac <abbr title="Operating System">OS</abbr> X. Um einen GlusterFS-Server zu starten, wird kein Kernel-Modul benötigt. Ein Server kann sowohl Client als auch Server gleichzeitig sein. Ein Client für Windows-Systeme ist in Planung, wird aber von den Entwicklern erst umgesetzt, sobald das WinFUSE-Projekt stabil läuft.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "GlusterFS" [1-1145] -->
+<h2 class="sectionedit2" id="szenario">Szenario</h2>
+<div class="level2">
+
+<p>
+Das folgende Szenario beschreibt die Erstellung eines  GlusterFS auf 2 Fedora-Servern. Alle Server haben eine zweite zusätzliche Festplatte sdb.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Szenario" [1146-1314] -->
+<h3 class="sectionedit3" id="schritt_fuer_schritt">Schritt für Schritt</h3>
+<div class="level3">
+
+<p>
+Als erstes müssen die beiden Festplatten sdb formatiert und gemountet werden. Diese Schritte werden auf beiden Servern ausgeführt.  
+<pre class="code bash"><span class="kw2">fdisk</span> <span class="sy0">/</span>dev<span class="sy0">/</span>sdb
+n
+<span class="kw2">w</span>
+mkfs.xfs <span class="re5">-i</span> <span class="re2">size</span>=<span class="nu0">512</span> <span class="sy0">/</span>dev<span class="sy0">/</span>sdb1 <span class="re5">-f</span>
+<span class="kw2">mkdir</span> <span class="re5">-p</span> <span class="sy0">/</span>data<span class="sy0">/</span>brick1
+<span class="kw3">echo</span> <span class="st0">&quot;/dev/sdb1 /data/brick1 xfs defaults 1 2&quot;</span> <span class="sy0">&gt;&gt;</span> <span class="sy0">/</span>etc<span class="sy0">/</span>fstab
+<span class="kw2">mount</span> <span class="re5">-a</span></pre>
+
+</p>
+
+<p>
+Nach der Partitionierung wird glusterfs installiert. Dieser Schritt wird auf beiden Servern ausgeführt.  
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">yum install</span> glusterfs-server
+systemctl start glusterd</pre>
+
+</p>
+
+<p>
+Alle beiden Server bekommen eine static IP-Addresse. Dazu wird die /etc/sysconfig/network-scripts/ifcfg-eth0 und die /etc/sysconfig/network Datei angepasst : 
+</p>
+
+<p>
+ifcfg-eth0 Datei
+<pre class="code">BOOTPROTO=none
+GATEWAY=10.0.75.1
+IPADDR0=10.0.75.51
+PREFIX=&quot;24&quot;</pre>
+
+</p>
+
+<p>
+network Datei
+<pre class="code">GATEWAY=10.0.75.2</pre>
+
+</p>
+
+<p>
+In meinem Beispiel habe ich SELINUX und die Firewall (iptables -F) auf beiden Servern deaktiviert. Dazu muss die Datei /etc/selinux/config wie folgt angepasst werden. 
+<pre class="code"> SELINUX=disabled or SELINUX=permissive </pre>
+
+</p>
+
+<p>
+Nach einer Anpassung der selinux/config müssen die Server neu gestartet werden.
+</p>
+
+<p>
+Als nächstes wird über glusterfs eine Verbindung zu den beiden Servern aufgebaut. 
+</p>
+
+<p>
+Server01 
+<pre class="code bash">gluster peer probe Server02
+gluster peer Status </pre>
+
+</p>
+
+<p>
+Server02 
+<pre class="code bash">gluster peer probe Server01
+gluster peer Status </pre>
+
+</p>
+
+<p>
+Wenn SELinux und die Firewall korrekt konfiguriert sind zeigt der Status folgendes an „peer in Cluster (connected)“
+</p>
+
+<p>
+Falls der Service nicht dauerhaft läuft kann er aktiviert werden. 
+<pre class="code bash">systemctl <span class="kw3">enable</span> glusterfsd </pre>
+
+</p>
+
+<p>
+Einrichtung des Clusters: 
+</p>
+
+<p>
+Das Mountverzeichnis wird auf beiden Servern angelegt. 
+</p>
+
+<p>
+&lt;/code&gt;
+mkdir /data/brick1/gv0
+&lt;/code&gt;
+Als nächstes wird das GlusterFS-Volumen formatiert. Die Ausführung erfolgt nur auf einen der Server. :
+</p>
+
+<p>
+<pre class="code bash">gluster  volume create gv0 replica <span class="nu0">2</span> transport tcp Server1:<span class="sy0">/</span>data<span class="sy0">/</span>brick1<span class="sy0">/</span>gv0 Server2:<span class="sy0">/</span>data<span class="sy0">/</span>brick1<span class="sy0">/</span>gv0</pre>
+
+</p>
+
+<p>
+Das Volume wird nun gestartet. 
+</p>
+
+<p>
+<pre class="code bash">gluster volume start gv0</pre>
+
+</p>
+
+<p>
+Der Status kann mit dem Kommando geprüft werden.
+</p>
+
+<p>
+<pre class="code bash">gluster volume info</pre>
+
+</p>
+
+<p>
+Mit dem GlusterFS Client kann nun auf das Volumen von einen beliebigen Client zugriffen werden. 
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">yum install</span> glusterfs-client </pre>
+
+</p>
+
+<p>
+Glusterfs-Volumen auf einem Client mounten 
+<pre class="code bash">mount.glusterfs server1:<span class="sy0">/</span>gv0 <span class="sy0">/</span>mnt<span class="sy0">/</span>glusterfs</pre>
+
+</p>
+
+<p>
+Der Eintrag in die /etc/fstab sieht dann wie folgt aus : 
+</p>
+
+<p>
+<pre class="code bash">server01:<span class="sy0">/</span>gv0 <span class="sy0">/</span>mnt<span class="sy0">/</span>glusterfs glusterfs defaults,_netdev <span class="nu0">0</span> <span class="nu0">0</span></pre>
+
+</p>
+
+<p>
+<strong>Samba-anpassung</strong>
+</p>
+
+<p>
+Samba wird wie folgt Installiert 
+<pre class="code bash"><span class="kw2">yum install</span> samba-vfs-glusterfs
+<span class="kw2">yum install</span> samba-client</pre>
+
+</p>
+
+<p>
+—–läuft noch nicht 
+</p>
+
+<p>
+<strong>Fehleranalyse</strong>: 
+</p>
+
+<p>
+Sollte bei der Erstellung des Volumen der Fehler erscheinen das, dass Volumen bereits existiert kann folgendes ausgeführt werden um das Problem zu lösen. 
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">yum install</span> attr
+<span class="kw3">cd</span> <span class="sy0">/</span>data<span class="sy0">/</span>brick1<span class="sy0">/</span>gv0
+<span class="kw1">for</span> i <span class="kw1">in</span> <span class="sy0">`</span>attr <span class="re5">-lq</span> .<span class="sy0">`</span>; <span class="kw1">do</span>   setfattr <span class="re5">-x</span> trusted.<span class="re1">$i</span> .; <span class="kw1">done</span>
+attr <span class="re5">-lq</span> <span class="sy0">/</span>data<span class="sy0">/</span>brick1<span class="sy0">/</span>gv0 <span class="co0"># Bei leer läuft es wieder </span></pre>
+
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Schritt für Schritt" [1315-] -->

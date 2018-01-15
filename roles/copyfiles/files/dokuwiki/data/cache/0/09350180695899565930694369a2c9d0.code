@@ -1,0 +1,26 @@
+Configuration InstallApplication <span class="br0">&#123;</span>
+Import<span class="sy0">-</span>DscResource <span class="sy0">-</span>ModuleName <span class="st0">'PSDesiredStateConfiguration'</span>
+node <span class="st0">'localhost'</span> <span class="br0">&#123;</span>
+            file MyConfig <span class="br0">&#123;</span>
+                DestinationPath <span class="sy0">=</span> <span class="st0">'C:\Test\test.txt'</span>
+                <span class="kw2">Type</span> <span class="sy0">=</span> <span class="st0">'File'</span>
+                contents <span class="sy0">=</span> <span class="st0">'write-host works fine'</span>
+            <span class="br0">&#125;</span>
+&nbsp;
+            Package Install7Zip <span class="br0">&#123;</span>
+&nbsp;
+                Ensure <span class="sy0">=</span> <span class="st0">'Present'</span>
+                Name <span class="sy0">=</span> <span class="st0">'7-Zip 16.02'</span>
+                Path <span class="sy0">=</span> <span class="st0">'C:\temp\7z1602.msi'</span>
+                ProductId <span class="sy0">=</span> <span class="st0">'{23170F69-40C1-2701-1602-000001000000}'</span>
+                LogPath <span class="sy0">=</span> <span class="st0">'C:\Install_7zip.log'</span>
+                                <span class="br0">&#125;</span>
+           Package Python27 <span class="br0">&#123;</span>
+                Ensure <span class="sy0">=</span> <span class="st0">'Present'</span>
+                Name <span class="sy0">=</span> <span class="st0">'Python 2.7.11'</span>
+                Path <span class="sy0">=</span> <span class="st0">'C:\temp\python-2.7.11.msi'</span>
+                ProductId <span class="sy0">=</span> <span class="st0">'{16E52445-1392-469F-9ADB-FC03AF00CD61}'</span>
+                LogPath <span class="sy0">=</span> <span class="st0">'C:\Python2711.log'</span>
+                               <span class="br0">&#125;</span>
+   <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>

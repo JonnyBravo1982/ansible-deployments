@@ -1,0 +1,42 @@
+====== netzwerk ps per tcpwrapper einschränken ======
+Vorraussetzung: [[inetd]]
+
+==== Einen Rechner verbieten ====
+
+''/etc/hosts.deny'' :
+<file>
+ps : notebook04.linuxhotel.de
+</file>
+
+evtl. Dienst neu starten
+
+==== Einen Rechner erlauben, alle anderen verbieten ====
+
+''/etc/hosts.allow'' :
+<file>
+ps : notebook04.linuxhotel.de
+</file>
+
+''/etc/hosts.deny'' :
+<file>
+ps : ALL
+</file>
+
+evtl. Dienst neu starten
+
+==== Bei Zugriff einen Aktion auslösen ====
+
+''/etc/hosts.allow'' :
+<file>
+ps : notebook04.linuxhotel.de : spawn echo 'Zugriff auf ps' >> /tmp/psax
+</file>
+
+==== Bei Zugriff einen Aktion auslösen ====
+
+''/etc/hosts.deny'' :
+<file>
+ps : ALL : twist echo 'Zugriff auf ps nicht erlaubt'
+</file>
+
+====== Doku ======
+  * http://www.centos.org/docs/5/html/5.1/Deployment_Guide/s1-server-tcpw-xinetd.html

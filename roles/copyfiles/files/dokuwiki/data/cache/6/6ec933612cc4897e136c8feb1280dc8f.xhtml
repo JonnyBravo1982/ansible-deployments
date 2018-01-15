@@ -1,0 +1,119 @@
+
+<p>
+kurze Anleitung für die Installation von Samba4 als Domain Controller!! Funktioniert nur mit Ubuntu (10.4) eine Funktionalität mit debian stabil (08.01.2013) ist nicht gegeben.
+Befehle:
+</p>
+
+<p>
+- vergeben einer festen ip Addresse. Bearbeitung der interfaces file „/etc/networks/interfaces“
+</p>
+<pre class="code">sudo vim /etc/networks/interfaces
+auto lo eth0
+iface lo inet loopback
+iface eth0 inet static
+address 192.168.3.200
+netmask 255.255.255.0
+gateway 192.168.3.3
+dns-nameservers 192.168.3.200 192.168.3.3
+dns-search freakhouse.local</pre>
+
+<p>
+- ändern hosts file (korrekte Namensauflösung) /etc/hosts
+</p>
+<pre class="code">sudo vim /etc/hosts
+192.168.3.200  HomeServer01 HomeServer01.freakhouse.local</pre>
+
+<p>
+- installation der programe
+</p>
+
+<p>
+ apt-get install samba4 
+</p>
+
+<p>
+- löschen der installierten Konfigurationsfile
+</p>
+
+<p>
+ sudo rm /etc/samba/smb.conf
+</p>
+
+<p>
+-Installtion der neuen domain
+</p>
+
+<p>
+ /usr/share/samba/setup/provision –realm=freakhouse.local –domain=FREAKHOUSE –adminpass=&#039;Test123&#039; –server-role=dc
+</p>
+
+<p>
+-Installation <abbr title="Domain Name System">DNS</abbr> Servers und Bearbeitung
+</p>
+<pre class="code">sudo apt-get install bind9
+sudo echo include &#039;&quot;/var/lib/samba/private/named.conf&quot;&#039; &gt;&gt; /etc/bind/named.conf</pre>
+
+<p>
+- /etc/apparmor.d/usr.sbin.named muss für die Kommunikation zwischen samba und bind bearbeitet werden. Der pfad muss pro Architektur angepasst werden.
+</p>
+
+<p>
+ /var/lib/samba/private/<strong> rkw,
+ /var/lib/samba/private/dns/</strong> rkw,
+ /usr/lib/x86_64-linux-gnu/samba/bind9/<strong> rm,
+ /usr/lib/x86_64-linux-gnu/samba/gensec/</strong> rm,
+ /usr/lib/x86_64-linux-gnu/ldb/modules/ldb/<strong> rm,
+ /usr/lib/x86_64-linux-gnu/samba/ldb/</strong> rm,
+</p>
+
+<p>
+- Anpassen der file /etc/bind/named.conf.option
+</p>
+<pre class="code"> dnssec-validation no;
+ tkey-gssapi-keytab &quot;/var/lib/samba/private/dns.keytab&quot;;
+ allow-query { any; };
+ allow-recursion { any; };
+ forwarders { 192.168.3.3; };</pre>
+
+<p>
+-Installtion Kerberos
+</p>
+<pre class="code"> sudo apt-get install krb5-user</pre>
+
+<p>
+- Anpassung der smb.conf für romingprofil /etc/samba/smb.conf
+</p>
+<pre class="code">[profiles$]
+     path = /home/jonnybravo/samba/profiles
+     read only = no</pre>
+
+<p>
+- Service neustarten
+</p>
+<pre class="code"> sudo service bind9 restart 
+ sudo service samba4 restart
+ sudo service apparmor restart</pre>
+
+<p>
+- Alle weiteren Anpassung über Remoteserver-Verwaltungstools für Windows <a href="http://www.google.de/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;ved=0CDYQFjAA&amp;url=http%3A%2F%2Fwww.microsoft.com%2Fde-de%2Fdownload%2Fdetails.aspx%3Fid%3D7887&amp;ei=vyfsUPD9GtHltQa28oGgBQ&amp;usg=AFQjCNHn21xlrQcxZVOFm-B-XZfkGl74OA&amp;bvm=bv.1357316858,d.Yms" class="urlextern" title="http://www.google.de/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;ved=0CDYQFjAA&amp;url=http%3A%2F%2Fwww.microsoft.com%2Fde-de%2Fdownload%2Fdetails.aspx%3Fid%3D7887&amp;ei=vyfsUPD9GtHltQa28oGgBQ&amp;usg=AFQjCNHn21xlrQcxZVOFm-B-XZfkGl74OA&amp;bvm=bv.1357316858,d.Yms"  rel="nofollow">http://www.google.de/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;ved=0CDYQFjAA&amp;url=http%3A%2F%2Fwww.microsoft.com%2Fde-de%2Fdownload%2Fdetails.aspx%3Fid%3D7887&amp;ei=vyfsUPD9GtHltQa28oGgBQ&amp;usg=AFQjCNHn21xlrQcxZVOFm-B-XZfkGl74OA&amp;bvm=bv.1357316858,d.Yms</a>
+</p>
+
+<p>
+Funktionalitätstest
+</p>
+
+<p>
+- Kerberos bei nicht funktionalität evtl. /etc/krb5.conf file anpassen default_realm = freakhouse
+</p>
+<pre class="code">kinit administrator@freakhouse.local</pre>
+
+<p>
+- funktionalität <abbr title="Domain Name System">DNS</abbr>
+</p>
+<pre class="code"> host -t SRV _ldap._tcp.freakehouse.local.
+ host -t SRV _kerberos._tcp.freakhouse.local.
+ host -t A HomeServer01.freakhouse.local.</pre>
+
+<p>
+Eine großen Dank an Egon für die Vorarbeit <a href="http://www.matrix44.net/cms/notes/gnulinux/samba-4-ad-domain-with-ubuntu-12-04" class="urlextern" title="http://www.matrix44.net/cms/notes/gnulinux/samba-4-ad-domain-with-ubuntu-12-04"  rel="nofollow">http://www.matrix44.net/cms/notes/gnulinux/samba-4-ad-domain-with-ubuntu-12-04</a>
+</p>

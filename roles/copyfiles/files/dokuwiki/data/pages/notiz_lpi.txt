@@ -1,0 +1,4 @@
+Mailversand mit mail
+<code bash>
+echo "BODY: Test"|mail -s "Test" nutzer31@localhost
+</code>

@@ -1,0 +1,9 @@
+Docker jiffybox ports öffnen 
+
+80 
+443
+2222
+2020
+
+Owncloud-Container starten 
+docker run --name owncloud -e REGENERATE_SSL_CERT=true -e SUBJECT=/C=DE/ST=DD/L=Dresden/O=ICHAG/OU=UNITICH/CN=localhost -p 2020:443 -d l3iggs/owncloud 

@@ -1,0 +1,61 @@
+Get-DscResource zeigt die Resourcen an die DSC nutzen kann. 
+
+Install Beispiel von der https://www.powershellgallery.com 
+
+<code powershell>
+Install-Module -Name xRobocopy 
+</code>
+
+das folgende Beispiel erstellt eine DSC-Konfiguration. 
+
+<code powershell>
+Configuration InstallApplication {
+Import-DscResource -ModuleName 'PSDesiredStateConfiguration'
+node 'localhost' {
+            file MyConfig {
+                DestinationPath = 'C:\Test\test.txt'
+                Type = 'File'
+                contents = 'write-host works fine'
+            }
+
+            Package Install7Zip {
+                
+                Ensure = 'Present'
+                Name = '7-Zip 16.02'
+                Path = 'C:\temp\7z1602.msi'
+                ProductId = '{23170F69-40C1-2701-1602-000001000000}'
+                LogPath = 'C:\Install_7zip.log'
+                                }
+           Package Python27 {
+                Ensure = 'Present'
+                Name = 'Python 2.7.11'
+                Path = 'C:\temp\python-2.7.11.msi'
+                ProductId = '{16E52445-1392-469F-9ADB-FC03AF00CD61}'
+                LogPath = 'C:\Python2711.log'
+                               }
+   }
+}
+</code>
+
+Der Befehl 
+<code powershell>
+InstallApplication -OutputPath C:\temp\
+</code>
+erstellt eine MOF File anhand der Konfiguration. 
+
+Die MOF-File kann nun auf dem Zielsystem angewendet werden. 
+<code powershell>
+start-dscconfiguration -Path <Pfad_der_Mofauchnetwork> -wait -verbos
+</code> 
+
+Das ganze kann auch Remote gestartet werden 
+<code powershell >
+</code>
+
+Netzlaufwerk waren bei meinem Test 21.07.2016 nicht funktional ich musste mir vorher ein Laufwerk auf den Client mounten. 
+<code powershell>
+ New-PSDrive -Name Mountdir -PSProvider FileSystem -Root \\t4m-apc-255\Packages
+</code>
+
+Diese konnte ich dann in der Konfigurationsfile wiefolgt ansprechen. 
+

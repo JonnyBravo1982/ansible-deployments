@@ -1,0 +1,174 @@
+Alle Container löschen 
+<code>
+docker rm $(docker ps -a -q)
+</code>
+Alle Images löschen 
+<code>
+docker rmi $(docker images -q)
+</code>
+
+Anlegen eines logalen reposetoriers und verteilung eines Images !
+<code>
+docker run -d -p 5500:5000 registry:2
+docker tag test/mycow:latest localhost:5500/mycow:0.1
+docker push localhost:5500/mycow:0.1
+</code>
+
+Um den dockerd Distributionsübergreift zu bearbeiten eignet sich am besten die Datei /etc/docker/daemon.json an zulegen 
+daemon.json
+<code>
+{
+"authorization-plugins": [],
+"dns": [],
+"dns-opts": [],
+"dns-search": [],
+"exec-opts": [],
+Persönliches Exemplar für Daniel Schlaupitz
+1254
+Docker
+"exec-root": "",
+"storage-driver": "",
+"storage-opts": [],
+"labels": [],
+"live-restore": true,
+"log-driver": "",
+"log-opts": {},
+"mtu": 0,
+"pidfile": "",
+"graph": "",
+"cluster-store": "",
+"cluster-store-opts": {},
+"cluster-advertise": "",
+"max-concurrent-downloads": 3,
+"max-concurrent-uploads": 5,
+"debug": true,
+"hosts": [],
+"log-level": "",
+"tls": true,
+"tlsverify": true,
+"tlscacert": "",
+"tlscert": "",
+"tlskey": "",
+"swarm-default-advertise-addr": "",
+"api-cors-header": "",
+"selinux-enabled": false,
+"userns-remap": "",
+"group": "",
+"cgroup-parent": "",
+"default-ulimits": {},
+"ipv6": false,
+"iptables": false,
+"ip-forward": false,
+"ip-masq": false,
+"userland-proxy": false,
+"ip": "0.0.0.0",
+"bridge": "",
+"bip": "",
+"fixed-cidr": "",
+"fixed-cidr-v6": "",
+"default-gateway": "",
+"default-gateway-v6": "",
+"icc": false,
+"raw-logs": false,
+"registry-mirrors": [],
+"insecure-registries": [],
+"disable-legacy-registry": false,
+"default-runtime": "runc",
+"oom-score-adjust": -500,
+"runtimes": {
+"runc": {
+"path": "runc"
+},
+"custom": {
+"path": "/usr/local/bin/my-runc-replacement",
+"runtimeArgs": [
+"--debug"
+]
+}
+}
+}
+</code>
+
+Alle Einstellung in der deamon.json können auch mit dem Kommando dockerd konfiguriert werden.
+
+Beispiel setzten einen alternativen Docker-Verzeichnis: 
+
+deamon.json
+<code>
+{
+"graph": "/data/docker"
+}
+</code>
+dockerd
+<code>
+dockerd --graph="/data/docker"
+</code>
+
+Docker CLI-Subkommandos
+<code>
+history Zeige die History eines Images
+images Liste Images
+image [build history import
+inspect load ls prune pull
+push rm save tag] (ab 1.13) Neues Subkommando für die Image-
+Verwaltung mit weiteren Subkommandos
+import Inhalt eines Tarballs importieren, um ein
+Image zu erzeugen
+info Docker-Informationen
+inspect Detaillierte Informationen zu einem Image
+ps Liste Container-Instanzen
+[image] prune (ab 1.13) Löschen von Dangling/Unused-
+Images
+pull Pulle ein Image aus einer Registry
+rm Container removen
+rmi Images removen
+run Container mit einem Kommando ausführen
+search Docker Registry nach Images durchsuchen
+system [df events info prune] (ab 1.13) Neue System-spezifische
+</code>
+
+Docker INFO gibt alle wichtigen Informationen aus. Beispiel Befehl zum auslesen der Registry
+
+<code>
+docker info|grep "registry"
+</code>
+
+Für eine detailsuche zu nutzen kann mit search und Filter gearbeitet werden. 
+
+<code>
+docker search ubuntu --filter=is-official=true
+</code>
+
+Mit inspect können die Metadaten eines Images ausgelesen werden. 
+
+<code>
+docker image inspect jonnybravo/mycow
+</code>
+
+
+Mit dem Commado prune werden die Image Leichen gelöscht 
+
+<code>
+docker image prune
+</code>
+
+Dockerfile wichtige Kommands
+
+  - from welches BasisImage
+  - MAINTAINER Autor 
+  - RUN im Read/Write Layer des Intermediate Container auszuführende Aktion 
+  - ENV Umgebungsvaribale 
+  - EXPOSE Portmapping
+  - ENTRYPOINT fixes Startkommando für primäre Applikation
+  - CMD überschreibbares Startkommando für primäre Applikation
+  - LABEL eindeutige Bezeichnung für spätere Selektion 
+  - ADD Files,Directory, remote URLs in Image kopieren 
+  - COPY Files in Image kopieren 
+  - VOLUME persistentes Volumes für Image definieren 
+  - USER User für die Kommandoausführung
+  - WORKDIR Setzt das Work Directory 
+  - ARG Build Arguments
+  - ONBUILD Postbuild Trigger für spätere auf diesem Image basierende Builds
+
+
+

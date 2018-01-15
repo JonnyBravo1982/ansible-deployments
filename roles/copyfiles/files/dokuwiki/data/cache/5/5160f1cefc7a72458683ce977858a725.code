@@ -1,0 +1,6 @@
+<span class="kw2">&lt;?php</span>
+  <span class="re0">$vorname</span> <span class="sy0">=</span> <span class="st0">&quot;Denis&quot;</span><span class="sy0">;</span>
+  <span class="kw1">echo</span> <span class="st0">&quot;Hallo &quot;</span> <span class="sy0">.</span> <span class="st0">&quot; Welt. &quot;</span><span class="sy0">;</span> <span class="coMULTI">/* Hallo Welt */</span>
+  <span class="kw1">echo</span> <span class="st0">&quot;Hallo &quot;</span> <span class="sy0">.</span> <span class="re0">$vorname</span><span class="sy0">;</span> <span class="coMULTI">/* Hallo Denis */</span>
+  <span class="kw1">echo</span> <span class="st0">&quot;&lt;br /&gt;Guten Morgen &quot;</span> <span class="sy0">.</span> <span class="re0">$vorname</span> <span class="sy0">.</span> <span class="st0">&quot; � gut geschlafen?&quot;</span><span class="sy0">;</span> 
+   <span class="sy1">?&gt;</span>

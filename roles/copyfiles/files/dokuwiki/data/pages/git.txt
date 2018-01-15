@@ -1,0 +1,68 @@
+Die wichtigsten Befehle in GIT
+
+
+erstellt im aktuellen Ordner ein neues Git Reposietory
+<code git>
+git init 
+</code>
+
+zeigt an welche Dateien noch nicht getrackt wurden sind 
+<code git>
+git status
+</code>
+
+Bereitet die Dateien für den commit vor 
+<code git>
+git add  .
+</code>
+
+zeigt die anderung an 
+<code git>
+git show
+</code>
+
+Commit erstellt die erste Version 
+<code git>
+git commit -m "erster Version"
+</code>
+
+zeigt die Unterschiedlichen Versionen an 
+<code git>
+git log
+</code>
+
+um nun die Version zu wechseln kann folgender befehl genutzt werden 
+<code git>
+git reset <commitid> --hard 
+</code>
+
+der folgende Befehl zeigt die änderungen zwischen der letzten Version 
+<code git>
+git diff HEAD~1
+</code>
+
+Um zu einer anderen Version zu wechseln kann folgendes genutzt werden (checkout verlässt den master)
+<code git>
+git revert <commitid> --no-commit 
+git commit  -m "New Versiom from Version"
+</code>
+
+mit dem dem Kommando branch kann der zustand angezeigt werden. Ideal ist master nach einem checkout neu einbinden
+<code git>
+git branch 
+</code>
+
+Mi dem anlegen der Datei ~./gitconfig können die Passwörter gecacht werden. 
+
+<code>
+vim ~./gitconfig
+
+[credential "https://git.f-i-ts.de"]
+        username = ize1e22
+[URL "https://git.f-i-ts.de"]
+        insteadOf = git@git.admnet.fits:
+[credential]
+        helper = store
+        helper = cache --timeout=86400
+</code>
+

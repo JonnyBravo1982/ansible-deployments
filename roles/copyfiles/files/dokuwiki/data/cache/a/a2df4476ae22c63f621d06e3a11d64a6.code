@@ -1,0 +1,4 @@
+Install<span class="sy0">-</span>ADDSDomain  <span class="sy0">-</span>NewDomainName  <span class="st0">'schlumpfenland'</span>  `
+<span class="sy0">-</span>ParentDomainName <span class="st0">'schlumpfenland.com'</span>; `
+<span class="sy0">-</span>InstallDNS `
+<span class="sy0">-</span>CreateDNSDelegation 

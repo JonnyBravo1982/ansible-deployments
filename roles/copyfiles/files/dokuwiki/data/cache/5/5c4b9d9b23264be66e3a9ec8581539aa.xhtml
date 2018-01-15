@@ -1,0 +1,48 @@
+
+<p>
+Das folgende PowerShell Skript erstellt einen Nano-Server und legt diesen im HyperV an. 
+</p>
+
+<p>
+Verzeichnisse = Im ISO Verzeichnis müssen die Sourcen eines Windows Server 2016 liegen 
+</p>
+
+<p>
+Base = wird für die Erstellung genutzt 
+</p>
+
+<p>
+VHD = in diesen Verzeichnis liegen die fertigen VHDs
+</p>
+
+<p>
+<pre class="code powershell"> <span class="co1">#region PREREQUISITES</span>
+    <span class="co1"># Variables</span>
+    <span class="re0">$password</span> <span class="sy0">=</span> <span class="kw1">ConvertTo-SecureString</span> <span class="kw5">-AsPlainText</span> <span class="kw5">-Force</span> <span class="kw5">-String</span> <span class="st0">'Pa$$w0rd'</span>
+    <span class="re0">$iso_X</span> <span class="sy0">=</span> <span class="st0">'C:\temp\TP5\'</span>
+    <span class="re0">$VirtualHardDiskPath</span> <span class="sy0">=</span> $<span class="br0">&#40;</span>Get<span class="sy0">-</span>VMHost<span class="br0">&#41;</span>.VirtualHardDiskPath
+    <span class="co1"># Nano creation module (from WS 2016 ISO) </span>
+    <span class="co1"># Import-Module 'C:\temp\TP5\NanoServer\NanoServer\NanoServerImageGenerator\NanoServerImageGenerator.psm1'</span>
+&nbsp;
+<span class="re0">$nanoName</span> <span class="sy0">=</span> <span class="st0">'sea-nano1'</span>
+New<span class="sy0">-</span>NanoServerImage `
+   <span class="sy0">-</span>DeploymentType Guest `
+   <span class="sy0">-</span>Edition Standard `
+   <span class="sy0">-</span>MediaPath <span class="st0">&quot;$PSScriptRoot\ISO\&quot;</span> `
+   <span class="sy0">-</span>BasePath <span class="st0">&quot;$PSScriptRoot\Base&quot;</span> `
+   <span class="sy0">-</span>TargetPath <span class="st0">&quot;$PSScriptRoot\VHD\$nanoName.vhd&quot;</span> `
+   <span class="kw5">-ComputerName</span> <span class="re0">$nanoname</span> `
+   <span class="sy0">-</span>AdministratorPassword <span class="re0">$password</span> `
+   <span class="sy0">-</span>Packages Microsoft<span class="sy0">-</span>NanoServer<span class="sy0">-</span>IIS<span class="sy0">-</span>Package
+&nbsp;
+    <span class="re0">$paramsNewVM</span> <span class="sy0">=</span> <span class="sy0">@</span><span class="br0">&#123;</span>
+        Computername <span class="sy0">=</span> <span class="re0">$env</span>:computername
+        Name <span class="sy0">=</span> <span class="re0">$nanoName</span>
+        Generation <span class="sy0">=</span> <span class="nu0">1</span>
+        MemoryStartupBytes <span class="sy0">=</span> 1GB <span class="co1"># Minimum: 512 GB </span>
+        VHDPath <span class="sy0">=</span> <span class="st0">&quot;$PSScriptRoot\VHD\$nanoName.vhd&quot;</span>
+        SwitchName <span class="sy0">=</span> <span class="st0">'NAT'</span>
+    <span class="br0">&#125;</span>
+    New<span class="sy0">-</span>VM <span class="sy0">@</span>paramsNewVM <span class="sy0">|</span> Start<span class="sy0">-</span>VM</pre>
+
+</p>

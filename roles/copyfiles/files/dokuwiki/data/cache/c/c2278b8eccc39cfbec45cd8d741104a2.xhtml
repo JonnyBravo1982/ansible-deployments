@@ -1,0 +1,33 @@
+
+<p>
+In diesem Beispiel wird die die Klasse Benutzer angelegt und mit zwei Datensätzen befüllt. 
+</p>
+
+<p>
+<pre class="code powershell">class Benutzer <span class="br0">&#123;</span>
+<span class="br0">&#91;</span>int32<span class="br0">&#93;</span> <span class="re0">$ID</span>
+<span class="br0">&#91;</span><span class="re3">STRING</span><span class="br0">&#93;</span><span class="re0">$Vornamer</span>
+<span class="br0">&#91;</span><span class="re3">STRING</span><span class="br0">&#93;</span><span class="re0">$Nachname</span>
+    <span class="co1">#Aufruf Methode </span>
+    Benutzer<span class="br0">&#40;</span><span class="br0">&#91;</span><span class="re3">string</span><span class="br0">&#93;</span><span class="re0">$ID</span><span class="sy0">,</span><span class="re0">$Vorname</span><span class="sy0">,</span><span class="re0">$Nachname</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+    <span class="re0">$this</span>.ID <span class="sy0">=</span> <span class="re0">$ID</span>
+    <span class="re0">$this</span>.Vornamer <span class="sy0">=</span> <span class="re0">$Vorname</span>
+    <span class="re0">$this</span>.Nachname <span class="sy0">=</span> <span class="re0">$Nachname</span>
+    <span class="br0">&#125;</span> 
+<span class="br0">&#125;</span>
+<span class="re0">$NewBenutzer1</span> <span class="sy0">=</span> <span class="br0">&#91;</span>Benutzer<span class="br0">&#93;</span>::new<span class="br0">&#40;</span><span class="st0">'1'</span><span class="sy0">,</span><span class="st0">'Daniel'</span><span class="sy0">,</span><span class="st0">'Schlaupitz'</span><span class="br0">&#41;</span>
+<span class="re0">$NewBenutzer2</span> <span class="sy0">=</span> <span class="br0">&#91;</span>Benutzer<span class="br0">&#93;</span>::new<span class="br0">&#40;</span><span class="st0">'2'</span><span class="sy0">,</span><span class="st0">'Horst'</span><span class="sy0">,</span><span class="st0">'Schlaupitz'</span><span class="br0">&#41;</span>
+<span class="re0">$NewBenutzer1</span>
+<span class="re0">$NewBenutzer2</span>
+&nbsp;</pre>
+
+</p>
+
+<p>
+Ausgabe : <div class="konsole"><div class="konsole_top_left"></div><div class="konsole_top">USER</div><div class="konsole_top_right"></div><div class="konsole_left"></div><div class="konsoleuser">
+ID Vornamer Nachname  
+– ——– ——–
+ 1 Daniel   Schlaupitz
+ 2 Horst    Schlaupitz
+</div><div class="konsole_right"></div><div class="konsole_bottom_left"></div><div class="konsole_bottom"></div><div class="konsole_bottom_right"></div></div>
+</p>

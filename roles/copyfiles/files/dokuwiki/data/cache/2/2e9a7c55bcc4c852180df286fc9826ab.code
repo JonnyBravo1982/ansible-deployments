@@ -1,0 +1,7 @@
+dism.exe <span class="co101">/mount-Image</span> <span class="co101">/ImageFile:C:\temp\Wacom\Imaging\win10-1511_x64_enterprise_eng.wim</span> <span class="co101">/index:1</span> <span class="co101">/MountDir:&quot;C:\temp\Wacom\Imaging\Mount&quot;</span>
+&nbsp;
+Dism <span class="co101">/Image:C:\temp\Wacom\Imaging\Mount</span> <span class="co101">/ScratchDir:C:\Scratch</span> <span class="co101">/Add-Package</span> <span class="co101">/PackagePath:C:\temp\Wacom\Imaging\LangPack\it-it\lp.cab</span>
+&nbsp;
+dism <span class="co101">/unmount-Wim</span> <span class="co101">/MountDir:C:\temp\Wacom\Imaging\Mount</span> <span class="co101">/commit</span>
+&nbsp;
+Dism <span class="co101">/Image:C:\temp\Wacom\Imaging\Mount</span> <span class="co101">/Get-ProvisionedAppxPackages</span> <span class="sy0">&gt;&gt;</span> C:\temp\Wacom\Porv.txt

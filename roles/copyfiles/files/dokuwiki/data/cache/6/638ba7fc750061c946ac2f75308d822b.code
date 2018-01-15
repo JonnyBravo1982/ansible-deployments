@@ -1,0 +1,1 @@
+journalctl <span class="re5">-b</span>

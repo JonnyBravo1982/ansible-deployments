@@ -1,0 +1,6 @@
+<span class="kw2">&lt;?php</span>
+<a href="http://php.net/date_default_timezone_set"><span class="kw3">date_default_timezone_set</span></a><span class="br0">&#40;</span><span class="st0">&quot;Europe/Berlin&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">echo</span> <span class="st0">&quot;&lt;h1&gt;Willkommen am &quot;</span><span class="sy0">;</span>
+<span class="kw1">echo</span> <a href="http://php.net/date"><span class="kw3">date</span></a><span class="br0">&#40;</span><span class="st0">&quot;j.n.Y&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">echo</span> <span class="st0">&quot;&lt;/h1&gt;<span class="es1">\n</span>&quot;</span><span class="sy0">;</span>
+<span class="sy1">?&gt;</span>

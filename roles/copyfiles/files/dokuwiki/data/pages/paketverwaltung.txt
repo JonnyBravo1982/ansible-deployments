@@ -1,0 +1,576 @@
+====== lokale Paketverwaltung ======
+===== dpkg und rpm =====
+^Funktion ^Debian und Ubuntu ^RedHat, Fedora und SuSE (( OK, rpm ist auch für debian verfügbar, aber sollte da nur in besonderen Fällen eingesetzt werden )) |
+|Anzeigen welche Pakete installiert sind: | 
+  dpkg -l 
+  COLUMNS=150 dpkg -l 
+|
+  rpm -qa
+|
+|Anzeigen zu welchem Paket die Datei ''/usr/bin/top'' gehoert: | 
+  dpkg -S /usr/bin/top
+|
+  rpm -qf /usr/bin/top
+|
+|Beschreibung zum Paket //procps// anzeigen: |
+  dpkg -s procps
+|
+  rpm -qi procps
+|
+|Anzeigen welche Dateien zum Paket //procps// gehoeren: |
+  dpkg -L procps
+|
+  rpm -ql procps
+|
+|Paket installieren (( das macht man normalerweise mit //apt-get//, //yum//, //zypper// oder //yast// )): |
+  dpkg -i xskat_4.0-1_i386.deb
+|
+  rpm -i datei.rpm
+|
+|Paket loeschen: (( auch das geht mit //apt-get//, //yum//, //zypper// oder //yast// )) |
+  dpkg --remove paket
+  dpkg --purge paket
+|
+  rpm -e <paket>
+|
+
+^Funktion ^Debian und Ubuntu ^RedHat, Fedora und SuSE (( OK, rpm ist auch für debian verfügbar, aber sollte da nur in besonderen Fällen eingesetzt werden )) |
+|Pakete nach Größe sortiert ausgeben: |
+  dpkg-query -W --showformat='${Installed-Size} \
+  ${Package}\n' | sort -n
+|
+  rpm -qa --queryformat '%{SIZE} %{NAME}\n' | sort -n
+|
+|Geaenderte Dateien suchen |
+  debsums -e procps
+|
+  rpm -V procps
+|
+| Geänderte Konfigurationsdateien suchen |
+  debsums -ec
+|
+  rpm -qac --dump | perl -naF'\s+' -e 'print $F[0], $/ if -f $F[0] and not -l $F[0] and (split /\s+/, `md5sum $F[0]`)[0] ne $F[3]' 
+|
+| Konfigurationsdatei wiederherstellen |
+  cd /var/cache/apt/archives/
+  dpkg -i --force-confmiss dokuwiki_0.0.20120125b-2_all.deb
+|
+| Zuletzt installierte Pakete anzeigen: |
+  grep 'status installed' /var/log/dpkg.log
+|
+  rpm -qa --last | tac
+|
+| Datenverzeichnis für Dienst //apache// finden: |
+  dpkg -S var/ | grep apache
+|
+
+==== Abhängigkeiten (rpm) ====
+Von welchen Eigenschaften hängt das Paket //cups-libs// ab?
+  rpm -q --requires cups
+Welche Eigenschaften stellt das Paket //cups-libs// anderen Paketen zur Verfügung?
+  rpm -q --provides paket
+Welche Pakete hängen von der Eigenschaft //libcups.so.2// ab?
+  rpm -q --whatrequires libcups.so.2
+Welches Paket stellt die Eigenschaft //libcups.so.2// zur Verfügung?
+  rpm -q --whatprovides libcups.so.2
+
+Bei //dpkg// sind Pakete direkt von anderen Paketen abhängig.
+
+====== Repository basierte Paketverwaltung ======
+TODO: 
+  * [[https://mvogt.wordpress.com/2014/04/|apt]] ist neu in debian 8.0 (jessie). Dieses Kapitel überarbeiten, sobald debian 7 nicht mehr supportet wird. 
+  * [[http://dnf.readthedocs.org/en/latest/cli_vs_yum.html|dnf]] statt yum, sobald das in CentOS ist. 
+===== apt, yum und zypper =====
+^Funktion^Debian ^RedHat ^SuSE ^
+|Repositories einbinden | 
+  apt-setup
+''/etc/apt/sources.list'' | ''/etc/yum.repos.d/*.repo'' | ''/etc/zypp/repos.d/*.repo'' |
+|Repository-Daten aktualisieren|
+  aptitude update
+|
+  yum check-update
+|
+  zypper refresh
+|
+|Updates einspielen |
+  aptitude safe-upgrade
+oder
+  apt-get upgrade
+|
+  yum update
+|
+  zypper update
+|
+|Distributions upgrade |
+  aptitude full-upgrade
+oder
+  apt-get dist-upgrade
+|
+  yum upgrade
+|
+  zypper dup
+|
+|Nach Paketen suchen|
+  aptitude search suchwort
+  apt-cache search suchwort
+|
+  yum search suchwort
+  yum list | grep paketname
+|
+  zypper search suchwort
+|
+|Beschreibung zu einem Paket anzeigen:|
+  aptitude show paketname
+|
+  yum info paketname
+|
+  zypper info paketname
+|
+|Paket installieren|
+  aptitude install paketname
+  apt-get install paketname
+|
+  yum install paketname
+|
+  zypper install paketname
+|
+|Paket erneut installieren| TODO |
+  yum reinstall paketname
+| TODO |
+|Paket entfernen|
+  aptitude remove paketname
+  aptitude purge paketname
+  apt-get [--purge] remove paketname
+|
+  yum remove paketname
+|
+|Paket für Datei ''samba.schema'' im Repository suchen|
+  apt-file update
+  apt-file search samba.schema
+| 
+  yum provides */samba.schema
+|
+
+==== Abhängigkeiten (dpkg und apt) ====
+Von welchen Paketen ist das Paket //cups// abhängig?
+  apt-cache depends cups
+Welche Pakete sind vom Paket //cups// abhängig?
+  apt-cache rdepends cups
+
+==== yast, y2pmsh, rug und zypper ====
+YaST, y2pmsh, rug und zypper sind nur für SuSE verfügbar.
+
+^Funktion ^y2pmsh ( SuSE 9.2 bis 10.1 / SLES 9 & 10 ) (( nicht offiziell unterstützt - aber brauchbar )) ^rug ( SuSE 10.1 bis 10.2 / SLES 10 ) ^zypper ( ab SuSE 10.2) |
+| Repositories einbinden | 
+  y2pmsh source --add http://suse/i386/update/10.1
+oder
+  y2pmsh source -a http://suse/i386/update/10.1
+ | 
+  rug service-add -t zypp http://suse/i386/update/10.1 
+oder
+  rug sa -t zypp http://suse/i386/update/10.1 
+|
+  zypper service-add http://suse/i386/update/10.3
+oder
+  zypper service-add http://suse/i386/update/10.3
+|
+|Repository-Daten aktualisieren|
+  
+|
+  rug refresh
+|
+  zypper refresh
+|
+|Updates einspielen |
+  y2pmsh upgrade
+  y2pmsh commit
+|
+  rug update
+|
+  zypper update
+|
+|Nach Paketen suchen|
+  y2pmsh search suchwort
+|
+  rug search suchwort
+|
+  zypper search suchwort
+|
+|Paketbeschreibung anzeigen:|
+  y2pmsh show paketname
+|
+  rug info paketname
+|
+  zypper info paketname
+|
+|Paket installieren|
+  y2pmsh isc paketname
+oder
+  y2pmsh install paketname
+  y2pmsh solve
+  y2pmsh commit
+|
+  rug install paketname
+|
+  zypper install paketname
+|
+|Paket entfernen|
+  y2pmsh remove paketname
+  y2pmsh solve
+  y2pmsh commit
+|
+  rug remove paketname
+|
+  zypper remove paketname
+|
+
+Die Paketverwaltung von YaST baut bis SuSE 10.0 / SLES 9 auf dem Programm ''y2pmsh'' auf, daß man hier auch an Stelle von yast benutzen kann. ''y2pmsh'' hat auch einen interaktiven Modus: einfach starten, und die oben angegebenen Befehle funktionieren incl. Tab-Completion
+
+y2pmsh/YaST/rug/zypper bietet die Möglichkeit verschiedene Repositories einzubinden. Eine Liste verfügbarer Repositories findet sich hier: http://www.opensuse.org/Additional_YaST_Package_Repositories
+
+Hier ist beschrieben, wie man ein lokales Repository für YaST erstellt: http://en.opensuse.org/Network_Installation_Source
+===== Neues Repository samt Schlüssel zu Debian hinzufügen =====
+Adresse des Repositories zu ''/etc/apt/sources.list.d'' hinzufügen.
+
+Aus diesem Repository das Paket ''repositoryname-keyring'' installieren, darin sind die Schlüssel enthalten.
+
+Oder: ''apt-key add dateiname'', fügt die Schlüssel aus ''dateiname'' zum Schlüsselbund hinzu.
+
+Mit ''apt-key export keyId'' wird ein Schlüssel aus einem bestehenden Schlüsselbund von APT auf stdout exportiert.
+
+Mit ''gnupg --export --armor keyId'' wird ein Schlüssel aus einem privaten Schlüsselbund auf stdout exportiert.
+===== Dokumentation =====
+[[ http://docs.fedoraproject.org/yum/en/ | Fedora ]]
+[[ http://docs.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/ch-yum.html | RedHat ]]
+[[ http://www.debian.org/doc/manuals/apt-howto/index.de.html | Debian ]]
+[[ http://de.opensuse.org/Paketverwaltung | openSuSE ]]
+
+[[http://yum.baseurl.org/wiki/Guides| yum]]
+
+====== Zusätzliche Repositories ======
+===== Debian =====
+  * http://backports.org - neuere Versionen vieler Pakete für Debian stable
+  * http://deb-multimedia.org/ - Software und Codecs für Multimedia
+
+===== Ubuntu =====
+  * http://getdeb.net
+  * http://www.medibuntu.org/
+
+===== RedHat / Centos / Scientific Linux =====
+  * http://wiki.centos.org/Repositories
+
+===== openSuSE =====
+  * [[https://de.opensuse.org/Paket_Repositories]]
+
+====== rpm ======
+===== Defragmentieren der RPM-Datenbank =====
+  rpm --rebuilddb
+
+=== Links ===
+  * [[ http://de.opensuse.org/SDB:Paketverwaltungsstapelspeicher_beschleunigen#Extern_defragmentieren | Tips zu rpm und zypper ]]
+
+===== Einzelne Dateien aus einem .rpm-Paket rausfischen =====
+Anzeigen welche Dateien drin sind: ((mehr zu [[cpio]]))
+  rpm2cpio nxclient-1.5.0-113.i386.rpm | cpio -i -t
+
+Datei extrahieren:
+  rpm2cpio nxclient-1.5.0-113.i386.rpm | cpio -id ./usr/NX/share/keys/server.id_dsa.key
+
+
+  
+
+===== Paketbeschreibungen =====
+
+Die Beschreibungen von Paketen bei Debian sind im Original auf Englisch.
+Deutsche (und anderssprachige) Übersetzungen werden mit Hilfe des Debian
+Description Translation Project [[http://ddtp.debian.net/]] organisiert
+und bei nächtlichen Durchläufen mit beachtet.
+
+
+====== lokale Paketverwaltung ======
+===== dpkg und rpm =====
+^Funktion ^Debian und Ubuntu ^RedHat, Fedora und SuSE (( OK, rpm ist auch für debian verfügbar, aber sollte da nur in besonderen Fällen eingesetzt werden )) |
+|Anzeigen welche Pakete installiert sind: | 
+  dpkg -l 
+  COLUMNS=150 dpkg -l 
+|
+  rpm -qa
+|
+|Anzeigen zu welchem Paket die Datei ''/usr/bin/top'' gehoert: | 
+  dpkg -S /usr/bin/top
+|
+  rpm -qf /usr/bin/top
+|
+|Beschreibung zum Paket //procps// anzeigen: |
+  dpkg -s procps
+|
+  rpm -qi procps
+|
+|Anzeigen welche Dateien zum Paket //procps// gehoeren: |
+  dpkg -L procps
+|
+  rpm -ql procps
+|
+|Paket installieren (( das macht man normalerweise mit //apt-get//, //yum//, //zypper// oder //yast// )): |
+  dpkg -i xskat_4.0-1_i386.deb
+|
+  rpm -i datei.rpm
+|
+|Paket loeschen: (( auch das geht mit //apt-get//, //yum//, //zypper// oder //yast// )) |
+  dpkg --remove paket
+  dpkg --purge paket
+|
+  rpm -e <paket>
+|
+
+^Funktion ^Debian und Ubuntu ^RedHat, Fedora und SuSE (( OK, rpm ist auch für debian verfügbar, aber sollte da nur in besonderen Fällen eingesetzt werden )) |
+|Pakete nach Größe sortiert ausgeben: |
+  dpkg-query -W --showformat='${Installed-Size} \
+  ${Package}\n' | sort -n
+|
+  rpm -qa --queryformat '%{SIZE} %{NAME}\n' | sort -n
+|
+|Geaenderte Dateien suchen |
+  debsums -e procps
+|
+  rpm -V procps
+|
+| Geänderte Konfigurationsdateien suchen |
+  debsums -ec
+|
+  rpm -qac --dump | perl -naF'\s+' -e 'print $F[0], $/ if -f $F[0] and not -l $F[0] and (split /\s+/, `md5sum $F[0]`)[0] ne $F[3]' 
+|
+| Konfigurationsdatei wiederherstellen |
+  cd /var/cache/apt/archives/
+  dpkg -i --force-confmiss dokuwiki_0.0.20120125b-2_all.deb
+|
+| Zuletzt installierte Pakete anzeigen: |
+  grep 'status installed' /var/log/dpkg.log
+|
+  rpm -qa --last | tac
+|
+| Datenverzeichnis für Dienst //apache// finden: |
+  dpkg -S var/ | grep apache
+|
+
+==== Abhängigkeiten (rpm) ====
+Von welchen Eigenschaften hängt das Paket //cups-libs// ab?
+  rpm -q --requires cups
+Welche Eigenschaften stellt das Paket //cups-libs// anderen Paketen zur Verfügung?
+  rpm -q --provides paket
+Welche Pakete hängen von der Eigenschaft //libcups.so.2// ab?
+  rpm -q --whatrequires libcups.so.2
+Welches Paket stellt die Eigenschaft //libcups.so.2// zur Verfügung?
+  rpm -q --whatprovides libcups.so.2
+
+Bei //dpkg// sind Pakete direkt von anderen Paketen abhängig.
+
+====== Repository basierte Paketverwaltung ======
+TODO: 
+  * [[https://mvogt.wordpress.com/2014/04/|apt]] ist neu in debian 8.0 (jessie). Dieses Kapitel überarbeiten, sobald debian 7 nicht mehr supportet wird. 
+  * [[http://dnf.readthedocs.org/en/latest/cli_vs_yum.html|dnf]] statt yum, sobald das in CentOS ist. 
+===== apt, yum und zypper =====
+^Funktion^Debian ^RedHat ^SuSE ^
+|Repositories einbinden | 
+  apt-setup
+''/etc/apt/sources.list'' | ''/etc/yum.repos.d/*.repo'' | ''/etc/zypp/repos.d/*.repo'' |
+|Repository-Daten aktualisieren|
+  aptitude update
+|
+  yum check-update
+|
+  zypper refresh
+|
+|Updates einspielen |
+  aptitude safe-upgrade
+oder
+  apt-get upgrade
+|
+  yum update
+|
+  zypper update
+|
+|Distributions upgrade |
+  aptitude full-upgrade
+oder
+  apt-get dist-upgrade
+|
+  yum upgrade
+|
+  zypper dup
+|
+|Nach Paketen suchen|
+  aptitude search suchwort
+  apt-cache search suchwort
+|
+  yum search suchwort
+  yum list | grep paketname
+|
+  zypper search suchwort
+|
+|Beschreibung zu einem Paket anzeigen:|
+  aptitude show paketname
+|
+  yum info paketname
+|
+  zypper info paketname
+|
+|Paket installieren|
+  aptitude install paketname
+  apt-get install paketname
+|
+  yum install paketname
+|
+  zypper install paketname
+|
+|Paket erneut installieren| TODO |
+  yum reinstall paketname
+| TODO |
+|Paket entfernen|
+  aptitude remove paketname
+  aptitude purge paketname
+  apt-get [--purge] remove paketname
+|
+  yum remove paketname
+|
+|Paket für Datei ''samba.schema'' im Repository suchen|
+  apt-file update
+  apt-file search samba.schema
+| 
+  yum provides */samba.schema
+|
+
+==== Abhängigkeiten (dpkg und apt) ====
+Von welchen Paketen ist das Paket //cups// abhängig?
+  apt-cache depends cups
+Welche Pakete sind vom Paket //cups// abhängig?
+  apt-cache rdepends cups
+
+==== yast, y2pmsh, rug und zypper ====
+YaST, y2pmsh, rug und zypper sind nur für SuSE verfügbar.
+
+^Funktion ^y2pmsh ( SuSE 9.2 bis 10.1 / SLES 9 & 10 ) (( nicht offiziell unterstützt - aber brauchbar )) ^rug ( SuSE 10.1 bis 10.2 / SLES 10 ) ^zypper ( ab SuSE 10.2) |
+| Repositories einbinden | 
+  y2pmsh source --add http://suse/i386/update/10.1
+oder
+  y2pmsh source -a http://suse/i386/update/10.1
+ | 
+  rug service-add -t zypp http://suse/i386/update/10.1 
+oder
+  rug sa -t zypp http://suse/i386/update/10.1 
+|
+  zypper service-add http://suse/i386/update/10.3
+oder
+  zypper service-add http://suse/i386/update/10.3
+|
+|Repository-Daten aktualisieren|
+  
+|
+  rug refresh
+|
+  zypper refresh
+|
+|Updates einspielen |
+  y2pmsh upgrade
+  y2pmsh commit
+|
+  rug update
+|
+  zypper update
+|
+|Nach Paketen suchen|
+  y2pmsh search suchwort
+|
+  rug search suchwort
+|
+  zypper search suchwort
+|
+|Paketbeschreibung anzeigen:|
+  y2pmsh show paketname
+|
+  rug info paketname
+|
+  zypper info paketname
+|
+|Paket installieren|
+  y2pmsh isc paketname
+oder
+  y2pmsh install paketname
+  y2pmsh solve
+  y2pmsh commit
+|
+  rug install paketname
+|
+  zypper install paketname
+|
+|Paket entfernen|
+  y2pmsh remove paketname
+  y2pmsh solve
+  y2pmsh commit
+|
+  rug remove paketname
+|
+  zypper remove paketname
+|
+
+Die Paketverwaltung von YaST baut bis SuSE 10.0 / SLES 9 auf dem Programm ''y2pmsh'' auf, daß man hier auch an Stelle von yast benutzen kann. ''y2pmsh'' hat auch einen interaktiven Modus: einfach starten, und die oben angegebenen Befehle funktionieren incl. Tab-Completion
+
+y2pmsh/YaST/rug/zypper bietet die Möglichkeit verschiedene Repositories einzubinden. Eine Liste verfügbarer Repositories findet sich hier: http://www.opensuse.org/Additional_YaST_Package_Repositories
+
+Hier ist beschrieben, wie man ein lokales Repository für YaST erstellt: http://en.opensuse.org/Network_Installation_Source
+===== Neues Repository samt Schlüssel zu Debian hinzufügen =====
+Adresse des Repositories zu ''/etc/apt/sources.list.d'' hinzufügen.
+
+Aus diesem Repository das Paket ''repositoryname-keyring'' installieren, darin sind die Schlüssel enthalten.
+
+Oder: ''apt-key add dateiname'', fügt die Schlüssel aus ''dateiname'' zum Schlüsselbund hinzu.
+
+Mit ''apt-key export keyId'' wird ein Schlüssel aus einem bestehenden Schlüsselbund von APT auf stdout exportiert.
+
+Mit ''gnupg --export --armor keyId'' wird ein Schlüssel aus einem privaten Schlüsselbund auf stdout exportiert.
+===== Dokumentation =====
+[[ http://docs.fedoraproject.org/yum/en/ | Fedora ]]
+[[ http://docs.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/ch-yum.html | RedHat ]]
+[[ http://www.debian.org/doc/manuals/apt-howto/index.de.html | Debian ]]
+[[ http://de.opensuse.org/Paketverwaltung | openSuSE ]]
+
+[[http://yum.baseurl.org/wiki/Guides| yum]]
+
+====== Zusätzliche Repositories ======
+===== Debian =====
+  * http://backports.org - neuere Versionen vieler Pakete für Debian stable
+  * http://deb-multimedia.org/ - Software und Codecs für Multimedia
+
+===== Ubuntu =====
+  * http://getdeb.net
+  * http://www.medibuntu.org/
+
+===== RedHat / Centos / Scientific Linux =====
+  * http://wiki.centos.org/Repositories
+
+===== openSuSE =====
+  * [[https://de.opensuse.org/Paket_Repositories]]
+
+====== rpm ======
+===== Defragmentieren der RPM-Datenbank =====
+  rpm --rebuilddb
+
+=== Links ===
+  * [[ http://de.opensuse.org/SDB:Paketverwaltungsstapelspeicher_beschleunigen#Extern_defragmentieren | Tips zu rpm und zypper ]]
+
+===== Einzelne Dateien aus einem .rpm-Paket rausfischen =====
+Anzeigen welche Dateien drin sind: ((mehr zu [[cpio]]))
+  rpm2cpio nxclient-1.5.0-113.i386.rpm | cpio -i -t
+
+Datei extrahieren:
+  rpm2cpio nxclient-1.5.0-113.i386.rpm | cpio -id ./usr/NX/share/keys/server.id_dsa.key
+
+
+  
+
+===== Paketbeschreibungen =====
+
+Die Beschreibungen von Paketen bei Debian sind im Original auf Englisch.
+Deutsche (und anderssprachige) Übersetzungen werden mit Hilfe des Debian
+Description Translation Project [[http://ddtp.debian.net/]] organisiert
+und bei nächtlichen Durchläufen mit beachtet.

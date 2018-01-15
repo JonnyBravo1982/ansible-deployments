@@ -1,0 +1,26 @@
+In diesem Beispiel wird die die Klasse Benutzer angelegt und mit zwei Datensätzen befüllt. 
+
+<code powershell>
+class Benutzer {
+[int32] $ID
+[STRING]$Vornamer
+[STRING]$Nachname
+    #Aufruf Methode 
+    Benutzer([string]$ID,$Vorname,$Nachname){
+    $this.ID = $ID
+    $this.Vornamer = $Vorname
+    $this.Nachname = $Nachname
+    } 
+}
+$NewBenutzer1 = [Benutzer]::new('1','Daniel','Schlaupitz')
+$NewBenutzer2 = [Benutzer]::new('2','Horst','Schlaupitz')
+$NewBenutzer1
+$NewBenutzer2
+ </code>
+
+Ausgabe : <konsole>
+ID Vornamer Nachname  
+-- -------- --------  
+ 1 Daniel   Schlaupitz
+ 2 Horst    Schlaupitz
+</konsole>

@@ -1,0 +1,92 @@
+
+<p>
+<strong>Native NAT in Windows 10 Hyper-V</strong>
+</p>
+
+<p>
+Ab Windows 10 ist es möglich NAT Switch zu erstellen. Das folgende Beispiel erläutert ein Beispiel mit Hyper-V. 
+</p>
+
+<p>
+erstellen eines neuen VM-Switches 
+<pre class="code powershell">New<span class="sy0">-</span>VMSwitch <span class="kw5">-Name</span> <span class="st0">&quot;NAT&quot;</span> <span class="sy0">-</span>SwitchType NAT <span class="sy0">-</span>NATSubnetAddress 10.0.75.0<span class="sy0">/</span><span class="nu0">24</span></pre>
+
+</p>
+
+<p>
+erstellen des neuen NAT
+<pre class="code powershell">New<span class="sy0">-</span>NetNat –Name <span class="st0">&quot;NAT&quot;</span> –InternalIPInterfaceAddressPrefix 10.0.75.0<span class="sy0">/</span><span class="nu0">24</span></pre>
+
+</p>
+
+<p>
+Nach dem Release 16.07.2016 würde der Schalter vom SwitchType NAT wieder entfernt. In der neuen Version muss folgendes ausgeführt werden. 
+</p>
+
+<p>
+<pre class="code powershell">New<span class="sy0">-</span>VMSwitch –SwitchName <span class="st0">&quot;NAT&quot;</span> –SwitchType Internal</pre>
+
+</p>
+
+<p>
+<pre class="code powershell">New<span class="sy0">-</span>NetIPAddress –IPAddress 10.0.75.1 <span class="sy0">-</span>PrefixLength <span class="nu0">24</span> <span class="sy0">-</span>InterfaceAlias <span class="st0">&quot;vEthernet (NAT)&quot;</span></pre>
+
+</p>
+
+<p>
+<pre class="code powershell">New<span class="sy0">-</span>NetNat –Name NAT –InternalIPInterfaceAddressPrefix 10.0.75.0<span class="sy0">/</span><span class="nu0">24</span></pre>
+
+</p>
+
+<p>
+Die folgende Schritte müssen für beide Version ausgeführt werden  
+Dem neuem NAT-Adapter wird eine statische IP zugewiesen. 
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=nat_hyper-v&amp;media=hyperv1.png" class="media" title="hyperv1.png"><img src="/lib/exe/fetch.php?w=200&amp;tok=48e3d0&amp;media=hyperv1.png" class="media" alt="" width="200" /></a>
+</p>
+
+<p>
+Dem Client kann man nun eine statische Addresse zuweisen oder man installiert einen kleinen DHCP. 
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=nat_hyper-v&amp;media=hyperv-2.png" class="media" title="hyperv-2.png"><img src="/lib/exe/fetch.php?w=200&amp;tok=7d0daa&amp;media=hyperv-2.png" class="media" alt="" width="200" /></a>
+</p>
+
+<p>
+Der kleine DHCP kann auf folgender Website heruntergeladen werden : <a href="http://www.dhcpserver.de/cms/download/" class="urlextern" title="http://www.dhcpserver.de/cms/download/" rel="nofollow">http://www.dhcpserver.de/cms/download/</a> oder aus meiner Owncloud. 
+</p>
+
+<p>
+Für die Konfiguration des DHCP wird die dhcpwiz.exe gestartet und wie folgt konfiguriert. 
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=nat_hyper-v&amp;media=dhcpwiz1.png" class="media" title="dhcpwiz1.png"><img src="/lib/exe/fetch.php?w=200&amp;tok=e73863&amp;media=dhcpwiz1.png" class="media" alt="" width="200" /></a>
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=nat_hyper-v&amp;media=dhcpwiz2.png" class="media" title="dhcpwiz2.png"><img src="/lib/exe/fetch.php?w=200&amp;tok=d8f842&amp;media=dhcpwiz2.png" class="media" alt="" width="200" /></a>
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=nat_hyper-v&amp;media=dhcpwiz3.png" class="media" title="dhcpwiz3.png"><img src="/lib/exe/fetch.php?w=200&amp;tok=8dce97&amp;media=dhcpwiz3.png" class="media" alt="" width="200" /></a>
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=nat_hyper-v&amp;media=dhcpwiz4.png" class="media" title="dhcpwiz4.png"><img src="/lib/exe/fetch.php?w=200&amp;tok=aa6730&amp;media=dhcpwiz4.png" class="media" alt="" width="200" /></a>
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=nat_hyper-v&amp;media=dhcpwiz5.png" class="media" title="dhcpwiz5.png"><img src="/lib/exe/fetch.php?w=200&amp;tok=933b04&amp;media=dhcpwiz5.png" class="media" alt="" width="200" /></a>
+</p>
+
+<p>
+Im letzten Fenster wird die Firewall konfiguriert und der Server installiert. Um nun den zugriff über icmp und smb auf dem Host zu erlauben muss auf dem Host eine Firewallregel definiert werden die den zugriff aus diesem Netz erlaubt.  
+</p>
+
+<p>
+<a href="/lib/exe/detail.php?id=nat_hyper-v&amp;media=dhcpwiz6.png" class="media" title="dhcpwiz6.png"><img src="/lib/exe/fetch.php?w=200&amp;tok=465196&amp;media=dhcpwiz6.png" class="media" alt="" width="200" /></a>
+</p>

@@ -1,0 +1,10 @@
+#Copy File and RUN
+#.---
+- name: "Copy Files"
+  copy:
+    src: "docker-compose.yml"
+    dest: "/tmp/docker-compose.yml"
+- name: "Run Docker compose gitlab"
+  command: docker-compose up -d
+  args:
+    chdir: "/tmp"

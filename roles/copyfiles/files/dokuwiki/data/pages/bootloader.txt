@@ -1,0 +1,217 @@
+====== Bootloader ======
+[[Bootloader]]
+====== initrd =====
+[[initrd]]
+====== init ======
+  * [[init|SysVinit]]
+  * [[upstart]]
+  * [[systemd]]
+
+===== systemd vs. SysVinit =====
+==== Dienste steuern =====
+^ Funktion ^ SysVinit ^ systemd ^
+|dienst starten|
+  service dienst start
+| 
+  systemctl start dienst
+|
+|dienst stoppen|
+  service dienst stop
+|
+  systemctl stop dienst
+|
+|dienst TERM Signal schicken|  |
+  systemctl kill dienst
+|
+|dienst prüfen|
+  service dienst status
+| 
+  systemctl status dienst
+|
+|dienst neu starten|
+  service dienst restart
+|
+  systemctl restart dienst
+|
+|dienst neu laden|
+  service dienst reload
+|
+  systemctl reload dienst
+|
+|dienst beim Booten starten|
+  chkconfig dienst on
+|
+  systemctl enable dienst
+|
+|dienst beim Booten nicht starten|
+  chkconfig dienst off
+|
+  systemctl disable dienst
+|
+|Wird der dienst beim Booten gestartet?|
+  chkconfig dienst
+|
+  systemctl is-enabled dienst
+|
+|Abhängigkeiten anzeigen| |
+  systemctl list-dependencies dienst
+|
+==== Runlevel ====
+^ Kurzbefehl/Funktion ^ SysVinit ^ systemd ^
+|
+  halt
+|
+  init 0
+|
+  systemctl isolate halt.target
+  systemctl halt
+|
+|
+  poweroff
+| |
+  systemctl isolate poweroff.target
+  systemctl poweroff
+|
+|in Single User Mode wechseln|
+  init 1
+|
+  systemctl isolate rescue.target
+  systemctl rescue
+|
+|
+  reboot
+|
+  init 6
+|
+  systemctl reboot
+|
+
+
+====== Bootloader ======
+===== Bootloader löschen =====
+  dd if=/dev/zero of=/dev/sda bs=446 count=1
+
+===== grub2 =====
+==== Grub2 in den MBR installieren ====
+=== CentOS 7 ===
+  yum install grub2
+
+=== Debian (ab 6.0) Ubuntu (ab 14.04) ===
+  apt-get install grub-pc
+  update-grub2
+  grub-install /dev/sda
+
+=== openSuSE 12.2 ===
+  update-bootloader
+  grub2-install /dev/sda
+
+==== Kernel Bootparameter ändern ====
+Z.B. Kernel Argument ''nomodeset'' setzen:
+=== openSuSE 12.3 ===
+''/etc/default/grub'' :
+
+Zeile ''GRUB_CMDLINE_LINUX_DEFAULT'' anpassen
+
+''/boot/grub2/grub.cfg'' neu erstellen:
+  grub2-mkconfig --output=/boot/grub2/grub.cfg
+
+=== debian (ab 6.0) ubuntu (14.04) ===
+''/etc/default/grub'' :
+
+Zeile ''GRUB_CMDLINE_LINUX_DEFAULT'' anpassen
+
+''/boot/grub/grub.cfg'' neu erstellen:
+  grub-mkconfig --output=/boot/grub/grub.cfg
+
+==== Grub2 mit Passwort absichern ====
+=== Root Passwort ändern ===
+Grub Bootprompt: ''init=/bin/bash'' hinzufügen
+
+Kernel mit ''strg+x'' booten
+
+  mount -o remount,rw /
+  passwd
+  mount -o remount,ro /
+  exec /sbin/init
+
+=== Grub absichern ===
+Debian 6.0, CentOS 7:
+  grub2-mkpasswd-pbkdf2
+
+Debian 7, Ubuntu (ab 14.04):
+  grub-mkpasswd-pbkdf2
+
+<file txt /etc/grub.d/45_password>
+#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+set superusers="root"
+password_pbkdf2 root grub.pbkdf2.sha512.10000.FF73A777C6793E117430446F4D12F00D25DA53515B5048B1DAAA0688743550226CD05AD661EBDCA2AA1997AEBDC0C35C74CA48C9309FBED1C201C5875E3AD2E8.292A1642CB109860054562756A5AE950975B586A8DFDE535F566D1ADDCC6747349406E84862FFD9258F64268A36E63EF25A41A3CC0CD6291E63D98CEDDF00FE6
+</file>
+
+  chmod +x /etc/grub.d/45_password
+
+Debian (ab 6), Ubuntu (14.04):
+  grub-mkconfig -o /boot/grub/grub.cfg
+
+CentOS (7):
+  grub2-mkconfig -o /boot/grub2/grub.cfg
+
+== testen ==
+  grep password /boot/grub?/grub.cfg
+  reboot
+
+=== Doku ===
+  * https://www.gnu.org/software/grub/manual/html_node/Security.html
+===== grub =====
+==== Grub in den MBR installieren ====
+=== Debian ===
+  grub-install /dev/sda
+oder
+  grub
+  root (hd0,0)
+  setup (hd0)
+  quit
+
+  update-grub
+
+=== SuSE ===
+  grub-install /dev/sda
+oder
+  grub
+  root (hd0,0)
+  setup (hd0)
+  quit
+
+==== Neuen Kernel testen ====
+System rebooten, und einmalig den 3. Eintrag ( grub fängt bei 0 an zu zählen ... ) aus ''/boot/grub/menu.lst'' verwenden:
+
+SuSE:
+  grubonce 2
+
+Debian:
+  grub-reboot 2
+
+==== Grub mit Passwort absichern ====
+=== Root Passwort ändern ===
+Grub Bootprompt: ''init=/bin/bash'' hinzufügen
+
+Kernel mit ''b'' booten
+
+  mount -o remount,rw /
+  passwd
+  mount -o remount,ro /
+  exec /sbin/init
+
+=== Grub absichern ===
+  /sbin/grub-md5-crypt
+
+''/boot/grub/menu.lst'' :
+<file>
+password --md5 $1$ZkniA/$2EBU5eSONAj.i2KIhhtWA0
+</file>
+
+===== Dokus & Links =====
+  * http://wiki.ubuntuusers.de/grub_2/konfiguration

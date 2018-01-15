@@ -1,0 +1,13 @@
+*<span class="kw2">&lt;?php</span><span class="sy0">*</span>
+<span class="sy0">*</span><span class="re0">$farben</span> <span class="sy0">=</span> <a href="http://php.net/array"><span class="kw3">array</span></a> <span class="br0">&#40;</span><span class="st0">&quot;hellblau&quot;</span> <span class="sy0">=&gt;</span>  <span class="st0">&quot;lightblue&quot;</span><span class="sy0">,</span> <span class="sy0">*</span>
+<span class="sy0">*</span>                 <span class="st0">&quot;schwarz&quot;</span> <span class="sy0">=&gt;</span> <span class="st0">&quot;black&quot;</span><span class="sy0">,</span> <span class="sy0">*</span>
+<span class="sy0">*</span>                 <span class="st0">&quot;gelb&quot;</span> <span class="sy0">=&gt;</span> <span class="st0">&quot;yellow&quot;</span><span class="sy0">,</span> <span class="sy0">*</span>
+<span class="sy0">*</span>                 <span class="st0">&quot;himmelblau&quot;</span> <span class="sy0">=&gt;</span> <span class="st0">&quot;skyblue&quot;</span><span class="sy0">,*</span>
+<span class="sy0">*</span>                 <span class="st0">&quot;rot&quot;</span> <span class="sy0">=&gt;</span> <span class="st0">&quot;red&quot;</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="re0">$serial</span> <span class="sy0">=</span> <a href="http://php.net/serialize"><span class="kw3">serialize</span></a><span class="br0">&#40;</span><span class="re0">$farben</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="re0">$serial</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="re0">$arr</span> <span class="sy0">=</span> <a href="http://php.net/unserialize"><span class="kw3">unserialize</span></a><span class="br0">&#40;</span><span class="re0">$serial</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;&lt;pre&gt;&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><a href="http://php.net/print_r"><span class="kw3">print_r</span></a><span class="br0">&#40;</span><span class="re0">$arr</span><span class="br0">&#41;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="kw1">echo</span> <span class="st0">&quot;&lt;/pre&gt;&quot;</span><span class="sy0">;*</span>
+<span class="sy0">*</span><span class="sy1">?&gt;</span>*

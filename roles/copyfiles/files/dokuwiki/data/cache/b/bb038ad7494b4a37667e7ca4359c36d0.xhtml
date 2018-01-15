@@ -1,0 +1,198 @@
+
+<p>
+Hier eine kleine Auflistung aller geprüften PowerShell Kommandos im Bezug auf SCCM 2012. 
+</p>
+
+<p>
+1. Dieses Beispiel listet alle Applikationsnamen auf  
+<pre class="code powershell"><span class="br0">&#40;</span>Get<span class="sy0">-</span>CMApplication<span class="br0">&#41;</span>.LocalizedDisplayName</pre>
+
+</p>
+
+<p>
+Links : 
+</p>
+
+<p>
+<a href="http://cm12sdk.net/?page_id=10" class="urlextern" title="http://cm12sdk.net/?page_id=10" rel="nofollow">http://cm12sdk.net/?page_id=10</a>
+</p>
+
+<p>
+<a href="https://technet.microsoft.com/en-us/library/jj821831.aspx" class="urlextern" title="https://technet.microsoft.com/en-us/library/jj821831.aspx" rel="nofollow">https://technet.microsoft.com/en-us/library/jj821831.aspx</a>
+</p>
+
+<p>
+Content aktualisieren auf allen Pakete 
+</p>
+
+<p>
+<pre class="code powershell">try
+<span class="br0">&#123;</span>
+    <span class="kw1">Get-Wmiobject</span> <span class="kw5">-Namespace</span> <span class="st0">&quot;root\SMS\Site_P01&quot;</span> <span class="kw5">-Class</span> SMS_Application <span class="sy0">-</span><span class="kw3">Filter</span> <span class="st0">&quot;isLatest='true' and isExpired='false'&quot;</span> <span class="sy0">|</span> <span class="kw3">foreach</span><span class="br0">&#123;</span>
+           <span class="re0">$name</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.LocalizedDisplayName
+           <span class="kw2">echo</span> <span class="st0">&quot;Application : $name&quot;</span>
+           <span class="re0">$dptypes</span> <span class="sy0">=</span> Get<span class="sy0">-</span>CMDeploymentType <span class="sy0">-</span>ApplicationName <span class="st0">&quot;$name&quot;</span>
+           <span class="kw3">foreach</span> <span class="br0">&#40;</span><span class="re0">$dpt</span> <span class="kw3">in</span> <span class="re0">$dptypes</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+                <span class="re0">$dptname</span> <span class="sy0">=</span> <span class="re0">$dpt</span>.LocalizedDisplayName
+                <span class="kw2">echo</span> <span class="st0">&quot;Deployment Type: $dptname&quot;</span>
+                Update<span class="sy0">-</span>CMDistributionPoint <span class="sy0">-</span>ApplicationName <span class="st0">&quot;$name&quot;</span> <span class="sy0">-</span>DeploymentTypeName <span class="st0">&quot;$dptname&quot;</span>
+                <span class="br0">&#125;</span>
+           <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>
+catch
+<span class="br0">&#123;</span>
+    <a href="about:blank"><span class="kw6">$_</span></a>.Exception.Message
+<span class="br0">&#125;</span></pre>
+
+</p>
+
+<p>
+Dieses Skript verteilt den Content auf eine DistributionGroup 
+</p>
+
+<p>
+<pre class="code powershell">    <span class="kw1">Get-Wmiobject</span> <span class="kw5">-Namespace</span> <span class="st0">&quot;root\SMS\Site_S01&quot;</span> <span class="kw5">-Class</span> SMS_Application <span class="sy0">-</span><span class="kw3">Filter</span> <span class="st0">&quot;isLatest='true' and isExpired='false'&quot;</span> <span class="sy0">|</span> <span class="kw3">foreach</span><span class="br0">&#123;</span>
+           <span class="re0">$name</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.LocalizedDisplayName
+           <span class="kw2">echo</span> <span class="st0">&quot;Application : $name&quot;</span>
+           <span class="re0">$dptypes</span> <span class="sy0">=</span> Get<span class="sy0">-</span>CMDeploymentType <span class="sy0">-</span>ApplicationName <span class="st0">&quot;$name&quot;</span>
+           <span class="kw3">foreach</span> <span class="br0">&#40;</span><span class="re0">$dpt</span> <span class="kw3">in</span> <span class="re0">$dptypes</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+                <span class="re0">$dptname</span> <span class="sy0">=</span> <span class="re0">$dpt</span>.LocalizedDisplayName
+               <span class="co1"># echo &quot;Deployment Type: $dptname&quot;</span>
+                Start<span class="sy0">-</span>CMContentDistribution <span class="sy0">-</span>ApplicationName <span class="st0">&quot;$name&quot;</span> <span class="sy0">-</span>DistributionPointGroupName <span class="st0">&quot;LRA&quot;</span>
+                <span class="br0">&#125;</span>
+           <span class="br0">&#125;</span>
+    <a href="about:blank"><span class="kw6">$_</span></a>.Exception.Message</pre>
+
+</p>
+
+<p>
+PowerShell module sauber importieren (nur wenn die Admin Konsole installiert ist)
+</p>
+
+<p>
+<pre class="code powershell">Import<span class="sy0">-</span>Module <span class="br0">&#40;</span><span class="kw1">Join-Path</span> $<span class="br0">&#40;</span><span class="kw1">Split-Path</span> <span class="re0">$env</span>:SMS_ADMIN_UI_PATH<span class="br0">&#41;</span> ConfigurationManager.psd1<span class="br0">&#41;</span></pre>
+
+</p>
+
+<p>
+Dieses Beispiel liest eine XML File aus und erstellt eine Applikation im SCCM !!
+</p>
+
+<p>
+<pre class="code powershell"><span class="kw3">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span><span class="br0">&#40;</span><span class="kw1">get-host</span><span class="br0">&#41;</span>.Version<span class="br0">&#41;</span>.Major <span class="kw4">-eq</span> <span class="nu0">2</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="re0">$PSScriptRoot</span> <span class="sy0">=</span> <span class="kw1">Split-Path</span> <span class="kw5">-Parent</span> <span class="kw5">-Path</span>  <span class="re0">$MyInvocation</span>.MyCommand.Definition
+<span class="br0">&#125;</span>
+<span class="re0">$XMLFile</span>  <span class="sy0">=</span> <span class="st0">&quot;$PSScriptRoot\Application.xml&quot;</span>
+<span class="kw3">if</span> <span class="br0">&#40;</span><span class="kw4">-not</span> <span class="br0">&#40;</span><span class="kw1">Test-Path</span> <span class="re0">$XMLFile</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+ <span class="kw3">throw</span> <span class="st0">&quot;Application.xml not exists&quot;</span>
+<span class="br0">&#125;</span>
+<span class="co1">##Set variables####################################################</span>
+<span class="kw1">write-host</span> <span class="st0">&quot;Modify the xml ;) !!&quot;</span>
+notepad <span class="st0">&quot;$XMLFile&quot;</span>
+<span class="kw1">write-host</span> <span class="st0">&quot;save the XML&quot;</span>
+timeout <span class="nu0">5</span>
+Wait<span class="sy0">-</span>Process <span class="kw5">-Name</span> <span class="st0">&quot;notepad&quot;</span>
+<span class="re0">$Data</span> <span class="sy0">=</span> <span class="br0">&#91;</span><span class="re3">Xml</span><span class="br0">&#93;</span> <span class="br0">&#40;</span><span class="kw1">Get-Content</span> <span class="st0">&quot;$XMLFile&quot;</span><span class="br0">&#41;</span>
+<span class="co1"># Read XML and set Variables </span>
+<span class="br0">&#40;</span><span class="re0">$Data</span><span class="br0">&#41;</span>.ApplicationProperty<span class="sy0">|</span><span class="kw1">ForEach-Object</span> <span class="br0">&#123;</span>
+         <span class="re0">$Vendor</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.Vendor
+         <span class="re0">$Product</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.Product 
+         <span class="re0">$Version</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.Version
+         <span class="re0">$Revision</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.Revision
+         <span class="re0">$EXECUTEFile</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.InstallFile
+         <span class="re0">$EXECuteFileArgument</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.InstallArguments
+         <span class="re0">$UnInstallA</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.UnInstallSetup
+         <span class="re0">$UnInstallArgument</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.UnInstallArguements
+         <span class="re0">$ARPPATH</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.ARPPath
+         <span class="re0">$ARCH</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.ARCH
+         <span class="re0">$LANG</span> <span class="sy0">=</span> <a href="about:blank"><span class="kw6">$_</span></a>.LANG
+   <span class="br0">&#125;</span>
+<span class="re0">$SourceFolder</span> <span class="sy0">=</span> <span class="kw1">Read-Host</span> <span class="st0">'What is the Source Folder?'</span>
+<span class="re0">$SourceFolderSCCMROOT</span> <span class="sy0">=</span> <span class="st0">&quot;\\teg.teda\admin\SCCM\SD\Applications&quot;</span>
+<span class="re0">$FolderName</span> <span class="sy0">=</span> <span class="st0">&quot;$Vendor&quot;</span> <span class="sy0">+</span> <span class="st0">&quot;_&quot;</span> <span class="sy0">+</span> <span class="st0">&quot;$Product&quot;</span> <span class="sy0">+</span> <span class="st0">&quot;_&quot;</span> <span class="sy0">+</span> <span class="st0">&quot;$Version&quot;</span> <span class="sy0">+</span> <span class="st0">&quot;_&quot;</span> <span class="sy0">+</span> <span class="st0">&quot;$ARCH&quot;</span> <span class="sy0">+</span> <span class="st0">&quot;_&quot;</span> <span class="sy0">+</span> <span class="st0">&quot;$LANG_$Revision&quot;</span>
+<span class="re0">$ApplicationName</span> <span class="sy0">=</span> <span class="st0">&quot;$Product $Version $Lang $Revision&quot;</span>
+<span class="re0">$FolderName</span>
+<span class="kw1">New-Item</span> <span class="st0">&quot;$SourceFolderSCCMROOT\$FolderName&quot;</span> <span class="sy0">-</span><span class="kw2">type</span> directory
+<span class="kw1">New-Item</span> <span class="st0">&quot;$SourceFolderSCCMROOT\$FolderName\approved&quot;</span> <span class="sy0">-</span><span class="kw2">type</span> directory
+<span class="kw1">Copy-Item</span> <span class="st0">&quot;$XMLFile&quot;</span> <span class="st0">&quot;$SourceFolderSCCMROOT\$FolderName\&quot;</span>  <span class="kw5">-force</span>
+<span class="kw1">Copy-Item</span> <span class="st0">&quot;$PSScriptRoot\Wrapper.ps1&quot;</span> <span class="st0">&quot;$SourceFolderSCCMROOT\$FolderName\&quot;</span>  <span class="kw5">-force</span>  
+<span class="kw1">Copy-Item</span> <span class="st0">&quot;$SourceFolder\*&quot;</span> <span class="st0">&quot;$SourceFolderSCCMROOT\$FolderName\approved&quot;</span> <span class="kw5">-Recurse</span> <span class="kw5">-Force</span>
+<span class="co1">########################################################################################################################################</span>
+Import<span class="sy0">-</span>Module <span class="br0">&#40;</span><span class="kw1">Join-Path</span> $<span class="br0">&#40;</span><span class="kw1">Split-Path</span> <span class="re0">$env</span>:SMS_ADMIN_UI_PATH<span class="br0">&#41;</span> ConfigurationManager.psd1<span class="br0">&#41;</span>
+<span class="kw2">cd</span> <span class="st0">&quot;000:&quot;</span>
+New<span class="sy0">-</span>CMApplication <span class="kw5">-Name</span> <span class="st0">&quot;$ApplicationName&quot;</span> <span class="kw5">-Description</span> <span class="st0">&quot;create_from_Script&quot;</span> <span class="sy0">-</span>Publisher <span class="st0">&quot;$Vendor&quot;</span> <span class="sy0">-</span>SoftwareVersion <span class="st0">&quot;$Version&quot;</span>
+&nbsp;
+<span class="re0">$scriptDetection</span> <span class="sy0">=</span> <span class="sy0">@</span><span class="st0">'
+$pagefile = Get-WmiObject -Class Win32_PageFileSetting
+$AutomaticManagePageFile = Get-WmiObject -Class Win32_ComputerSystem 
+if (($pagefile.InitialSize -eq 1024) -and ($pagefile.MaximumSize -eq 2048) -and ($AutomaticManagePageFile.AutomaticManagedPagefile -eq $false))
+{
+    Write-host &quot;Installed&quot;
+}
+else
+{
+}
+'</span><span class="sy0">@</span>
+&nbsp;
+<span class="re0">$DeploymentTypeHash</span> <span class="sy0">=</span> <span class="sy0">@</span><span class="br0">&#123;</span>
+                    ManualSpecifyDeploymentType <span class="sy0">=</span> <span class="re0">$true</span> <span class="co1">#Yes we are going to manually specify the Deployment type</span>
+                    Applicationname <span class="sy0">=</span> <span class="st0">&quot;$ApplicationName&quot;</span> <span class="co1">#Application Name </span>
+                   <span class="co1"># Applicationname = &quot;DymoLabelmanager 1.73 ENG 00&quot; #Application Name </span>
+                    DeploymentTypeName <span class="sy0">=</span> <span class="st0">&quot;Installation&quot;</span>    <span class="co1">#Name given to the Deployment Type</span>
+                    DetectDeploymentTypeByCustomScript <span class="sy0">=</span> <span class="re0">$true</span> <span class="co1"># Yes deployment type will use a custom script to detect the presence of this </span>
+                    ScriptInstaller <span class="sy0">=</span> <span class="re0">$true</span> <span class="co1"># Yes this is a Script Installer</span>
+                    ScriptType <span class="sy0">=</span> <span class="st0">'PowerShell'</span> <span class="co1"># yep we will use PowerShell Script</span>
+                    ScriptContent <span class="sy0">=</span> <span class="st0">&quot;$scriptDetection&quot;</span>  <span class="co1"># Use the earlier defined here string</span>
+                    AdministratorComment <span class="sy0">=</span> <span class="st0">&quot;created from Skript&quot;</span>
+                   <span class="co1"># ContentLocation  = &quot;$SourceFolderSCCMROOT\$FolderName&quot; </span>
+                    ContentLocation <span class="sy0">=</span> <span class="st0">&quot;$SourceFolderSCCMROOT\$FolderName&quot;</span>  <span class="co1"># NAL path to the package</span>
+                    InstallationProgram <span class="sy0">=</span><span class="st0">'powershell.exe -ExecutionPolicy Bypass -File &quot;Wrapper.ps1&quot;'</span>  <span class="co1">#Command line to Run for install</span>
+                    UninstallProgram <span class="sy0">=</span><span class="st0">'powershell.exe -ExecutionPolicy Bypass -File &quot;Wrapper.ps1&quot; -uninstall'</span> <span class="co1">#Command line to Run for un-Install</span>
+                    RequiresUserInteraction <span class="sy0">=</span> <span class="re0">$false</span>  <span class="co1">#Don't let User interact with this</span>
+                    InstallationBehaviorType <span class="sy0">=</span> <span class="st0">'InstallForSystem'</span> <span class="co1"># Targeting Devices here</span>
+                    InstallationProgramVisibility <span class="sy0">=</span> <span class="st0">'Hidden'</span>  <span class="co1"># Hide the PowerShell Console</span>
+                    LogonRequirementType <span class="sy0">=</span> <span class="st0">'WhereOrNotUserLoggedOn'</span>
+                    <span class="br0">&#125;</span>
+Add<span class="sy0">-</span>CMDeploymentType <span class="sy0">@</span>DeploymentTypeHash 
+<span class="co1">####################################################################################################</span>
+<span class="re0">$Copy</span> <span class="sy0">=</span> Get<span class="sy0">-</span>CMApplication <span class="kw5">-Name</span> <span class="st0">&quot;$ApplicationName&quot;</span>
+Move<span class="sy0">-</span>CMObject <span class="sy0">-</span>FolderPath .\Application\T4M <span class="kw5">-InputObject</span> $copy</pre>
+
+</p>
+
+<p>
+SCCM Clientcache verändern über die WMI 
+</p>
+
+<p>
+<pre class="code powershell"><span class="re0">$sms</span><span class="sy0">=</span><span class="kw2">gwmi</span> <span class="kw5">-namespace</span> root\ccm\softmgmtagent <span class="kw5">-class</span> cacheconfig;$sms.size <span class="sy0">=</span> <span class="st0">&quot;10000&quot;</span>;$sms.put<span class="br0">&#40;</span><span class="br0">&#41;</span> </pre>
+
+</p>
+
+<p>
+Das folgende Skript liesst eine CSV aus und verschiebt die Rechner in die entsprechende Collection. 
+Bespiel CSV : 
+<pre class="code csv">ColID;Rechner
+UBA0001B; PC62328
+UBA0001B; PC62354
+UBA0001B; PC62355
+UBA0001B; PC62356
+UBA0001B; PC62357
+UBA0001B; PC62360
+UBA0001B; PC62361
+UBA0001B; PC62382
+UBA0001B; PC62390
+UBA0001B; PC62391
+UBA0001B; PC62479
+UBA0001B; PC62486
+UBA0001B; SB71111-1</pre>
+
+Skript : 
+<pre class="code powershell"><span class="kw3">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span><span class="br0">&#40;</span><span class="kw1">get-host</span><span class="br0">&#41;</span>.Version<span class="br0">&#41;</span>.Major <span class="kw4">-eq</span> <span class="nu0">2</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="re0">$PSScriptRoot</span> <span class="sy0">=</span> <span class="kw1">Split-Path</span> <span class="kw5">-Parent</span> <span class="kw5">-Path</span>  <span class="re0">$MyInvocation</span>.MyCommand.Definition
+<span class="br0">&#125;</span>
+Import<span class="sy0">-</span>Module <span class="br0">&#40;</span><span class="kw1">Join-Path</span> $<span class="br0">&#40;</span><span class="kw1">Split-Path</span> <span class="re0">$env</span>:SMS_ADMIN_UI_PATH<span class="br0">&#41;</span> ConfigurationManager.psd1<span class="br0">&#41;</span>
+<span class="kw2">cd</span> UBA:
+<span class="kw1">Import-Csv</span> <span class="st0">&quot;$PSScriptRoot\PilotUpdate_2.csv&quot;</span> <span class="kw5">-Delimiter</span> <span class="st0">&quot;;&quot;</span><span class="sy0">|%</span><span class="br0">&#123;</span>Add<span class="sy0">-</span>CMDeviceCollectionDirectMembershipRule  <span class="sy0">-</span>CollectionId <span class="st0">&quot;ColID&quot;</span> <span class="sy0">-</span>ResourceId <span class="br0">&#40;</span>Get<span class="sy0">-</span>CMDevice <span class="kw5">-name</span> <a href="about:blank"><span class="kw6">$_</span></a>.Rechner<span class="br0">&#41;</span>.ResourceId<span class="br0">&#125;</span></pre>
+
+</p>

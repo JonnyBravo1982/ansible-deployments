@@ -1,0 +1,22 @@
+#Repository anlegen 
+<code bash>
+Register-PSRepository -Name T4M -SourceLocation "\\T4M-APC-255\repo$" -InstallationPolicy Trusted
+</code>
+#prüfen ob es vorhanden ist
+<code bash>
+Get-PSRepository
+</code>
+<code bash>
+New-ModuleManifest -Path "C:\Windows\System32\WindowsPowerShell\v1.0\Modules\MSSQLQuery\MSSQLQuery.psd1" -Author 'Daniel Schlaupitz' -ModuleVersion '1.0' -Description 'SQL Query function'
+</code>
+#Module veröffentlichen 
+<code bash>
+Publish-Module -Name MSSQLQuery -Repository "T4M" -ReleaseNotes "First"
+</code>
+#finde Module 
+<code bash>
+Find-Module -Repository T4M
+</code>
+<code bash>
+Install-Module -Name MSSQLQUERy
+</code>

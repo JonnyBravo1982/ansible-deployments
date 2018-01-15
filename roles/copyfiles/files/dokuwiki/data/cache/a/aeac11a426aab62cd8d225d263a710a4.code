@@ -1,0 +1,17 @@
+**<span class="sc2">&lt;?php date_default_timezone_set<span class="br0">&#40;</span><span class="st0">&quot;Europe/Berlin&quot;</span><span class="br0">&#41;</span>;?&gt;</span>**
+*<span class="sc0">&lt;!DOCTYPE html&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>*
+* <span class="sc2">&lt;<a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>*
+  **<span class="sc2">&lt;<a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;&lt;?php echo date<span class="br0">&#40;</span><span class="st0">&quot;j.n.Y&quot;</span><span class="br0">&#41;</span>; ?&gt;&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>**
+*  <span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">charset</span><span class="sy0">=</span><span class="st0">&quot;UTF-8&quot;</span> <span class="sy0">/</span>&gt;</span>*
+*  <span class="sc2">&lt;<a href="http://december.com/html/4/element/style.html"><span class="kw2">style</span></a> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;text/css&quot;</span>&gt;</span>*
+  **body { background-color: <span class="sc2">&lt;?php echo <span class="st0">&quot;yellow&quot;</span>; ?&gt;</span>; }**
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/style.html"><span class="kw2">style</span></a>&gt;</span>*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/p.html"><span class="kw2">p</span></a>&gt;</span>*
+*<span class="sc2">&lt;?php*</span>
+<span class="sc2">  **echo <span class="st0">&quot;Schönen Tag &lt;br /&gt;</span></span>auch!&quot;;** *?&gt;*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/p.html"><span class="kw2">p</span></a>&gt;</span>*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>*

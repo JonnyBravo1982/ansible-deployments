@@ -1,0 +1,1 @@
+New<span class="sy0">-</span>NetIPAddress <span class="sy0">-</span>IPAddress 10.0.75.30 <span class="sy0">-</span>PrefixLength <span class="nu0">24</span> <span class="sy0">-</span>DefaultGateway 10.0.75.1 <span class="sy0">-</span>InterfaceIndex <span class="nu0">5</span>

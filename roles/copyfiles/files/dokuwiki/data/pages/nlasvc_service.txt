@@ -1,0 +1,6 @@
+
+**NlaSvc Service** 
+Der NlaSvc Service prüft ob ein Windows 7 Rechner Online ist oder nicht. In dem er prüft ob er eine File vom Microsoft Server gedownloaden werden kann. 
+Der Service kann über die Registry deaktiviert oder modifiziert werden. 
+  HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NlaSvc\Parameters\Internet
+Value Beschreibung EnableActivProbing aktivert=1 und deaktivert=0 die funktion ActiveWebProbePath angabe des dateinamen ActiveWebProbeHost angabe zum host wie die Datei liegt ActiveWebProbeContent prüft den Inhalt der Datei ActiveDnsProbeContent angabe des DNS Servers 

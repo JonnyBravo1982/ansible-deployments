@@ -1,0 +1,16 @@
+====== Jobverwaltung der bash ======
+Vordergrundprozess anhalten:
+''STRG+z''
+
+Job in den Hintergrund schieben:
+  bg
+Job in den Vordergrund schieben:
+  fg
+Jobs anzeigen:
+  jobs
+
+Programm ''sleep 10'' im Hintergrund laufen lassen:
+  sleep 10 &
+
+Job 2 beenden:
+  kill %2

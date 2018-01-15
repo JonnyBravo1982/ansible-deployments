@@ -1,0 +1,7 @@
+&lt;<span class="kw3">VirtualHost</span> *:<span class="nu0">80</span>&gt;
+<span class="co1">#ProxyPreserveHost On</span>
+<span class="co1">#ProxyRequests Off</span>
+<span class="kw1">ServerName</span> jonnywordpress
+<span class="kw1">ProxyPass</span>               /       http://localhost:<span class="nu0">8081</span>/
+<span class="kw1">ProxyPassReverse</span>        /       http://localhost:<span class="nu0">8081</span>/
+&lt;/<span class="kw3">VirtualHost</span>&gt;

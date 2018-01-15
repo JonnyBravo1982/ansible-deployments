@@ -1,0 +1,296 @@
+
+<h1 class="sectionedit1" id="x_display_manager">X Display Manager</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "X Display Manager" [1-32] -->
+<h2 class="sectionedit2" id="xdmcp_server">XDMCP Server</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "XDMCP Server" [33-57] -->
+<h3 class="sectionedit3" id="gdm">gdm</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="ubuntu">Ubuntu</h4>
+<div class="level4">
+
+<p>
+<code>/etc/gdm/gdm.conf-custom</code> :
+<pre class="file">[xdmcp]
+Enable=true</pre>
+
+</p>
+<pre class="code">/etc/init.d/gdm restart</pre>
+
+</div>
+
+<h4 id="debian_50">Debian 5.0</h4>
+<div class="level4">
+
+<p>
+<code>/etc/gdm/gdm.conf</code> :
+<pre class="file">[xdmcp]
+Enable=true</pre>
+
+</p>
+<pre class="code">/etc/init.d/gdm restart</pre>
+
+</div>
+
+<h4 id="debian_60">Debian 6.0</h4>
+<div class="level4">
+
+<p>
+<code>/etc/gdm3/daemon.conf</code> :
+<pre class="file">[xdmcp]
+Enable=true</pre>
+
+</p>
+<pre class="code">/etc/init.d/gdm3 restart</pre>
+
+</div>
+
+<h4 id="centos_redhat">Centos / RedHat</h4>
+<div class="level4">
+<pre class="code">gdmsetup</pre>
+
+<p>
+oder
+<code>/etc/gdm/custom.conf</code> :
+<pre class="file">[xdmcp]
+Enable=true
+
+[Security]
+DisallowTCP=false</pre>
+
+</p>
+<pre class="code">pkill gdm-binary</pre>
+
+</div>
+
+<h5 id="begruessungsmeldung_aendern">Begrüßungsmeldung ändern</h5>
+<div class="level5">
+<pre class="code">gdmsetup</pre>
+
+<p>
+oder
+<code>/etc/gdm/custom.conf</code> :
+<pre class="file">[greeter]
+DefaultWelcome=false
+Welcome=Hallo %n</pre>
+
+</p>
+<pre class="code">pkill gdm-binary</pre>
+
+</div>
+<!-- EDIT3 SECTION "gdm" [58-711] -->
+<h3 class="sectionedit4" id="kdm">kdm</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="debian">Debian</h4>
+<div class="level4">
+
+<p>
+<code>/etc/kde3/kdm/kdmrc</code> :
+<pre class="file">[xdmcp]
+Enable=true</pre>
+
+</p>
+
+<p>
+<code>/etc/kde3/kdm/Xaccess</code> :
+<pre class="file">*                    #any host can get a login window</pre>
+
+</p>
+<pre class="code">/etc/init.d/kdm restart</pre>
+
+</div>
+
+<h5 id="begruessungsmeldung_aendern1">Begrüßungsmeldung ändern</h5>
+<div class="level5">
+
+<p>
+<code>/etc/default/kdm.d/10_desktop-base</code> : ( Debian 5.0 )
+<pre class="file">USETHEME=&quot;false&quot;</pre>
+
+</p>
+
+<p>
+<code>/etc/kde3/kdm/kdmrc</code> :
+<pre class="file">[X-*-Greeter]
+GreetString=Willkommen auf %n</pre>
+
+</p>
+<pre class="code">/etc/init.d/kdm restart</pre>
+
+</div>
+
+<h4 id="suse_121">SuSE 12.1</h4>
+<div class="level4">
+
+<p>
+<code>/etc/sysconfig/displaymanager</code> :
+<pre class="file">DISPLAYMANAGER_REMOTE_ACCESS=&quot;yes&quot;</pre>
+
+</p>
+<pre class="code">service xdm reload</pre>
+
+<p>
+<sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup>
+</p>
+
+</div>
+
+<h4 id="dokumentation">Dokumentation</h4>
+<div class="level4">
+<pre class="code">konqueror help:/kdm</pre>
+
+</div>
+<!-- EDIT4 SECTION "kdm" [712-1478] -->
+<h3 class="sectionedit5" id="xdm">xdm</h3>
+<div class="level3">
+
+<p>
+<code>/etc/X11/xdm/xdm-config</code> : <sup><a href="#fn__2" id="fnt__2" class="fn_top">2)</a></sup>
+<pre class="file">  ! DisplayManager.requestPort:   0</pre>
+
+</p>
+
+<p>
+<code>/etc/X11/xdm/Xaccess</code> :
+<pre class="file">*                                       #any host can get a login window</pre>
+
+</p>
+
+</div>
+<!-- EDIT5 SECTION "xdm" [1479-1888] -->
+<h2 class="sectionedit6" id="xdmcp_client">XDMCP Client</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT6 SECTION "XDMCP Client" [1889-1913] -->
+<h3 class="sectionedit7" id="x_als_terminal">X als Terminal</h3>
+<div class="level3">
+<pre class="code">X -query &lt;server&gt; :1 vt8 &amp;</pre>
+
+</div>
+
+<h4 id="mit_init_automatisch_starten">mit init automatisch starten</h4>
+<div class="level4">
+
+<p>
+<code>/etc/inittab</code> : 
+<pre class="file">xx:5:respawn:/usr/bin/X -query notebook17 :1</pre>
+
+</p>
+<pre class="code">init q</pre>
+
+</div>
+<!-- EDIT7 SECTION "X als Terminal" [1914-2093] -->
+<h3 class="sectionedit8" id="im_fenster_mit_xephyr">Im Fenster mit Xephyr</h3>
+<div class="level3">
+
+<p>
+Pakete:
+</p>
+<ul>
+<li class="level1"><div class="li"> openSuSE (11.1): xorg-x11-server-extra</div>
+</li>
+<li class="level1"><div class="li"> CentOS (5.3): xorg-x11-server-Xephyr</div>
+</li>
+<li class="level1"><div class="li"> Debian (5.0): xserver-xephyr</div>
+</li>
+</ul>
+<pre class="code">Xephyr -query notebook17 :1 &amp;</pre>
+
+</div>
+<!-- EDIT8 SECTION "Im Fenster mit Xephyr" [2094-2284] -->
+<h3 class="sectionedit9" id="links">Links</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <a href="http://remmina.sourceforge.net" class="urlextern" title="http://remmina.sourceforge.net"  rel="nofollow">Remote Desktop Client für RDP, VNC, NX, XDMCP und SSH</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT9 SECTION "Links" [2285-2394] -->
+<h2 class="sectionedit10" id="display-manager_auswaehlen">Display-Manager auswählen</h2>
+<div class="level2">
+
+</div>
+
+<h4 id="centos">CentOS</h4>
+<div class="level4">
+
+<p>
+<code>/etc/sysconfig/desktop</code> : 
+<pre class="file">DISPLAYMANAGER=XDM</pre>
+
+</p>
+
+</div>
+
+<h4 id="suse">SuSE</h4>
+<div class="level4">
+
+<p>
+<code>/etc/sysconfig/displaymanager</code> : 
+<pre class="file">DISPLAYMANAGER=XDM</pre>
+
+</p>
+
+</div>
+
+<h4 id="debian1">Debian</h4>
+<div class="level4">
+<pre class="code">dpkg-reconfigure kdm</pre>
+
+<p>
+oder
+</p>
+
+<p>
+<code>/etc/X11/default-display-manager</code> : 
+<pre class="file">/usr/bin/kdm -query &lt;server&gt; :1 vt8</pre>
+
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Display-Manager auswählen" [2395-2728] -->
+<h1 class="sectionedit11" id="terminal-server_loesungen">Terminal-Server Lösungen</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="http://connectivity.opentext.de/products/exceed-ondemand.aspx" class="urlextern" title="http://connectivity.opentext.de/products/exceed-ondemand.aspx"  rel="nofollow">http://connectivity.opentext.de/products/exceed-ondemand.aspx</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.x2go.org" class="urlextern" title="http://www.x2go.org"  rel="nofollow">http://www.x2go.org</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.nomachine.com" class="urlextern" title="http://www.nomachine.com"  rel="nofollow">http://www.nomachine.com</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.ltsp.org" class="urlextern" title="http://www.ltsp.org"  rel="nofollow">http://www.ltsp.org</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT11 SECTION "Terminal-Server Lösungen" [2729-] --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+ Beim reload oder restart wird die xdm-Konfigurationsdatei angepasst:
+
+<code>/var/adm/kdm/kdmrc.sysconfig</code>
+<pre class="file">[Xdmcp]
+Enable=true</pre>
+
+</div>
+<div class="fn"><sup><a href="#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+ unter SuSE:
+
+<code>/etc/sysconfig/displaymanager</code> : 
+<pre class="file">DISPLAYMANAGER_REMOTE_ACCESS=&quot;yes&quot;</pre>
+<pre class="code">SuSEconfig</pre>
+SuSEconfig ändert nun die Datei <code>/etc/X11/xdm/xdm-config</code>: ( openSuSE 11.4 )
+</div>
+</div>

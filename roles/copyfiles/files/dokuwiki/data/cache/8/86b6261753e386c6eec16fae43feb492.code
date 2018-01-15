@@ -1,0 +1,3 @@
+<span class="kw1">function</span> ccat <span class="br0">&#123;</span> 
+  <span class="kw2">egrep</span> <span class="re5">-v</span> <span class="st_h">'^\s*(#|$)'</span> <span class="st0">&quot;$1&quot;</span> 
+<span class="br0">&#125;</span>

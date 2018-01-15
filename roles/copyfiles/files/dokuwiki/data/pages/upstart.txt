@@ -1,0 +1,48 @@
+====== Upstart ======
+===== erste init-Skripte =====
+Welche Start-Skripte werden bei __jedem__ Bootvorgang als __erstes__ gestartet?
+=== CentOS 6 ===
+''/etc/init/rcS.conf'' 
+
+===== runlevel Start-Skripte =====
+Die native Upstart Konfiguration liegt in
+  * ''/etc/init/'' und
+  * ''/etc/event.d''
+
+Upstart ist aber auch weiterhin kompatibel zu den aus [[init|sysVinit]] bekannten Startskripten in 
+  * ''/etc/init.d/''
+
+==== Dienste starten und eintragen ====
+=== Dienst sofort, einmalig starten ===
+== upstart nativ ==
+Beispiel: tty4
+  initctl start tty TTY=/dev/tty4
+
+== sysVinit kompatibel ==
+  service dienst start
+
+=== Dienst immer beim Booten starten ===
+== upstart nativ ==
+Konfigurationsdateien ''/etc/init/*.conf''
+(( siehe
+  man 5 init
+))
+== sysVinit kompatibel ==
+  chkconfig dienst on
+
+=== Dienst sofort, einmalig beenden ===
+== upstart nativ ==
+Beispiel: tty4
+  initctl stop tty TTY=/dev/tty4
+
+== sysVinit kompatibel ==
+  service dienst stop
+
+=== Dienst beim Booten nicht starten ===
+Konfigurationsdateien ''/etc/init/*.conf''
+(( siehe
+  man 5 init
+))
+== sysVinit kompatibel ==
+  chkconfig dienst off
+

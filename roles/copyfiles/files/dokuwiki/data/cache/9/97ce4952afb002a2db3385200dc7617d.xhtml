@@ -1,0 +1,224 @@
+
+<p>
+Verzeichniss Strukture
+</p>
+
+<p>
+/bin - Dateien/Befehle, die von allen Anwendern benutzt werden dürfen /boot - Dateien des Bootloaders: Grub, Lilo /dev - Gerätedateien /etc - spezifische Konfigurationsdateien /home - Home-Verzeichnisse /lib - Kernel-Module, dynamische Bibliotheken /media - Portable Datenträger wie Speichersticks, ext. Festplatten /mnt - Einhängepunkt für Dateisysteme /opt - zusätzliche Softwarepakete /root - Home-Verzeichnis Root /sbin - Systembefehle /srv - Server-Dienste-Dateien /tmp - temporäres Verzeichnis /usr - 2. Verzeichnisebene /var - variable Daten
+</p>
+
+<p>
+Paketmanagement Debian Folgende gibt es
+</p>
+<pre class="code">alien
+apt-get
+dpkg
+dselect
+aptitude</pre>
+
+<p>
+Auflistung aller Installierten Pakete
+</p>
+<pre class="code">dpkg -l</pre>
+
+<p>
+-vi kurzreverenz
+</p>
+<pre class="code">:q! beenden ohne Speichern 
+:v virtusal Modus mit p wieder hinzufügen 
+:A text anfügen 
+:i inzert modus 
+:w save
+:! Kommandozeile ausführen z.b :!ls
+:dd löscht die ganz zeile
+:u Rückgängig machen
+CTRL+R Kommando wiederherstellen
+:G geht zum Ende der datei gg zum Anfang
+:% Klammern finden 
+:s etwas ersetzen z.b :s/das/dir/ um das gesamt Dokument zuändert folgt noch der paremter gc um alle zu ersetzen :s/das/dir/gc
+
+
+ </pre>
+
+<p>
+- das System durchsucht die $Path variable um seine befehle zu erkennen. Diese wird in /etc/profile modifiziert.
+</p>
+
+<p>
+- Umgebungsvariablen werden mit export angelegt
+</p>
+<pre class="code">export mutt=/usr/bin/mutt</pre>
+
+<p>
+- In der ./bash_history speichert die bash die letzten Befehle mit dem Kommando history ist es möglich sich die Befehle anzeigen zu lassen die größe der speicherung bestimmt die variable $HISTSIZE die in /etc/profile liegt.
+</p>
+
+<p>
+- Dokumentationssysteme von Linux sind
+</p>
+<ol>
+<li class="level1"><div class="li">man </div>
+</li>
+<li class="level1"><div class="li">apropos</div>
+</li>
+<li class="level1"><div class="li">info </div>
+</li>
+<li class="level1"><div class="li">whatis</div>
+</li>
+</ol>
+
+<p>
+- man besitzt verschiedene Kategorien
+</p>
+<pre class="code"> 1 Ausführbare Programme
+ 2 Systemaufrufe
+ 3 Bibliotheksaufrufe
+ 4 Spezielle Datein 
+ 5 Dateiformate und Konventionen
+ 6 Spiele 
+ 7 Makropakete 
+ 8 Systemadministrattionsbefehle (nur root)</pre>
+
+<p>
+- cat gibt den Inhalt einer Datei auf der Konsole aus - wc zählt längen
+</p>
+<ol>
+<li class="level1"><div class="li">c Byteanzal ausgeben </div>
+</li>
+<li class="level1"><div class="li">m Zeichenzahl ausgeben </div>
+</li>
+<li class="level1"><div class="li">l Zeilenanzahl ausgeben </div>
+</li>
+<li class="level1"><div class="li">L die länge der längsten Zeile </div>
+</li>
+<li class="level1"><div class="li">w Wort Anzahl ausgeben</div>
+</li>
+</ol>
+
+<p>
+Folgende Kommandozeilen Tools sollten bekannt sein mit Beispiel
+</p>
+
+<p>
+-cat zeigt eine oder veeint mehrere Datei 
+</p>
+<pre class="code">   cat /etc/ssh/sshd.conf</pre>
+
+<p>
+-cut extrahiert Spalten
+</p>
+<pre class="code">   cat /etc/ssh/sshd.conf |cut -b 10</pre>
+
+<p>
+-expand ersetzt Tabulator durch Leerzeichen 
+-fmt textformatierer 
+-head zeigt den Kopfeiner Datei an 
+</p>
+<pre class="code">  head -n 3 /etc/ssh/sshd.conf
+parameter 
+    -n wieviel zeilen sollen angezeigt werden 
+    -c wieviel bytes anzeigen 
+    -v gibt immer den dateinamen mit an </pre>
+
+<p>
+-join Zeilem von zwei Datein über ein gemeinsamnes Feld verbinden 
+-less zeigt Datein seitenweise an 
+</p>
+<pre class="code">  less /etc/ssh/sshd.conf
+  cd /usr/bin &amp;&amp; ls -l |less</pre>
+
+<p>
+-more zeigt Datein seitenweise an 
+</p>
+<pre class="code">  more /etc/ssh/sshd.conf
+  cd /usr/bin &amp;&amp; ls -l |more</pre>
+
+<p>
+-nl nummeriert zeilen 
+</p>
+<pre class="code">  cd /usr/bin &amp;&amp; ls -l |nl|more</pre>
+
+<p>
+-od gibt Datein in oktal aus 
+</p>
+<pre class="code">  od /etc/ssh/sshd.conf</pre>
+
+<p>
+-paste vereint mehrere Texte zeilenmweise
+-pr Wandelttext datein in druckausgaben um 
+-sed Stromeditor umwandeln von texten 
+</p>
+<pre class="code">sed s/a/A &lt; file.txt hier wird werden alle &quot;a&quot; durch &quot;A&quot; in der file.txt ersetzt
+parammeter mit Beispielen:
+-p	Gibt die entsprechenden Zeilen auf dem Bildschirm aus.	sed -n &#039;1,10p&#039; datei -- zeigt nur die ersten zehn Zeilen von datei an.
+-d	Löscht den definierten Bereich.	sed &#039;3d&#039; datei -- löscht die dritte Zeile in datei.
+-s	Ersetzt Zeichenketten.	sed &#039;s/KDE/Gnome/&#039; datei -- ersetzt alle Vorkommen von &quot;KDE&quot; durch &quot;Gnome&quot; in der gesamten Datei.
+-a	Fügt Text hinter den adressierten Zeilen ein (Einsatz in Skripten).	1a\ -Umbruch- Hier ist eine neue Zeile. -- fügt nach der ersten Zeile den folgenden Text ein.
+-i	Fügt Text vor den adressierten Zeilen ein (Einsatz in Skripten).	1i\ -Umbruch- Hier ist eine neue Zeile. -- fügt vor der ersten Zeile den folgenden Text ein.
+-c	Ersetzt Zeilen oder Zeilenbereiche (Einsatz in Skripten).	2c\ -Umbruch- Hier ist eine andere Zeile. -- ersetzt die zweite Zeile durch den folgenden Text ein.
+-r	Liest den Inhalt einer Datei ein und setzt diesen hinter die entsprechende Adresse.	sed &#039;2r neu.txt&#039; datei -- setzt den Inhalt von neu.txt hinter die zweite Zeile von datei .
+-w	Schreibt die adressierten Zeilen oder Bereiche in eine neue Datei.	sed &#039;5,$w neu.txt&#039; datei -- speichert von der fünften (einschließlich) bis zur letzten Zeile alles in der Datei neu.txt</pre>
+
+<p>
+-sort Zeilen von Textdatein sortieren
+</p>
+<pre class="code">  ls -l |sort -k 3 sortiert die 3 position der ausgebe also nach gruppen 9 wäre Namen </pre>
+
+<p>
+-split zerlegt Daten in Teildatein 
+</p>
+<pre class="code"> split -C 700m backup.tgz cd.</pre>
+
+<p>
+-tail gibt den letzten Teil einer datei aus 
+</p>
+<pre class="code"> tail -n 3 /etc/ssh/sshd.conf</pre>
+
+<p>
+-tee dupliziert die Standardeingabe und schreibt Sie in eine Datei 
+</p>
+<pre class="code">  ls -l|sort -k 9 |tee /home/file.txt</pre>
+
+<p>
+-tr ersetzt vorgegebene zeichen durch andere 
+</p>
+<pre class="code">tr a-zäöü A-ZÄÖÜ &lt; textdatei ersetzt alle kleinen Buchstaben in groß Buchstaben</pre>
+
+<p>
+-uniq löscht doppelte zeilen 
+-wc Zahlt alle zeilen 
+</p>
+<pre class="code">cat /etc/ssh/sshd.conf |wc -l zählt die zeilen in der sshd.conf</pre>
+
+<p>
+- mit Nice ist es möglich die Prozesse zu priosieren . - renice bearbeitet bereits laufende Prozesse Merksatz :
+</p>
+<pre class="code">Je höher der nice Wert umso &quot;netter&quot; sind Sie zu den anderen Usern.</pre>
+
+<p>
+- Mit grep -r ist es möglich Datein zu durchsuchen. Der Befehl rgrep erfühlt den selben zweck.
+</p>
+<pre class="code"> grep -r suchename /folder
+ rgrep suchename /folder</pre>
+
+<p>
+- Xargs bearbeitet die Standardausgabe als Liste und führt für jedes Listenelement ein Befehl aus.
+</p>
+<pre class="code"> test.file
+     google.de
+     yahoo.de 
+     lalaland.com</pre>
+
+<p>
+Aufruf
+</p>
+<pre class="code">  cat test.file|xargs -I var ping -c 2 var</pre>
+
+<p>
+- bei einem find Befehl ist es auch möglich mit exec zu arbeiten.
+</p>
+<pre class="code"> find /home/jonnybravo -name &quot;test*&quot; -exec rm {} \;</pre>
+
+<p>
+-als Mountpoints kommen immer nur Verzeichnisse in Frage (Antwort 1). -ld-linux.so ist der dynamische Linker der Programme und ihre Shared Libraries lädt 
+</p>

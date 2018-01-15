@@ -1,0 +1,24 @@
+
+<p>
+Sicherung von entferntem Rechner auf lokalen Rechner
+</p>
+
+<p>
+In diesem Beispiel soll das Verzeichnis /var/www vom Rechner example.com auf den lokalen Rechner gesichert werden. Außerdem sollen alle Dateien, die in /var/www gelöscht wurden, nachdem die letzte Sicherung erstellt wurde, lokal ebenfalls gelöscht werden, nachdem man sie noch ein letztes Mal sichert.
+</p>
+
+<p>
+Es werden wieder die selben Optionen wie vorher genommen sowie –delete für das Löschen und -b für die Backups gelöschter und veränderter Dateien. Diese Backups finden sich später in dem mit –backup-dir angegebenen Verzeichnis. Der Befehl sieht dann so aus:
+</p>
+
+<p>
+<pre class="code bash">rsync <span class="re5">--delete</span> <span class="re5">-avzbe</span> <span class="kw2">ssh</span> jonnybravo<span class="sy0">@</span>jonnybravoserver.de:<span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>dokuwiki <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>html<span class="sy0">/</span> <span class="re5">--backup-dir</span>=~<span class="sy0">/</span>old </pre>
+
+</p>
+
+<p>
+Sollen dem SSH-Befehl weitere Optionen angehängt werden, z.B. -i, um einen abweichenden Private-Key bei der Anmeldung zu übergeben, muss der SSH-Befehl in einfache Anführungszeichen gesetzt werden, etwa so:
+<pre class="code bash">rsync <span class="re5">--delete</span> <span class="re5">-avzbe</span> <span class="st_h">'ssh -i /pfad/zur/id_rsa'</span>  jonnybravo<span class="sy0">@</span>jonnybravoserver.de:<span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>dokuwiki <span class="sy0">/</span>var<span class="sy0">/</span>www<span class="sy0">/</span>html<span class="sy0">/</span> <span class="re5">--backup-dir</span>=~<span class="sy0">/</span>old </pre>
+
+Der Pfad zu dem Private-Key File muss dabei absolut sein. Dann den ganzen Befehl mit Cron zeitgesteuert automatisieren und die Angst vor einer defekten Festplatte oder versehentlich gelöschten Daten ist vorbei.
+</p>

@@ -1,0 +1,2 @@
+a2ensite /etc/apache2/sites-available/jonnywordpress.conf  #deaktvieren mit a2dissite 
+service apache2 reloade 

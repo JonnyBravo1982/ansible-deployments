@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- generator="FeedCreator 1.7.2-ppt DokuWiki" -->
+<?xml-stylesheet href="http://convert-3.com/lib/exe/css.php?s=feed" type="text/css"?>
+<rdf:RDF
+    xmlns="http://purl.org/rss/1.0/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel rdf:about="http://convert-3.com/feed.php">
+        <title>JonnysWiki</title>
+        <description></description>
+        <link>http://convert-3.com/</link>
+        <image rdf:resource="http://convert-3.com/lib/tpl/bootstrap3/images/favicon.ico" />
+       <dc:date>2017-12-06T07:08:18+00:00</dc:date>
+        <items>
+            <rdf:Seq>
+            </rdf:Seq>
+        </items>
+    </channel>
+    <image rdf:about="http://convert-3.com/lib/tpl/bootstrap3/images/favicon.ico">
+        <title>JonnysWiki</title>
+        <link>http://convert-3.com/</link>
+        <url>http://convert-3.com/lib/tpl/bootstrap3/images/favicon.ico</url>
+    </image>
+</rdf:RDF>

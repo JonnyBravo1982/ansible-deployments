@@ -1,0 +1,82 @@
+
+<p>
+Tmux ist ein Tool um das arbeiten mit der Shell zu erleichtern. Es ersetzt für mich das alte Programme Screen da es ähnlich Funktionen hat. Ich möchte kurz die wichtigsten Kniffe beschreiben. Jeder Benutzer kann sich eine eigene Steuerdatei mit der Bezeichnung  ~/.tmux.conf anlegen. In dieser Datei können z.B. Tastenkürzel geändert werden und Maus aktiviert werden. In diesem Beispiel wird die Mausoption aktiviert.  
+</p>
+
+<p>
+tmux.conf
+<pre class="code">set-option -g mouse on
+set-windows-option -g mode-keys vi 
+bind-key -t emacs-copy WheelUpPane halfpage-up
+bind-key -t emacs-copy WheelDownPane halfpage-down
+bind-key -t vi-copy WheelDownPane halfpage-down
+bind-key -t vi-copy WheelUpPane halfpage-up </pre>
+
+</p>
+
+<p>
+Die zeile „set-windows-option -g mode-keys vi“ aktiviert die vim Keys im Tmux-Fenster aktiviert werden mit Str+b und [ kommt man in das visual Menue. 
+</p>
+
+<p>
+Die Konfigurationsdatei wird nur beim Start des tmux-serves eingelesen. Bei einem laufenden Betrieb kann die Datei mit folgenden Befehl geladen werden. 
+</p>
+
+<p>
+<pre class="code">tmux source-file ~/.tmux.conf</pre>
+
+</p>
+
+<p>
+Der foglende Befehle zeigt die bestehenden Sessions
+<pre class="code">tmux list-sessions</pre>
+
+Wenn eine neue Session geöffnet wird kann man diese mit folgenden KOmmando öffen um nicht die Orientierung zu verlieren. 
+</p>
+
+<p>
+<pre class="code">tmux new-session -s testumgebung1</pre>
+
+</p>
+
+<p>
+zwischen den Sessions kann mit den folgenden Befehle gewechselt und zugegriffen werden.
+</p>
+<ul>
+<li class="level1"><div class="li"> tmux attach-session -t &lt;sessionname&gt;</div>
+</li>
+<li class="level1"><div class="li"> tmux switch-client -t &lt;sessionname&gt;</div>
+</li>
+<li class="level1"><div class="li"> </div>
+</li>
+</ul>
+
+<p>
+Im dem Kommando Str+b kommt man in das interne Menü. Im Steuerungsmenue könne folgte Kommandos eingesetzt werden. 
+</p>
+<ol>
+<li class="level1"><div class="li"> Shift + 2 öffnet einen neuen Screen Horizontal </div>
+</li>
+<li class="level1"><div class="li"> Shift + 5 öffnet einen neuen Screen Vertikal</div>
+</li>
+<li class="level1"><div class="li"> Bild Hoch / Bild Runter wird in der Shell Hoch und Runter navigiert </div>
+</li>
+<li class="level1"><div class="li"> ] fügt den mit der Maus kopierte Text hinzu </div>
+</li>
+<li class="level1"><div class="li"> Shift + 8 zwischen den Session wechseln </div>
+</li>
+<li class="level1"><div class="li"> Mit drücken der Shift-taste bei der Maus Benutzung wird die interne Funktion GnomeShell (Copy/Paste) Funktion genutzt </div>
+</li>
+<li class="level1"><div class="li"> Str + Shift + C kopiert den Text in die Zwischenablage</div>
+</li>
+<li class="level1"><div class="li"> c wird ein neues Fenster erstellt </div>
+</li>
+<li class="level1"><div class="li"> n wechselt zwischen den Fenstern </div>
+</li>
+<li class="level1"><div class="li"> 0 9 wechselt zwischen den Fenstern </div>
+</li>
+<li class="level1"><div class="li"> p wechselt zum vorhergehenden Fenster </div>
+</li>
+<li class="level1"><div class="li">  </div>
+</li>
+</ol>

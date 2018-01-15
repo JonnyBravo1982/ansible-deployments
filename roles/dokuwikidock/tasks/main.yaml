@@ -1,0 +1,17 @@
+---                                        
+ - name: "Copy Files"                         
+   copy: src="docker-compose.yml" dest="/tmp/docker-compose.yml"          
+ 
+   # - name: "Run Docker compose dokuwiki"          
+   #command: docker-compose up -d              
+   #args:                                      
+   # chdir: "/tmp/"
+ - name: Create a service 
+   template: src=dokuwiki.service.j2 dest=/etc/sysconfig/dokuwiki
+ 
+ - name: Register Unit Dokuwiki
+   template: src=dokuwiki.service.j2 dest=/lib/systemd/system/dokuwiki.service mode=644
+   notify:
+     - reload systemctl
+ - name: Start Service Dokuwiki
+   service: name=dokuwiki.service state=started enabled=yes

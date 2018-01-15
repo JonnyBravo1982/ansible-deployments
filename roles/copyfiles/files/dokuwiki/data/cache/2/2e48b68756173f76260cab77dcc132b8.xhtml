@@ -1,0 +1,333 @@
+
+<h1 class="sectionedit1" id="sysv-init">SysV-init</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "SysV-init" [1-24] -->
+<h2 class="sectionedit2" id="runlevel">runlevel</h2>
+<div class="level2">
+
+<p>
+Unter RedHat und SuSE gibt es Runlevel 1 als Notfall-Modus. Unter Debian ist Runlevel 1 nicht als Notfall-Modus geeignet. <code>emergency</code> am Bootprompt angeben startet den Debian Notfall-Modus. 
+Welche Runlevel auf einem System definiert sind, steht in der Datei <code>/etc/inittab</code>. 
+</p>
+
+</div>
+<!-- EDIT2 SECTION "runlevel" [25-326] -->
+<h3 class="sectionedit3" id="suse_und_redhat">SuSE und RedHat</h3>
+<div class="level3">
+<div class="table sectionedit4"><table class="inline">
+	<tr class="row0">
+		<td class="col0">runlevel </td><td class="col1"> heißt? [Kurz-Beschreibung]</td>
+	</tr>
+	<tr class="row1">
+		<td class="col0 rightalign">       0 </td><td class="col1"> System halt [System angehalten, nichts geht mehr]</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 rightalign">       1 </td><td class="col1"> Single user mode [root wird angemeldet, sonst nichts gestartet]</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 rightalign">       2 </td><td class="col1"> Local multiuser without remote network (e.g. NFS) [zur lokalen Administration ohne Netzwerk. Vorsicht! Schon per „ping“ erreichbar]</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 rightalign">       3 </td><td class="col1"> Full multiuser with network [vollwertiges System ohne graphische Oberfläche, z.B. Server]</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 rightalign">       4 </td><td class="col1"> Not used [nicht genutzt → frei für Jobs des Admins]</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 rightalign">       5 </td><td class="col1"> Full multiuser with network and xdm [vollwertiges System, z.B. Desktop-PCs]</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 rightalign">       6 </td><td class="col1"> System reboot [System wird neu gestartet] (Do not use this for initdefault!) [ist gut für Reboot-Test]</td>
+	</tr>
+</table></div>
+<!-- EDIT4 TABLE [354-1056] -->
+</div>
+<!-- EDIT3 SECTION "SuSE und RedHat" [327-1057] -->
+<h3 class="sectionedit5" id="debian_und_ubuntu">Debian und Ubuntu</h3>
+<div class="level3">
+<div class="table sectionedit6"><table class="inline">
+	<tr class="row0">
+		<td class="col0">runlevel </td><td class="col1"> heißt? [Kurz-Beschreibung]</td>
+	</tr>
+	<tr class="row1">
+		<td class="col0 rightalign">       0 </td><td class="col1"> System halt [System angehalten, nichts geht mehr]</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 rightalign">       1 </td><td class="col1"> Single user mode [root wird angemeldet, sonst nichts gestartet]</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 rightalign">    2 - 5 </td><td class="col1"> Full multiuser with network and xdm [vollwertiges System, z.B. Desktop-PCs]</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 rightalign">       6 </td><td class="col1"> System reboot [System wird neu gestartet] (Do not use this for initdefault!) [ist gut für Reboot-Test]</td>
+	</tr>
+</table></div>
+<!-- EDIT6 TABLE [1087-1474] -->
+</div>
+<!-- EDIT5 SECTION "Debian und Ubuntu" [1058-1475] -->
+<h2 class="sectionedit7" id="etc_inittab">/etc/inittab</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "/etc/inittab" [1476-1501] -->
+<h3 class="sectionedit8" id="wait">wait</h3>
+<div class="level3">
+
+<p>
+Beispiel: netcat in den Runleveln 2 und 3 einmalig starten
+</p>
+
+<p>
+Paket: netcat-traditional <sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup>
+</p>
+
+<p>
+<code>/etc/inittab</code> :
+</p>
+
+<p>
+<pre class="file">nc:23:wait:/bin/netcat -lp 5000 -o /tmp/netcat</pre>
+
+</p>
+<pre class="code">ps -C netcat
+init q
+ps -C netcat
+pkill netcat
+ps -C netcat</pre>
+
+</div>
+<!-- EDIT8 SECTION "wait" [1502-1827] -->
+<h3 class="sectionedit9" id="respawn">respawn</h3>
+<div class="level3">
+
+<p>
+Beispiel: netcat in den Runleveln 2 und 3 einmalig starten
+</p>
+
+<p>
+Paket: netcat-traditional
+</p>
+
+<p>
+<code>/etc/inittab</code> :
+</p>
+
+<p>
+<pre class="file">nc:23:respawn:/bin/netcat -lp 5000 -o /tmp/netcat</pre>
+
+</p>
+<pre class="code">ps -C netcat
+init q
+ps -C netcat
+pkill netcat
+ps -C netcat</pre>
+
+</div>
+<!-- EDIT9 SECTION "respawn" [1828-2088] -->
+<h2 class="sectionedit10" id="erste_init-skripte">erste init-Skripte</h2>
+<div class="level2">
+
+<p>
+Welche Start-Skripte werden bei <em class="u">jedem</em> Bootvorgang als <em class="u">erstes</em> gestartet?
+</p>
+
+</div>
+
+<h4 id="suse">SuSE</h4>
+<div class="level4">
+<pre class="code">/etc/init.d/boot.d/</pre>
+
+</div>
+
+<h4 id="debian">Debian</h4>
+<div class="level4">
+<pre class="code">/etc/init.d/rcS
+/etc/rcS.d/</pre>
+
+</div>
+
+<h4 id="centos_5">CentOS 5</h4>
+<div class="level4">
+<pre class="code">/etc/rc.d/rc.sysinit</pre>
+
+</div>
+<!-- EDIT10 SECTION "erste init-Skripte" [2089-2325] -->
+<h2 class="sectionedit11" id="runlevel_start-skripte">runlevel Start-Skripte</h2>
+<div class="level2">
+
+<p>
+Hier werden die meisten Dienste gestartet: (abhängig vom eingestellen Runlevel, hier 2)
+</p>
+<pre class="code">/etc/init.d/rc2.d/</pre>
+
+<p>
+bzw.
+</p>
+<pre class="code">/etc/rc2.d/</pre>
+
+</div>
+
+<h4 id="suse_und_redhat1">SuSE und RedHat</h4>
+<div class="level4">
+
+<p>
+Alle Links mit „S*“ (für Start) am Beginn des Filenamens aufgerufen.
+Beim Verlassen des Runlevels (z.B. shutdown) werden die Links mit Filenamen „K*“ (für Kill) gerufen. 
+</p>
+
+</div>
+
+<h4 id="debian_und_ubuntu1">Debian und Ubuntu</h4>
+<div class="level4">
+
+<p>
+Alle Links mit „S*“ (für Start) am Beginn des Filenamens aufgerufen.
+Beim Verlassen des Runlevels (z.B. shutdown) werden die selben Links in umgekehrter Reihenfolge aufgerufen. 
+</p>
+
+</div>
+<!-- EDIT11 SECTION "runlevel Start-Skripte" [2326-2894] -->
+<h3 class="sectionedit12" id="dienste_starten_und_eintragen">Dienste starten und eintragen</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="dienst_sofort_einmalig_starten">Dienst sofort, einmalig starten</h4>
+<div class="level4">
+<pre class="code">/etc/init.d/dienst start</pre>
+
+<p>
+oder
+</p>
+<pre class="code">service dienst start</pre>
+
+</div>
+
+<h4 id="dienst_immer_beim_booten_starten">Dienst immer beim Booten starten</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="suse_und_redhat2">SuSE und RedHat</h5>
+<div class="level5">
+<pre class="code">chkconfig dienst on</pre>
+
+</div>
+
+<h5 id="debian1">Debian</h5>
+<div class="level5">
+<pre class="code">update-rc.d dienst default</pre>
+
+<p>
+oder
+</p>
+<pre class="code">insserv dienst</pre>
+
+</div>
+
+<h4 id="dienst_sofort_einmalig_beenden">Dienst sofort, einmalig beenden</h4>
+<div class="level4">
+<pre class="code">/etc/init.d/dienst stop</pre>
+
+<p>
+oder
+</p>
+<pre class="code">service dienst stop</pre>
+
+</div>
+
+<h4 id="dienst_beim_booten_nicht_starten">Dienst beim Booten nicht starten</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="suse_und_redhat3">SuSE und RedHat</h5>
+<div class="level5">
+<pre class="code">chkconfig dienst off</pre>
+
+</div>
+
+<h5 id="debian2">Debian</h5>
+<div class="level5">
+<pre class="code">update-rc.d -f dienst remove</pre>
+
+<p>
+oder
+</p>
+<pre class="code">insserv -r dienst</pre>
+
+</div>
+<!-- EDIT12 SECTION "Dienste starten und eintragen" [2895-3433] -->
+<h3 class="sectionedit13" id="startoptionen_eines_dienstes_aendern">Startoptionen eines Dienstes ändern</h3>
+<div class="level3">
+
+<p>
+Debian, Ubuntu:
+</p>
+<pre class="code">cp -a /etc/default/dienst{,.orig}
+vim /etc/default/dienst</pre>
+
+<p>
+SuSE, RedHat:
+</p>
+<pre class="code">cp -a /etc/sysconfig/dienst{,.orig}
+vim /etc/sysconfig/dienst</pre>
+
+<p>
+Änderungen anzeigen:
+</p>
+<pre class="code">diff /etc/sysconfig/dienst{,.orig}</pre>
+
+<p>
+Dienst neu starten:
+</p>
+<pre class="code">/etc/init.d/dienst restart</pre>
+
+</div>
+<!-- EDIT13 SECTION "Startoptionen eines Dienstes ändern" [3434-3751] -->
+<h2 class="sectionedit14" id="start-skript_fuer_dienste_von_drittanbietern">Start-Skript für Dienste von Drittanbietern</h2>
+<div class="level2">
+
+</div>
+
+<h4 id="redhat_centos">RedHat / Centos</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> <a href="http://kbase.redhat.com/faq/FAQ_52_5120.shtm" class="urlextern" title="http://kbase.redhat.com/faq/FAQ_52_5120.shtm"  rel="nofollow">http://kbase.redhat.com/faq/FAQ_52_5120.shtm</a></div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="suse1">SuSE</h4>
+<div class="level4">
+
+<p>
+<code>/etc/init.d/skeleton</code> kopieren und anpassen
+</p>
+
+</div>
+
+<h4 id="ubuntu_804">Ubuntu 8.04</h4>
+<div class="level4">
+
+<p>
+<code>/etc/init.d/skeleton</code> kopieren und anpassen
+</p>
+
+</div>
+<!-- EDIT14 SECTION "Start-Skript für Dienste von Drittanbietern" [3752-4011] -->
+<h1 class="sectionedit15" id="dokumentation_der_distributoren">Dokumentation der Distributoren</h1>
+<div class="level1">
+
+<p>
+<a href="http://docs.redhat.com/docs/de-DE/Red_Hat_Enterprise_Linux/5/html/Installation_Guide/s1-boot-init-shutdown-sysv.html" class="urlextern" title="http://docs.redhat.com/docs/de-DE/Red_Hat_Enterprise_Linux/5/html/Installation_Guide/s1-boot-init-shutdown-sysv.html"  rel="nofollow"> RedHat </a>
+</p>
+
+</div>
+<!-- EDIT15 SECTION "Dokumentation der Distributoren" [4012-] --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+die Alternative <code>netcat-openbsd</code> kennt den Schalter <code>-o</code> nicht</div>
+</div>

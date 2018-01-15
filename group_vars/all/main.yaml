@@ -1,0 +1,5 @@
+owncloudtag: 0.3
+allusers: 
+  owncloud:
+       name: owncloud
+       id: 10001

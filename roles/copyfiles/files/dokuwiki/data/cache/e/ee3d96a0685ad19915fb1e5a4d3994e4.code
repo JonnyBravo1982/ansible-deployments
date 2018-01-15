@@ -1,0 +1,20 @@
+*<span class="sc0">&lt;!DOCTYPE html&gt;</span>*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>*
+* <span class="sc2">&lt;<a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>	*
+*  <span class="sc2">&lt;<a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>Einmaleins<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>		*
+*  <span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">charset</span><span class="sy0">=</span><span class="st0">&quot;UTF-8&quot;</span> <span class="sy0">/</span>&gt;</span>		*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>	*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>	*
+*<span class="sc2">&lt;<a href="http://december.com/html/4/element/table.html"><span class="kw2">table</span></a> <span class="kw3">border</span><span class="sy0">=</span><span class="st0">&quot;1&quot;</span> <span class="kw3">cellpadding</span><span class="sy0">=</span><span class="st0">&quot;5&quot;</span>&gt;</span>		*
+*<span class="sc2">&lt;?php			*</span>
+<span class="sc2"><span class="kw3">for</span> <span class="br0">&#40;</span>$i <span class="sy0">=</span> <span class="nu0">1</span>; $i &lt;<span class="sy0">=</span> <span class="nu0">10</span>; $i++<span class="br0">&#41;</span> <span class="br0">&#123;</span></span>
+<span class="sc2">  echo <span class="st0">&quot;&lt;tr&gt;</span></span>\n&quot;;
+  for ($j = 1; $j <span class="sc2">&lt;<span class="sy0">=</span> <span class="nu0">10</span>; $j++<span class="br0">&#41;</span> <span class="nu0">9</span><span class="br0">&#123;</span></span>
+<span class="sc2">   $zahl <span class="sy0">=</span> $i*$j;</span>
+<span class="sc2">echo <span class="st0">&quot;\t&lt;td&gt;</span></span>$zahl<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/td.html"><span class="kw2">td</span></a>&gt;</span>\n&quot;;
+  }
+  echo &quot;<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/tr.html"><span class="kw2">tr</span></a>&gt;</span>\n&quot;;
+}
+?&gt;		*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/table.html"><span class="kw2">table</span></a>&gt;</span>		*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>	*
+*<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>*

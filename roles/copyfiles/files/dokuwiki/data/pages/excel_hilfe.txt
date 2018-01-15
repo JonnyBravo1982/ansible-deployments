@@ -1,0 +1,15 @@
+um einen Bereich aus zu beispiel an einer Klammer zu filtern.
+
+Office
+
+Spalte A
+
+  Beate Büttner (K6559)
+
+Splate B
+
+ =TEIL(A1;FINDEN("(";A1)+1;LÄNGE(A1)-FINDEN("(";A1)-1)
+
+Ausgabe Spalte B
+
+   k6559

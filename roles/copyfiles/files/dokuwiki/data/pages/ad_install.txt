@@ -1,0 +1,20 @@
+Schritt für Schritt Anleitung um ein AD über die PowerShell zu installieren. Dieses Howto ist kurz und knackig ! 
+
+Feature installieren 
+<code powershell>
+Install-windowsfeature AD-domain-services
+</code>  
+
+Module installieren 
+<code powershell>
+Import-Module ADDSDeployment
+</code>  
+
+AddDSForest installieren  
+<code powershell>
+Install-ADDSDomain  -NewDomainName  'schlumpfenland'  `
+-ParentDomainName 'schlumpfenland.com'; `
+-InstallDNS `
+-CreateDNSDelegation 
+</code>  
+

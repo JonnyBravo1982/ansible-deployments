@@ -1,0 +1,25 @@
+<span class="sc0">&lt;!DOCTYPE html&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>
+ <span class="sc2">&lt;<a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+  <span class="sc2">&lt;<a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>Datenbankabfrage ausgeben lassen<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/title.html"><span class="kw2">title</span></a>&gt;</span>
+  <span class="sc2">&lt;<a href="http://december.com/html/4/element/meta.html"><span class="kw2">meta</span></a> <span class="kw3">charset</span><span class="sy0">=</span><span class="st0">&quot;UTF-8&quot;</span> <span class="sy0">/</span>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/head.html"><span class="kw2">head</span></a>&gt;</span>
+<span class="sc2">&lt;<a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>
+<span class="sc2">&lt;?php</span>
+<span class="sc2">$mysqli <span class="sy0">=</span> new mysqli<span class="br0">&#40;</span><span class="st0">&quot;localhost&quot;</span>, <span class="st0">&quot;root&quot;</span>, <span class="st0">&quot;&quot;</span>, <span class="st0">&quot;garten&quot;</span><span class="br0">&#41;</span>;</span>
+<span class="sc2">if <span class="br0">&#40;</span>$mysqli-&gt;</span>connect_error) {
+  echo &quot;Fehler bei der Verbindung: &quot; . mysqli_connect_error();
+  exit();
+}
+if (!$mysqli-&gt;set_charset(&quot;utf8&quot;)) {
+  echo &quot;Fehler beim Laden von UTF8 &quot;. $mysqli-&gt;error;
+}
+$ergebnis = $mysqli-&gt;query(&quot;SELECT name, beschreibung, preis FROM pflanzen;&quot;);
+while($zeile = $ergebnis-&gt;fetch_array()) {
+  echo &quot;<span class="sc2">&lt;<a href="http://december.com/html/4/element/strong.html"><span class="kw2">strong</span></a>&gt;</span>{$zeile['name']}<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/strong.html"><span class="kw2">strong</span></a>&gt;</span>: {$zeile['beschreibung']} {$zeile['preis']}<span class="sc2">&lt;<a href="http://december.com/html/4/element/br.html"><span class="kw2">br</span></a> <span class="sy0">/</span>&gt;</span>\n&quot;;
+}
+$ergebnis-&gt;close();
+$mysqli-&gt;close();
+?&gt;
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/body.html"><span class="kw2">body</span></a>&gt;</span>
+<span class="sc2">&lt;<span class="sy0">/</span><a href="http://december.com/html/4/element/html.html"><span class="kw2">html</span></a>&gt;</span>

@@ -1,0 +1,156 @@
+<span class="co1">-- PLEASE DEFINE SEARCH CRITERIA BEFORE RUNNING THIS SCRIPT.</span>
+<span class="co1">-- Change &quot;Symantec_CMDB&quot; to the database name to use if it is different.</span>
+<span class="kw1">DECLARE</span> @DataToFind NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span> <span class="sy0">=</span> <span class="st0">'Server'</span> <span class="co1">-- Change the value of @DataToFind to be what is to be searched for.</span>
+<span class="kw1">DECLARE</span> @DataType NVARCHAR<span class="br0">&#40;</span><span class="nu0">6</span><span class="br0">&#41;</span> <span class="sy0">=</span> <span class="st0">'Text'</span> <span class="co1">-- Change the value of @DataType to be Text (default), Number, Guid, Date or All.</span>
+<span class="kw1">DECLARE</span> @ExactMatch BIT <span class="sy0">=</span> <span class="nu0">0</span> <span class="co1">-- Change the value of @ExactMatch to be 0 or 1. 0 equals a wildcard match (default), 1 equals an exact match.</span>
+<span class="kw1">DECLARE</span> @CaseSensitive BIT <span class="sy0">=</span> <span class="nu0">0</span> <span class="co1">-- Change the value of @CaseSentitive to be 0 or 1. 0 equals not case sentitive (default), 1 equals case sensitive.</span>
+<span class="co1">--</span>
+<span class="kw1">DECLARE</span> @Schema <span class="kw1">TABLE</span> <span class="br0">&#40;</span>RowID <span class="kw1">INT</span> <span class="kw1">IDENTITY</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">,</span> STableName NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span><span class="sy0">,</span> SColumnName NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span><span class="sy0">,</span> SDataType NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span><span class="sy0">,</span> DataSize NVARCHAR<span class="br0">&#40;</span><span class="nu0">100</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+<span class="kw1">DECLARE</span> @Found <span class="kw1">TABLE</span><span class="br0">&#40;</span>FTableName NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span> <span class="kw1">DEFAULT</span> <span class="st0">''</span><span class="sy0">,</span> FColumnName NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span> <span class="kw1">DEFAULT</span> <span class="st0">''</span><span class="sy0">,</span> FDataType NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="kw1">MATCH</span> NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+<span class="kw1">DECLARE</span> @LoopNo <span class="kw1">INT</span><span class="sy0">,</span> @TotalRows <span class="kw1">INT</span><span class="sy0">,</span> @<span class="kw1">SQL</span> NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span><span class="sy0">,</span> @ParamDef NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataExists BIT<span class="sy0">,</span> @TableFound NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span><span class="sy0">,</span> @ColumnFound NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span><span class="sy0">,</span>
+@DataTypeFound NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypeSize NVARCHAR<span class="br0">&#40;</span><span class="kw1">MAX</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse1 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse2 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse3 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span>
+@DataTypesToUse4 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse5 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse6 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse7 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse8 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span>
+@DataTypesToUse9 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse10 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse11 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse12 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse13 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span>
+@DataTypesToUse14 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse15 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse16 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse17 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse18 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span>
+@DataTypesToUse19 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span><span class="sy0">,</span> @DataTypesToUse20 NVARCHAR<span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span>
+<span class="co1">--Note: This script will only search the defined data types as specified by the @DataType variable. For example, if String is the data type, numeric</span>
+<span class="co1">--data types such as INT will not be searched, however, if the number being searched for exists in an NVARCHAR, the match will be found.</span>
+<span class="kw1">IF</span> @DataType <span class="sy0">=</span> <span class="st0">'Text'</span>
+<span class="kw1">BEGIN</span>
+  <span class="kw1">SET</span> @DataTypesToUse1 <span class="sy0">=</span> <span class="st0">'NVARCHAR'</span>
+  <span class="kw1">SET</span> @DataTypesToUse2 <span class="sy0">=</span> <span class="st0">'VARCHAR'</span>
+  <span class="kw1">SET</span> @DataTypesToUse3 <span class="sy0">=</span> <span class="st0">'NTEXT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse4 <span class="sy0">=</span> <span class="st0">'TEXT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse5 <span class="sy0">=</span> <span class="st0">'NCHAR'</span>
+  <span class="kw1">SET</span> @DataTypesToUse6 <span class="sy0">=</span> <span class="st0">'CHAR'</span>
+  <span class="kw1">SET</span> @DataTypesToUse7 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse8 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse9 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse10 <span class="sy0">=</span> <span class="st0">''</span>
+<span class="kw1">END</span>
+<span class="kw1">IF</span> @DataType <span class="sy0">=</span> <span class="st0">'Guid'</span>
+<span class="kw1">BEGIN</span>
+  <span class="kw1">SET</span> @DataTypesToUse1 <span class="sy0">=</span> <span class="st0">'UNIQUEIDENTIFIER'</span>
+  <span class="kw1">SET</span> @DataTypesToUse2 <span class="sy0">=</span> <span class="st0">'NVARCHAR'</span>
+  <span class="kw1">SET</span> @DataTypesToUse3 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse4 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse5 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse6 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse7 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse8 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse9 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse10 <span class="sy0">=</span> <span class="st0">''</span>
+<span class="kw1">END</span>
+<span class="kw1">IF</span> @DataType <span class="sy0">=</span> <span class="st0">'Number'</span>
+<span class="kw1">BEGIN</span>
+  <span class="kw1">SET</span> @DataTypesToUse1 <span class="sy0">=</span> <span class="st0">'INT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse2 <span class="sy0">=</span> <span class="st0">'BIGINT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse3 <span class="sy0">=</span> <span class="st0">'SMALLINT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse4 <span class="sy0">=</span> <span class="st0">'TINYINT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse5 <span class="sy0">=</span> <span class="st0">'FLOAT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse6 <span class="sy0">=</span> <span class="st0">'REAL'</span>
+  <span class="kw1">SET</span> @DataTypesToUse7 <span class="sy0">=</span> <span class="st0">'DECIMAL'</span>
+  <span class="kw1">SET</span> @DataTypesToUse8 <span class="sy0">=</span> <span class="st0">'MONEY'</span>
+  <span class="kw1">SET</span> @DataTypesToUse9 <span class="sy0">=</span> <span class="st0">'SMALLMONEY'</span>
+  <span class="kw1">SET</span> @DataTypesToUse10 <span class="sy0">=</span> <span class="st0">'BIT'</span>
+<span class="kw1">END</span>
+<span class="co1">-- Note: DateTime values are stored as (example) 2011-12-06 07:45:09.257, however, appear as Dec 6 2011  7:45AM.</span>
+<span class="co1">-- To search for &quot;2011-12-06&quot;, specify &quot;Dec  6 2011&quot;. Also  note that for single digit days, there is an extra space</span>
+<span class="co1">-- after the month, as the above example shows.</span>
+<span class="kw1">IF</span> @DataType <span class="sy0">=</span> <span class="st0">'Date'</span>
+<span class="kw1">BEGIN</span>
+  <span class="kw1">SET</span> @ExactMatch <span class="sy0">=</span> <span class="nu0">0</span>
+  <span class="kw1">SET</span> @DataTypesToUse1 <span class="sy0">=</span> <span class="st0">'DATETIME'</span>
+  <span class="kw1">SET</span> @DataTypesToUse2 <span class="sy0">=</span> <span class="st0">'SMALLDATETIME'</span>
+  <span class="kw1">SET</span> @DataTypesToUse3 <span class="sy0">=</span> <span class="st0">'NVARCHAR'</span>
+  <span class="kw1">SET</span> @DataTypesToUse4 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse5 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse6 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse7 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse8 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse9 <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">SET</span> @DataTypesToUse10 <span class="sy0">=</span> <span class="st0">''</span>
+<span class="kw1">END</span>
+<span class="kw1">IF</span> @DataType <span class="sy0">=</span> <span class="st0">'All'</span>
+<span class="kw1">BEGIN</span>
+  <span class="kw1">SET</span> @ExactMatch <span class="sy0">=</span> <span class="nu0">0</span>
+  <span class="kw1">SET</span> @DataTypesToUse1 <span class="sy0">=</span> <span class="st0">'NVARCHAR'</span>
+  <span class="kw1">SET</span> @DataTypesToUse2 <span class="sy0">=</span> <span class="st0">'VARCHAR'</span>
+  <span class="kw1">SET</span> @DataTypesToUse3 <span class="sy0">=</span> <span class="st0">'NTEXT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse4 <span class="sy0">=</span> <span class="st0">'TEXT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse5 <span class="sy0">=</span> <span class="st0">'NCHAR'</span>
+  <span class="kw1">SET</span> @DataTypesToUse6 <span class="sy0">=</span> <span class="st0">'CHAR'</span>
+  <span class="kw1">SET</span> @DataTypesToUse7 <span class="sy0">=</span> <span class="st0">'UNIQUEIDENTIFIER'</span>
+  <span class="kw1">SET</span> @DataTypesToUse8 <span class="sy0">=</span> <span class="st0">'INT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse9 <span class="sy0">=</span> <span class="st0">'BIGINT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse10 <span class="sy0">=</span> <span class="st0">'SMALLINT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse11 <span class="sy0">=</span> <span class="st0">'TINYINT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse12 <span class="sy0">=</span> <span class="st0">'FLOAT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse13 <span class="sy0">=</span> <span class="st0">'REAL'</span>
+  <span class="kw1">SET</span> @DataTypesToUse14 <span class="sy0">=</span> <span class="st0">'DECIMAL'</span>
+  <span class="kw1">SET</span> @DataTypesToUse15 <span class="sy0">=</span> <span class="st0">'MONEY'</span>
+  <span class="kw1">SET</span> @DataTypesToUse16 <span class="sy0">=</span> <span class="st0">'SMALLMONEY'</span>
+  <span class="kw1">SET</span> @DataTypesToUse17 <span class="sy0">=</span> <span class="st0">'BIT'</span>
+  <span class="kw1">SET</span> @DataTypesToUse19 <span class="sy0">=</span> <span class="st0">'DATETIME'</span>
+  <span class="kw1">SET</span> @DataTypesToUse20 <span class="sy0">=</span> <span class="st0">'SMALLDATETIME'</span>
+<span class="kw1">END</span>
+<span class="kw1">INSERT</span> <span class="kw1">INTO</span> @Schema<span class="br0">&#40;</span>STableName<span class="sy0">,</span> SColumnName<span class="sy0">,</span> SDataType<span class="sy0">,</span> DataSize<span class="br0">&#41;</span>
+<span class="kw1">SELECT</span> T<span class="sy0">.</span>TABLE_NAME<span class="sy0">,</span> C<span class="sy0">.</span>COLUMN_NAME<span class="sy0">,</span> C<span class="sy0">.</span>DATA_TYPE<span class="sy0">,</span> C<span class="sy0">.</span>CHARACTER_MAXIMUM_LENGTH
+<span class="kw1">FROM</span> Information_Schema<span class="sy0">.</span>Tables <span class="kw1">AS</span> T
+<span class="kw1">JOIN</span> Information_Schema<span class="sy0">.</span>Columns <span class="kw1">AS</span> C
+<span class="kw1">ON</span> T<span class="sy0">.</span>TABLE_NAME <span class="sy0">=</span> C<span class="sy0">.</span>TABLE_NAME
+<span class="kw1">WHERE</span> T<span class="sy0">.</span>TABLE_TYPE <span class="sy0">=</span> <span class="st0">'BASE TABLE'</span>
+<span class="kw1">AND</span> <span class="br0">&#40;</span>DATA_TYPE <span class="sy0">=</span> @DataTypesToUse1 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse2 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse3 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse4
+<span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse5 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse6 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse7  <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse8
+<span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse9 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse10 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse11 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse12
+<span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse13 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse14 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse15 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse16
+ <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse17 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse18 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse19 <span class="kw1">OR</span> DATA_TYPE <span class="sy0">=</span> @DataTypesToUse20<span class="br0">&#41;</span>
+<span class="kw1">ORDER</span> <span class="kw1">BY</span> T<span class="sy0">.</span>TABLE_NAME<span class="sy0">,</span> C<span class="sy0">.</span>COLUMN_NAME
+<span class="kw1">SELECT</span> @LoopNo <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">,</span> @TotalRows <span class="sy0">=</span> <span class="kw1">MAX</span><span class="br0">&#40;</span>RowID<span class="br0">&#41;</span>
+<span class="kw1">FROM</span> @Schema
+WHILE @LoopNo <span class="sy0">&lt;=</span> @TotalRows
+<span class="kw1">BEGIN</span>
+  <span class="kw1">IF</span> @ExactMatch <span class="sy0">=</span> <span class="nu0">1</span>
+    <span class="kw1">SET</span> @<span class="kw1">SQL</span> <span class="sy0">=</span> <span class="st0">'IF EXISTS(SELECT * FROM ReplaceTableName WHERE CONVERT(NVARCHAR(MAX), [ReplaceColumnName]) = '</span><span class="st0">''</span> <span class="sy0">+</span>
+    @DataToFind <span class="sy0">+</span> <span class="st0">''</span><span class="st0">') SET @DataExists = 1 ELSE SET @DataExists = 0'</span>
+  <span class="kw1">ELSE</span>
+    <span class="kw1">SET</span> @<span class="kw1">SQL</span> <span class="sy0">=</span> <span class="st0">'IF EXISTS(SELECT * FROM ReplaceTableName WHERE CONVERT(NVARCHAR(MAX), [ReplaceColumnName]) LIKE '</span><span class="st0">'%'</span> <span class="sy0">+</span>
+    @DataToFind <span class="sy0">+</span> <span class="st0">'%'</span><span class="st0">') SET @DataExists = 1 ELSE SET @DataExists = 0'</span>
+  <span class="kw1">SET</span> @ParamDef <span class="sy0">=</span> <span class="st0">'@DataExists Bit OUTPUT'</span>
+  <span class="kw1">SELECT</span> @<span class="kw1">SQL</span> <span class="sy0">=</span> <span class="kw1">REPLACE</span><span class="br0">&#40;</span><span class="kw1">REPLACE</span><span class="br0">&#40;</span>@<span class="kw1">SQL</span><span class="sy0">,</span> <span class="st0">'ReplaceTableName'</span><span class="sy0">,</span> QUOTENAME<span class="br0">&#40;</span>STableName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">'ReplaceColumnName'</span><span class="sy0">,</span> SColumnName<span class="br0">&#41;</span>
+  <span class="kw1">FROM</span> @Schema
+  <span class="kw1">WHERE</span> RowId <span class="sy0">=</span> @LoopNo
+  <span class="kw1">EXEC</span> SP_EXECUTESQL @<span class="kw1">SQL</span><span class="sy0">,</span> @ParamDef<span class="sy0">,</span> @DataExists <span class="sy0">=</span> @DataExists OUTPUT
+  <span class="kw1">IF</span> @DataExists <span class="sy0">=</span> <span class="nu0">1</span>
+  <span class="kw1">BEGIN</span>
+    <span class="kw1">SELECT</span> @TableFound <span class="sy0">=</span> STableName <span class="kw1">FROM</span> @Schema <span class="kw1">WHERE</span> RowID <span class="sy0">=</span> @LoopNo
+    <span class="kw1">SELECT</span> @ColumnFound <span class="sy0">=</span> SColumnName <span class="kw1">FROM</span> @Schema <span class="kw1">WHERE</span> RowID <span class="sy0">=</span> @LoopNo
+    <span class="kw1">SELECT</span> @DataTypeFound <span class="sy0">=</span> SDataType <span class="kw1">FROM</span> @Schema <span class="kw1">WHERE</span> RowID <span class="sy0">=</span> @LoopNo
+    <span class="kw1">SELECT</span> @DataTypeSize <span class="sy0">=</span> DataSize
+    <span class="kw1">FROM</span> @Schema
+    <span class="kw1">WHERE</span> RowID <span class="sy0">=</span> @LoopNo
+    <span class="kw1">IF</span> @DataTypeSize <span class="sy0">&lt;&gt;</span> <span class="st0">''</span>
+      <span class="kw1">SET</span> @DataTypeFound <span class="sy0">=</span> @DataTypeFound <span class="sy0">+</span> <span class="st0">'('</span> <span class="sy0">+</span> @DataTypeSize <span class="sy0">+</span> <span class="st0">')'</span>
+    <span class="kw1">SET</span> @<span class="kw1">SQL</span> <span class="sy0">=</span> <span class="st0">'SELECT ['</span> <span class="sy0">+</span> @ColumnFound <span class="sy0">+</span> <span class="st0">'] FROM ['</span> <span class="sy0">+</span> @TableFound <span class="sy0">+</span> <span class="st0">'] WHERE CONVERT(NVARCHAR(MAX), ['</span> <span class="sy0">+</span> @ColumnFound <span class="sy0">+</span> <span class="st0">']) '</span>
+    <span class="kw1">IF</span> @CaseSensitive <span class="sy0">=</span> <span class="nu0">1</span>
+      <span class="kw1">SET</span> @<span class="kw1">SQL</span> <span class="sy0">=</span> <span class="sy0">+</span> @<span class="kw1">SQL</span> <span class="sy0">+</span> <span class="st0">'COLLATE Latin1_General_CS_AS '</span>
+    <span class="kw1">IF</span> @ExactMatch <span class="sy0">=</span> <span class="nu0">0</span>
+      <span class="kw1">SET</span> @<span class="kw1">SQL</span> <span class="sy0">=</span> @<span class="kw1">SQL</span> <span class="sy0">+</span> <span class="st0">'LIKE '</span><span class="st0">'%'</span> <span class="sy0">+</span> @DataToFind <span class="sy0">+</span> <span class="st0">'%'</span><span class="st0">''</span>
+    <span class="kw1">ELSE</span>
+      <span class="kw1">SET</span> @<span class="kw1">SQL</span> <span class="sy0">=</span> @<span class="kw1">SQL</span> <span class="sy0">+</span> <span class="st0">'= '</span><span class="st0">''</span> <span class="sy0">+</span> @DataToFind <span class="sy0">+</span> <span class="st0">''</span><span class="st0">''</span>
+    <span class="kw1">INSERT</span> <span class="kw1">INTO</span> @Found<span class="br0">&#40;</span><span class="kw1">MATCH</span><span class="br0">&#41;</span>
+    <span class="kw1">EXEC</span> SP_EXECUTESQL @<span class="kw1">SQL</span>
+    <span class="kw1">UPDATE</span> @Found
+    <span class="kw1">SET</span> FTableName <span class="sy0">=</span> @TableFound<span class="sy0">,</span> FColumnName <span class="sy0">=</span> @ColumnFound<span class="sy0">,</span> FDataType <span class="sy0">=</span> @DataTypeFound
+    <span class="kw1">WHERE</span> FTableName <span class="sy0">=</span> <span class="st0">''</span>
+  <span class="kw1">END</span>
+  <span class="kw1">SET</span> @LoopNo <span class="sy0">=</span> @LoopNo <span class="sy0">+</span> <span class="nu0">1</span>
+<span class="kw1">END</span>
+<span class="kw1">IF</span> @ExactMatch <span class="sy0">=</span> <span class="nu0">0</span>
+  <span class="kw1">SELECT</span> FTableName <span class="kw1">AS</span> <span class="st0">'Table'</span><span class="sy0">,</span> FColumnName <span class="kw1">AS</span> <span class="st0">'Column'</span><span class="sy0">,</span> FDataType <span class="kw1">AS</span> <span class="st0">'Data Type'</span><span class="sy0">,</span> <span class="kw1">MATCH</span> <span class="co1">-- Note: If the Data Type is not desired to be seen, remove this here.</span>
+  <span class="kw1">FROM</span> @Found
+  <span class="kw1">ORDER</span> <span class="kw1">BY</span> FTableName<span class="sy0">,</span> FColumnName<span class="sy0">,</span> <span class="kw1">MATCH</span>
+<span class="kw1">ELSE</span>
+  <span class="kw1">SELECT</span> FTableName <span class="kw1">AS</span> <span class="st0">'Table'</span><span class="sy0">,</span> FColumnName <span class="kw1">AS</span> <span class="st0">'Column'</span><span class="sy0">,</span> FDataType <span class="kw1">AS</span> <span class="st0">'Data Type'</span> <span class="co1">-- Note: If the Data Type is not desired to be seen, remove this here.</span>
+  <span class="kw1">FROM</span> @Found
+  <span class="kw1">ORDER</span> <span class="kw1">BY</span> FTableName<span class="sy0">,</span> FColumnName

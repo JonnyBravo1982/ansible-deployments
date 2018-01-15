@@ -1,0 +1,14 @@
+
+<p>
+Einer größerer Client Push kann in dem SCCM inboxes\ccr.box Verzeichnis gut beobachtet werden. Im Ordner inproc befinden sich alle Dateien die gerade in Bearbeitung sind und im Hauptordner liegen alle noch ausstehenden Dateien. Im Ordner ccrretry befindet sich die noch ausstehenden Dateien. Ein Client Push auf mehrer System kann wie folgt abgebrochen werden.  
+</p>
+<ul>
+<li class="level1"><div class="li"> 1. Den SMS_EXECUTIVE Dienst beenden</div>
+</li>
+<li class="level1"><div class="li"> 2. SMS_SITE_COMPONENT_MANGER Dienst beenden </div>
+</li>
+<li class="level1"><div class="li"> 3. Alle CCR Datein in den Ordnern ccr.box, ccbox.box\inproc und ccrretry.box</div>
+</li>
+<li class="level1"><div class="li"> 4  SMS_SITE_COMPONENT_MANGER Dienst wieder starten</div>
+</li>
+</ul>

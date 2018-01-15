@@ -1,0 +1,16 @@
+[Unit]
+Description=dokuwiki Container
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker stop %n
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull bitnami/dokuwiki:latest
+ExecStart=/usr/bin/docker run --name dokuwiki -p 80:80 --rm bitnami/dokuwiki:latest
+
+[Install]
+WantedBy=multi-user.target
+

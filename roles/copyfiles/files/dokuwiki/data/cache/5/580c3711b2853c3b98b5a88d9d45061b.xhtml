@@ -1,0 +1,52 @@
+
+<p>
+Die wichtigsten Pythonmodule für einen hack 
+</p>
+
+<p>
+ <pre class="code bash"> easy_install pyPdf python-nmap pygeoip mechanize beautifulSoup4  </pre>
+
+Das Tool easy_install kann bei ubuntu über das Paket python-setuptools installiert werden.
+</p>
+
+<p>
+Wichtige Module : 
+</p>
+<ul>
+<li class="level1"><div class="li"> python-nmap : nutzt nmap für einen Port Scan</div>
+</li>
+<li class="level1"><div class="li"> pexecpt : automatisierte Eingaben</div>
+</li>
+</ul>
+
+<p>
+Beispiel Skript: 
+</p>
+
+<p>
+einfacher Portscanner : 
+<pre class="code python"><span class="kw1">import</span> nmap
+<span class="kw1">import</span> <span class="kw3">optparse</span>
+&nbsp;
+<span class="kw1">def</span> nmapScan<span class="br0">&#40;</span>tgtHost<span class="sy0">,</span> tgtPort<span class="br0">&#41;</span>:
+    nmScan <span class="sy0">=</span> nmap.<span class="me1">PortScanner</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    nmScan.<span class="me1">scan</span><span class="br0">&#40;</span>tgtHost<span class="sy0">,</span> tgtPort<span class="br0">&#41;</span>
+    state<span class="sy0">=</span>nmScan<span class="br0">&#91;</span>tgtHost<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st0">'tcp'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="kw2">int</span><span class="br0">&#40;</span>tgtPort<span class="br0">&#41;</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st0">'state'</span><span class="br0">&#93;</span>
+    <span class="kw1">print</span><span class="br0">&#40;</span><span class="st0">&quot;[*] &quot;</span> + tgtHost + <span class="st0">&quot; tcp/&quot;</span> + tgtPort + <span class="st0">&quot; &quot;</span> + state<span class="br0">&#41;</span>
+<span class="kw1">def</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>:
+    <span class="kw3">parser</span> <span class="sy0">=</span> <span class="kw3">optparse</span>.<span class="me1">OptionParser</span><span class="br0">&#40;</span><span class="st0">'usage%prog '</span> + <span class="st0">&quot;-H &lt;target host&gt; -p &lt;target port&gt;&quot;</span><span class="br0">&#41;</span>
+    <span class="kw3">parser</span>.<span class="me1">add_option</span><span class="br0">&#40;</span><span class="st0">'-H'</span><span class="sy0">,</span> dest<span class="sy0">=</span><span class="st0">'tgtHost'</span><span class="sy0">,</span> <span class="kw2">type</span><span class="sy0">=</span><span class="st0">'string'</span><span class="sy0">,</span> <span class="kw2">help</span><span class="sy0">=</span><span class="st0">'target host'</span><span class="br0">&#41;</span>
+    <span class="kw3">parser</span>.<span class="me1">add_option</span><span class="br0">&#40;</span><span class="st0">'-p'</span><span class="sy0">,</span> dest<span class="sy0">=</span><span class="st0">'tgtPort'</span><span class="sy0">,</span> <span class="kw2">type</span><span class="sy0">=</span><span class="st0">'string'</span><span class="sy0">,</span> <span class="kw2">help</span><span class="sy0">=</span><span class="st0">'specify target ports seperated by comma'</span><span class="br0">&#41;</span>
+    <span class="br0">&#40;</span>options<span class="sy0">,</span> args<span class="br0">&#41;</span> <span class="sy0">=</span> <span class="kw3">parser</span>.<span class="me1">parse_args</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    tgtHost <span class="sy0">=</span> options.<span class="me1">tgtHost</span>
+    tgtPorts <span class="sy0">=</span> <span class="kw2">str</span><span class="br0">&#40;</span>options.<span class="me1">tgtPort</span><span class="br0">&#41;</span>.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">','</span><span class="br0">&#41;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>tgtHost <span class="sy0">==</span> <span class="kw2">None</span><span class="br0">&#41;</span>|<span class="br0">&#40;</span>tgtPorts<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span> <span class="sy0">==</span> <span class="kw2">None</span><span class="br0">&#41;</span>:
+        <span class="kw1">print</span><span class="br0">&#40;</span><span class="kw3">parser</span>.<span class="me1">usage</span><span class="br0">&#41;</span>
+        exit<span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>
+    <span class="kw1">for</span> tgtPort <span class="kw1">in</span> tgtPorts:
+        nmapScan<span class="br0">&#40;</span>tgtHost<span class="sy0">,</span> tgtPort<span class="br0">&#41;</span>
+<span class="kw1">if</span> __name__ <span class="sy0">==</span> <span class="st0">'__main__'</span>:
+    main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;</pre>
+
+</p>

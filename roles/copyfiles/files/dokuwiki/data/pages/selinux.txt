@@ -1,0 +1,5 @@
+Allow Httpd
+
+<code>
+setsebool -P httpd_unified 1
+</code>

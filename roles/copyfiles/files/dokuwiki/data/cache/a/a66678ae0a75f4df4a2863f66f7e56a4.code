@@ -1,0 +1,1 @@
+ <span class="kw1">SELECT</span> <span class="sy0">*</span> <span class="kw1">FROM</span> SEDO_LockState <span class="kw1">WHERE</span> LockStateID <span class="sy0">&lt;&gt;</span> <span class="nu0">0</span>

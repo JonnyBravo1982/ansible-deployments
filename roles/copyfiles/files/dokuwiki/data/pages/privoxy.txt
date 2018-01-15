@@ -1,0 +1,76 @@
+====== HowTo Privoxy ======
+
+Dieses Beispiel beschreibt wie ein Privoxy Proxy im eigenen Netzwerk konfiguriert werden kann als Anynomisierungsservice wird Tor genutzt. In diesem Beispiel wird Ubuntu Mate 15.10 genutzt. 
+
+===== Installation =====
+In wenigen Schritten ist der Proxy installiert. 
+<code bash>
+sudo apt-get install privoxy
+</code>
+Bei der installation von Tor sollte man immer auf die aktuellen Sourcen über das Repository zugreifen. Die nächste Kommandozeile bezieht sich auf Ubuntu 15.10 !
+
+<code bash>
+echo "deb     http://deb.torproject.org/torproject.org wily main" >> /etc/apt/sources.list
+apt-get update 
+apt-get install tor
+</code>
+===== Konfiguration =====
+Der Proxy wird über die Datei /etc/privoxy/config folgenden Einstellungen können gesetzt werden. 
+
+<code>
+debug     1 # Log the destination for each request Privoxy let through. See also debug 1024.
+debug     2 # show each connection status
+debug     4 # show I/O status
+debug     8 # show header parsing
+listen-address  192.168.50.32:8118
+enable-edit-actions 1
+forward-socks5t   /               127.0.0.1:9050 .
+</code>
+
+Die **debug** konfiguration gibt den Inhalt von dem was geloggt werden soll an. Die Log ist im Verzeichnis /var/log/privoxy/ und kann im wie im folgenden Beispiel ausgewertet.
+
+<code bash>
+tail /var/log/privoxy/logfile  -F -n 50 -s 2|grep "Connect:"
+</code>
+
+**listen-address** erlaubt es Privoxy im LAN zu betreiben. 
+
+**forward-socks5t** leitet die Anfragen auf den socks5 ins Tor-Netz um.
+
+**enable-edit-actions** erlaubt es den Proxy über die Webschnittstelle zu konfigurieren die Einstellung sollte nach einer fertigen konfiguration wieder entfernt werden.
+
+Die Webschnittstelle ist über folgende Addresse zu erreichen  http://config.privoxy.org/. 
+
+Wenn der Editor aktiviert ist, sollte als erstes in der match-all.action die Standard-Aggressivität eingestellt werden. Sie gilt für alle Seiten, kann aber durch Ausnahmeregeln umgangen werden. Es kann eine von drei Stufen gewählt werden: "Cautious" (Vorsichtig), "Medium" (Mittel) und "Advanced" (für Fortgeschrittene).
+
+Je aggressiver die Grundeinstellung, desto mehr Werbung und Spionage-Blödsinn wird unterdrückt, es häufen sich jedoch auch die unbeabsichtigten Effekte und es kann passieren, dass manche Seiten nicht mehr nutzbar sind. Für den Anfang ist es sicher nicht verkehrt, erste Erfahrungen mit "Cautious" zu sammeln und die Stufe zu erhöhen, wenn man mit der Privoxy-Bedienung etwas besser vertraut ist. 
+
+ Anständige Browser ermöglichen die Cookie-Kontrolle von sich aus, Privoxy ermöglicht es jedoch, Einstellungen für mehrere Browser gleichzeitig vorzunehmen. Wird nur ein Browser benutzt, ist es egal, wo die Einstellungen vorgenommen werden. Ab zwei Browsern ist Privoxy jedoch die komfortablere Lösung.
+
+Privoxy verfügt über folgende Aktionen die für Cookies relevant sind:
+
+    crunch-incoming-cookies
+    crunch-outgoing-cookies
+    session-cookies-only
+    filter{content-cookies}
+
+Mit "crunch-incoming-cookies" vernichtet man eingehende Cookies, bevor sie beim Browser ankommen. Mit "crunch-outgoing-cookies" vernichtet man vom Browser gesendete Cookies.
+
+"session-cookies-only" löscht das Haltbarkeitsdatum des Cookies, der weiter oben genannte Session-Cookie entsteht. Wenn man in einer Sektion "session-cookies-only" aktiviert, sind gleichzeitig "crunch-incoming-cookies" und "crunch-outgoing-cookies" zu deaktivieren.
+
+Um Missverständnissen vorzubeugen: die verschiedene Cookie-Einstellungen in verschiedenen Sektionen sind erlaubt. Wenn jedoch eine der beiden Optionen bereits in einer allgemein gehaltenen anderen Sektion aktiviert wurde, gilt sie auch für jede folgende Sektion, da ihre Einstellung dort auf "No Change" steht. "session-cookies-only" wäre dann wirkungslos, explizites Deaktivieren der beiden Session-Cruncher sorgt vor. 
+
+Wenn alle Einstellungen setzt sind muss der Proxy einmal neugestartet werden. 
+<code bash>
+/etc/init.d/privoxy restart 
+</code>
+
+Info Link : https://www.fabiankeil.de/privoxy-anleitung/
+
+=====Browser Konfiguration=====
+Der Browser wird dann wie im folgenden Bild konfiguriert : 
+
+{{:bildschirmfoto.png?200|}}
+
+Über folgenden Link kann geprüft werden ob man mit dem Tor Netzwerk verbunden ist. https://check.torproject.org/
+

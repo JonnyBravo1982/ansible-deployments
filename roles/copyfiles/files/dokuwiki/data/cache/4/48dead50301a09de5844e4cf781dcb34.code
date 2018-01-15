@@ -1,0 +1,2 @@
+<span class="kw2">yum install</span> glusterfs-server
+systemctl start glusterd

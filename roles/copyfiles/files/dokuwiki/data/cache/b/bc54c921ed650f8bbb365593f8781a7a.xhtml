@@ -1,0 +1,57 @@
+
+<h1 class="sectionedit1" id="cron">cron</h1>
+<div class="level1">
+
+<p>
+Programme regelmäßig starten
+</p>
+<pre class="code">crontab -e</pre>
+<ul>
+<li class="level1"><div class="li"> <code>/etc/crontab</code></div>
+</li>
+<li class="level1"><div class="li"> <code>/etc/cron.d/*</code></div>
+</li>
+<li class="level1"><div class="li"> <code>/var/spool/cron/*</code></div>
+</li>
+</ul>
+
+<p>
+Einfachere Variante:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>/etc/cron.hourly</code></div>
+</li>
+<li class="level1"><div class="li"> <code>/etc/cron.daily</code></div>
+</li>
+<li class="level1"><div class="li"> <code>/etc/cron.weekly</code></div>
+</li>
+<li class="level1"><div class="li"> <code>/etc/cron.monthly</code></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "cron" [1-258] -->
+<h2 class="sectionedit2" id="dokumentation">Dokumentation</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> man 1 crontab</div>
+</li>
+<li class="level1"><div class="li"> man 5 crontab</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://de.wikipedia.org/wiki/Cron" class="urlextern" title="http://de.wikipedia.org/wiki/Cron" rel="nofollow">Wikipedia zu Cron</a></div>
+</li>
+</ul>
+
+<p>
+Beispiele 
+crontab e
+<pre class="code bash"><span class="co0">#m       h       s      t       m       dow</span>
+<span class="sy0">*</span> <span class="sy0">*</span> <span class="sy0">*</span> <span class="sy0">*</span> <span class="sy0">*</span> <span class="kw2">date</span> <span class="sy0">&gt;&gt;</span> <span class="sy0">/</span>tmp<span class="sy0">/</span>crontest
+<span class="sy0">*</span> <span class="nu0">9</span>-<span class="nu0">17</span> <span class="sy0">*</span> <span class="sy0">*</span> <span class="sy0">*</span> logger <span class="re5">-p</span> user.alert <span class="st0">&quot;Von 9-17 Uhr jeden Tag&quot;</span>
+<span class="sy0">*/</span><span class="nu0">5</span> <span class="sy0">*</span> <span class="sy0">*</span> <span class="sy0">*</span> <span class="sy0">*</span> logger <span class="re5">-p</span> user.alert <span class="st0">&quot;aller 5 min &quot;</span>
+<span class="sy0">*</span> <span class="nu0">9</span>-<span class="nu0">17</span> <span class="nu0">28</span>-<span class="nu0">31</span> apr,nov <span class="sy0">*</span> logger <span class="re5">-p</span> user.alert <span class="st0">&quot;Von 9-17 vom 28-31 im Monat&quot;</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Dokumentation" [259-] -->

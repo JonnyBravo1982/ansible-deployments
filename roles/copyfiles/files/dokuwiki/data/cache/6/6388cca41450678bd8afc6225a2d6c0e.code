@@ -1,0 +1,6 @@
+  <span class="kw1">Get-ChildItem</span> <span class="kw5">-Recurse</span> <span class="kw5">-Include</span> <span class="sy0">@</span><span class="br0">&#40;</span><span class="st0">&quot;*.sh&quot;</span><span class="sy0">,</span><span class="st0">&quot;*.ps1&quot;</span><span class="sy0">,</span><span class="st0">&quot;*.bat&quot;</span><span class="sy0">,</span><span class="st0">&quot;*.cmd&quot;</span><span class="sy0">,</span><span class="st0">&quot;*.vbs&quot;</span><span class="br0">&#41;</span> <span class="sy0">|</span> <span class="kw1">Select-String</span> <span class="st0">&quot;regedit /s&quot;</span> <span class="sy0">|</span> <span class="kw1">foreach-object</span> <span class="br0">&#123;</span>
+     <span class="st0">&quot;Datei: &quot;</span> <span class="sy0">+</span> <a href="about:blank"><span class="kw6">$_</span></a>.Path
+     <span class="st0">&quot;Zeile No: &quot;</span> <span class="sy0">+</span> <a href="about:blank"><span class="kw6">$_</span></a>.LineNumber
+     <span class="st0">&quot;Zeile: &quot;</span> <span class="sy0">+</span> <a href="about:blank"><span class="kw6">$_</span></a>.Line
+     <span class="st0">&quot;&quot;</span>
+  <span class="br0">&#125;</span>

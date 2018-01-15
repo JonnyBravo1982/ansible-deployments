@@ -1,0 +1,5 @@
+
+Mit New-NetIPAddress wird eine neue IP vergeben -InterfaceIndex ist die ifindex von Get-NetIPInterface
+<code powershell>
+New-NetIPAddress -IPAddress 10.0.75.30 -PrefixLength 24 -DefaultGateway 10.0.75.1 -InterfaceIndex 5
+</code>

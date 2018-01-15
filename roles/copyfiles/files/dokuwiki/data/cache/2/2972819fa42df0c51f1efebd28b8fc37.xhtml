@@ -1,0 +1,386 @@
+
+<p>
+<strong>Todo</strong>: anpassen des Unit-Files bei systemd <sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup>
+</p>
+
+<h1 class="sectionedit1" id="ssh">ssh</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "ssh" [503-520] -->
+<h2 class="sectionedit2" id="einsatzzwecke_von_ssh">Einsatzzwecke von ssh</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Fernadministration</div>
+</li>
+<li class="level1"><div class="li"> Dateien übers Netz kopieren</div>
+</li>
+<li class="level1"><div class="li"> Tunnel bauen</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Einsatzzwecke von ssh" [521-628] -->
+<h2 class="sectionedit3" id="vorteile_von_ssh">Vorteile von ssh</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Sicherheit durch Public-Private Key Verschlüsselung</div>
+</li>
+<li class="level1"><div class="li"> Mehrere Benutzer können einen Account gemeinsam Nutzen</div>
+</li>
+<li class="level1"><div class="li"> Single Sign On möglich</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Vorteile von ssh" [629-803] -->
+<h1 class="sectionedit4" id="grundfunktionen">Grundfunktionen</h1>
+<div class="level1">
+
+<p>
+Einloggen auf &lt;Rechner&gt; mit &lt;Benutzer&gt;: <sup><a href="#fn__2" id="fnt__2" class="fn_top">2)</a></sup>
+</p>
+<pre class="code">ssh &lt;Benutzer&gt;@&lt;Rechner&gt;</pre>
+
+<p>
+hängende ssh-Verbindung beenden:
+</p>
+<pre class="code">~.</pre>
+
+<p>
+ssh-Verbindung pausieren:
+</p>
+<pre class="code">~Strg+z</pre>
+
+<p>
+Dateien auf andere Rechner kopieren: <sup><a href="#fn__3" id="fnt__3" class="fn_top">3)</a></sup>
+</p>
+<pre class="code">scp &lt;Datei&gt; &lt;Benutzer&gt;@&lt;Rechner&gt;:/&lt;Verzeichnis&gt;</pre>
+
+<p>
+Dateien auf andere Rechner ohne lange Pfadangaben ins $HOME-Verzeichnis von &lt;Benutzer&gt; kopieren:
+</p>
+<pre class="code">scp &lt;Datei&gt; &lt;Benutzer&gt;@&lt;Rechner&gt;:&lt;Verzeichnis&gt;</pre>
+
+<p>
+Fingerprint Hostkey überprüfen:
+</p>
+<pre class="code">ssh-keygen -l -f /etc/ssh/ssh_host_rsa_key.pub</pre>
+
+</div>
+<!-- EDIT4 SECTION "Grundfunktionen" [804-1700] -->
+<h1 class="sectionedit5" id="server_keys_neu_erzeugen">Server Keys neu erzeugen</h1>
+<div class="level1">
+
+</div>
+
+<h4 id="debian">Debian</h4>
+<div class="level4">
+<pre class="code">rm /etc/ssh/ssh_host_*key*
+dpkg-reconfigure openssh-server</pre>
+
+</div>
+<!-- EDIT5 SECTION "Server Keys neu erzeugen" [1701-1818] -->
+<h1 class="sectionedit6" id="public-private-key_authentifizierung">Public-Private-Key Authentifizierung</h1>
+<div class="level1">
+
+<p>
+Als Nutzer Schlüsselpaar erzeugen:
+</p>
+<pre class="code">ssh-keygen -t rsa -b 4096 -C &quot;Kommentar&quot;</pre>
+
+<p>
+Public-Key auf anderen Rechner übertragen:
+</p>
+<pre class="code">ssh-copy-id  -i .ssh/id_rsa.pub nutzer05@notebook06</pre>
+
+<p>
+oder alternativ:
+</p>
+<pre class="code">cat .ssh/id_rsa.pub | ssh nutzer05@notebook06 &quot;cat &gt;&gt; .ssh/authorized_keys&quot;
+ssh nutzer05@notebook06 &quot;chmod 400 .ssh/authorized_keys&quot;</pre>
+
+</div>
+<!-- EDIT6 SECTION "Public-Private-Key Authentifizierung" [1819-2201] -->
+<h2 class="sectionedit7" id="serverseitig_passwortauthentifizierung_abschalten">Serverseitig Passwortauthentifizierung abschalten</h2>
+<div class="level2">
+
+<p>
+<code>/etc/ssh/sshd_config</code>:
+<pre class="file">  UsePAM no
+  PasswordAuthentication no</pre>
+
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Serverseitig Passwortauthentifizierung abschalten" [2202-2345] -->
+<h2 class="sectionedit8" id="nutzer_zugriff_beschraenken">Nutzer Zugriff beschränken</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT8 SECTION "Nutzer Zugriff beschränken" [2346-2385] -->
+<h3 class="sectionedit9" id="mit_authorized_keys_command">mit authorized_keys command</h3>
+<div class="level3">
+
+<p>
+<em>Problem: die Datei <code>~/.ssh/authorized_keys</code> gehört dem Nutzer, den man einschränken möchte. </em>
+</p>
+
+<p>
+<pre class="file">command=&quot;/bin/cat /var/log/messages&quot;,no-agent-forwanding,no-X11-forwarding,no-port-forwarding ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHBqUtiLsRTLKquoVXKwhrPRD92CzaN9EOkVEfWoHfdC nutzer26@notebook26</pre>
+
+</p>
+
+</div>
+<!-- EDIT9 SECTION "mit authorized_keys command" [2386-2763] -->
+<h3 class="sectionedit10" id="mit_match">mit Match</h3>
+<div class="level3">
+
+<p>
+<pre class="file">Match User nutzer12
+  ForceCommand /usr/local/bin/cat_messages</pre>
+
+</p>
+
+<p>
+<pre class="file">#!/bin/sh
+/bin/cat /var/log/messages</pre>
+
+</p>
+
+</div>
+<!-- EDIT10 SECTION "mit Match" [2764-2972] -->
+<h2 class="sectionedit11" id="ssh-agent">ssh-agent</h2>
+<div class="level2">
+
+<p>
+Schlüssel dem <code>ssh-agent</code> hinzufügen:
+</p>
+<pre class="code">ssh-add .ssh/id_dsa</pre>
+
+<p>
+<sup><a href="#fn__4" id="fnt__4" class="fn_top">4)</a></sup>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "ssh-agent" [2973-3203] -->
+<h3 class="sectionedit12" id="agent-forwarding_nutzen">Agent-Forwarding nutzen</h3>
+<div class="level3">
+<pre class="code">ssh -A nutzer17@notebook17
+ssh nutzer07@notebook07</pre>
+
+</div>
+<!-- EDIT12 SECTION "Agent-Forwarding nutzen" [3204-3293] -->
+<h3 class="sectionedit13" id="ssh_ueber_mehrere_hops">SSH über mehrere Hops</h3>
+<div class="level3">
+
+<p>
+<pre class="file">+--------+                  +------------+                +------------+
+| ssh    |                  | Hop Server |                | server     |
+| client |                  | notebook01 |                | notebook02 |
+|        | ================ssh========tunnel============&gt; |            |
++--------+                  +------------+                +------------+</pre>
+
+</p>
+
+</div>
+
+<h4 id="client">Client</h4>
+<div class="level4">
+
+<p>
+centos 7:
+</p>
+
+<p>
+<pre class="file">Host notebook02
+  Hostname notebook02.linuxhotel.de
+  ProxyCommand ssh notebook01.linuxhotel.de -W %h:%p</pre>
+
+</p>
+
+<p>
+Bei älteren SSH-Versionen muss zusätzlich <code>netcat</code> bzw. <code>nc</code> installiert sein:
+<code>~/.ssh/config</code> : ( debian 6.0, centos 6 )
+</p>
+
+<p>
+<pre class="file">Host notebook02
+  Hostname notebook02.linuxhotel.de
+  ProxyCommand ssh -q notebook01.linuxhotel.de nc %h %p</pre>
+
+</p>
+
+</div>
+
+<h4 id="hop_server">Hop Server</h4>
+<div class="level4">
+
+<p>
+<em>optional</em>, damit sich der Benutzer nicht auf dem Hop-Server einloggen kann
+</p>
+
+<p>
+<code>/etc/ssh/sshd_config</code> :
+<pre class="file">Match User nutzer02
+  ForceCommand nc notebook02 22</pre>
+
+</p>
+
+</div>
+
+<h4 id="testen">testen</h4>
+<div class="level4">
+<pre class="code">ssh notebook02</pre>
+
+</div>
+<!-- EDIT13 SECTION "SSH über mehrere Hops" [3294-4356] -->
+<h3 class="sectionedit14" id="sicherheitseinschraenkung_bei_agent-forwarding">Sicherheitseinschränkung bei Agent-Forwarding</h3>
+<div class="level3">
+
+<p>
+Mit eingeschaltetem Agent-Forwarding sollte man nur vertrauenswürdige Server besuchen. root-Benutzer auf dem Server können während die Verbindung besteht den ssh-Agent „mitbenutzen“. Dazu sucht root nach
+</p>
+<ul>
+<li class="level1"><div class="li"> Prozess-Nummern ( <code>-t</code> ),  </div>
+</li>
+<li class="level1"><div class="li"> die dem verbundenen Benutzer gehören ( <code>-u</code> ), </div>
+</li>
+<li class="level1"><div class="li"> die eine IP-Verbindung geöffnent haben ( <code>-i</code> ),</div>
+</li>
+<li class="level1"><div class="li"> deren Namen mit der Zeichenkette <code>sshd</code> beginnt ( <code>-c</code> )</div>
+</li>
+</ul>
+<pre class="code">PIDS=&quot;$(lsof -a -i -c sshd -u nutzer05 -t)&quot;</pre>
+
+<p>
+Weiter sucht er nach dazu passenden Socket-Dateien ( <code>/tmp/ssh-*/agent.$pid</code> ), und speichert die letzte ( <code>tail -n 1</code> ) in der Variablen <code>SSH_AUTH_SOCK</code>
+</p>
+<pre class="code">export SSH_AUTH_SOCK=$(for pid in $PIDS; do ls /tmp/ssh-*/agent.$pid; done 2&gt;/dev/null | tail -n 1)</pre>
+
+<p>
+Auch ein ssh-agent auf dem client-Rechner kann ähnlich mitgenutzt werden:
+</p>
+<pre class="code">export SSH_AGENT_PID=$(pgrep -u nutzer05 -x &#039;ssh-agent&#039;)
+SSH_AUTH_SOCK=$(lsof -a -U -p $SSH_AGENT_PID -F n | tail -n 1)
+export SSH_AUTH_SOCK=${SSH_AUTH_SOCK#n}
+ssh nutzer07@notebook07</pre>
+
+</div>
+<!-- EDIT14 SECTION "Sicherheitseinschränkung bei Agent-Forwarding" [4357-5412] -->
+<h1 class="sectionedit15" id="fehlersuche">Fehlersuche</h1>
+<div class="level1">
+<pre class="code">ssh -v nutzer06@notebook06
+ssh -vv nutzer06@notebook06</pre>
+
+</div>
+<!-- EDIT15 SECTION "Fehlersuche" [5413-5498] -->
+<h1 class="sectionedit16" id="ssh_tunnel">SSH Tunnel</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT16 SECTION "SSH Tunnel" [5499-5523] -->
+<h2 class="sectionedit17" id="tcp_tunnel">TCP Tunnel</h2>
+<div class="level2">
+
+<p>
+Allgemein:
+</p>
+<pre class="code">ssh -L &lt;lokaler Port&gt;:&lt;Zielrechner&gt;:&lt;Zielport&gt; &lt;Benutzer&gt;@&lt;ssh-Server&gt;</pre>
+
+<p>
+Spezialfall X-Weiterleitung:
+</p>
+<pre class="code">ssh -X &lt;Benutzer&gt;@&lt;Rechner&gt;</pre>
+
+<p>
+Dazu muß in der Datei <code>/etc/ssh/sshd_config</code> folgender Eintrag vorhanden sein:
+<pre class="file">X11Forwarding yes</pre>
+
+</p>
+
+<p>
+Tunnel Rückwärts:
+</p>
+<pre class="code">ssh -R &lt;Port auf ssh-Server&gt;:&lt;Zielrechner&gt;:&lt;Zielport&gt; &lt;Benutzer&gt;@&lt;ssh-Server&gt;</pre>
+
+<p>
+Dazu muß in der Datei <code>/etc/ssh/sshd_config</code> folgender Eintrag vorhanden sein:
+<pre class="file">GatewayPorts yes</pre>
+
+</p>
+
+<p>
+Tunnel nachträglich anlegen:
+</p>
+<pre class="code">~C
+help
+-L &lt;lokaler Port&gt;:&lt;Zielrechner&gt;:&lt;Zielport&gt;</pre>
+
+</div>
+<!-- EDIT17 SECTION "TCP Tunnel" [5524-6107] -->
+<h2 class="sectionedit18" id="ip_tunnel_vpn">IP Tunnel / VPN</h2>
+<div class="level2">
+
+<p>
+<em>noch nicht getestet</em>
+</p>
+
+</div>
+<!-- EDIT18 SECTION "IP Tunnel / VPN" [6108-6160] -->
+<h3 class="sectionedit19" id="client1">Client</h3>
+<div class="level3">
+<pre class="code">ssh -f -w 0:1 192.168.1.15 true
+ifconfig tun0 10.1.1.1 10.1.1.2 netmask 255.255.255.252
+route add 10.0.99.0/24 10.1.1.2</pre>
+
+</div>
+<!-- EDIT19 SECTION "Client" [6161-6304] -->
+<h3 class="sectionedit20" id="server">Server</h3>
+<div class="level3">
+
+<p>
+<code>/etc/ssh/sshd_config</code> :
+<pre class="file">PermitTunnel yes</pre>
+
+</p>
+<pre class="code">ifconfig tun1 10.1.1.2 10.1.1.1 netmask 255.255.255.252
+route add 10.0.50.0/24 10.1.1.1</pre>
+
+</div>
+<!-- EDIT20 SECTION "Server" [6305-6473] -->
+<h1 class="sectionedit21" id="links">Links</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.jfranken.de/homepages/johannes/vortraege/ssh1_inhalt.de.html" class="urlextern" title="http://www.jfranken.de/homepages/johannes/vortraege/ssh1_inhalt.de.html" rel="nofollow"> SSH Grundlagen von Johannes Franken </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.jfranken.de/homepages/johannes/vortraege/ssh2_inhalt.de.html" class="urlextern" title="http://www.jfranken.de/homepages/johannes/vortraege/ssh2_inhalt.de.html" rel="nofollow"> SSH Tunnels von Johannes Franken </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.jfranken.de/homepages/johannes/vortraege/ssh3_inhalt.de.html" class="urlextern" title="http://www.jfranken.de/homepages/johannes/vortraege/ssh3_inhalt.de.html" rel="nofollow"> Firewalls durchbohren von Johannes Franken </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.employees.org/~satch/ssh/faq/ssh-faq.html" class="urlextern" title="http://www.employees.org/~satch/ssh/faq/ssh-faq.html" rel="nofollow"> SSH FAQ englisch </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.openssh.org/de/index.html" class="urlextern" title="http://www.openssh.org/de/index.html" rel="nofollow"> SSH Homepage deutsch </a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT21 SECTION "Links" [6474-] --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+<div class="content">als Default werden alle Prozesse einer proc group bei restart oder stop gekillt. Das ist nicht das, was man bei ssh o.ä. will.
+
+Unit-File nach /etc/systemd/system kopieren und KillMode=process rein
+und das Verhalten ist wie früher.
+
+Bei vielen Distris ist das Standard-Unit-File mit
+KillMode=control-group. D.h. man müsste immer und überall bei jeder
+ssh-Installation diese Änderung machen, wenn man nicht irgendwann ein
+doofes Problem haben will</div></div>
+<div class="fn"><sup><a href="#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+<div class="content"> Wenn auf dem entfernten Rechner Befehle ausgeführt werden sollen (z.B. Updates einspielen), die nicht unterbrochen werden sollen (z.B. von einem Netzwerkproblem), dann ist <a href="/doku.php?id=screen" class="wikilink2" title="screen" rel="nofollow">screen</a> auf dem entfernten Rechner sehr nützlich </div></div>
+<div class="fn"><sup><a href="#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+<div class="content"> manchmal ist hier auch <a href="/doku.php?id=tar#dateien_kopieren_mit_sudo_tar_und_ssh" class="wikilink2" title="tar" rel="nofollow">dateien_kopieren_mit_sudo_tar_und_ssh</a> nützlich, besonders wenn sowohl die Quell-Datei als auch das Ziel auf entfernten Rechnern liegen </div></div>
+<div class="fn"><sup><a href="#fnt__4" id="fn__4" class="fn_bot">4)</a></sup> 
+<div class="content">Bei openSuSE 11.0 wird der <code>ssh-agent</code> bei der Anmeldung nur gestartet, wenn das Verzeichnis <code>~/.ssh</code> existiert:<pre class="code">mkdir -m 700 ~/.ssh</pre>
+</div></div>
+</div>

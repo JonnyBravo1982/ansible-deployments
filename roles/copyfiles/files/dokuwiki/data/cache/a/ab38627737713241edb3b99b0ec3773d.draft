@@ -1,0 +1,11 @@
+a:6:{s:2:"id";s:5:"winrm";s:6:"prefix";s:0:"";s:4:"text";s:385:"WinRM selbst bringt eigene ACLs mit.  Die Remote PowerShell kann nach der Installation vo winrm die lokalen Admins und alle Benutzer in der Remoteverwaltungs gruppe benutzen werden. 
+ 
+WinRM 
+
+
+Remote PowerShell Berechtigungen kannst du mit folgenden Kommando konfigurieren  : 
+
+<code> 
+Set-PSSessionConfiguration -Name Microsoft.PowerShell -showSecurityDescriptorUI
+</code>
+";s:6:"suffix";s:0:"";s:4:"date";i:0;s:6:"client";s:10:"jonnybravo";}

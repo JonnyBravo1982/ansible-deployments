@@ -1,0 +1,138 @@
+====== GlusterFS ======
+
+GlusterFS ist ein verteiltes Dateisystem, das Speicherelemente von mehreren Servern als einheitliches Dateisystem präsentiert. Die verschiedenen Server, auch Cluster-Nodes (englisch node ‚Knoten‘) genannt, bilden eine Client-Server-Architektur über TCP/IP. Als Besonderheit können NAS-Systeme über Infiniband direkt in den Cluster eingebunden werden, auch eine redundante Anbindung von Speichermedien über TCP/IP, Infiniband Verbs oder InfiniBand SDP (Socket Direct Protocol) ist möglich. Die Daten auf allen Cluster-Nodes können gleichzeitig gelesen und geschrieben werden, wobei alle Änderungen an Dateien auf allen Servern augenblicklich umgesetzt werden. Das Dateisystem wird über ein FUSE-Kernel-Modul eingebunden und wird von POSIX-fähigen Betriebssystemen unterstützt, zum Beispiel Linux, FreeBSD, OpenSolaris und Mac OS X. Um einen GlusterFS-Server zu starten, wird kein Kernel-Modul benötigt. Ein Server kann sowohl Client als auch Server gleichzeitig sein. Ein Client für Windows-Systeme ist in Planung, wird aber von den Entwicklern erst umgesetzt, sobald das WinFUSE-Projekt stabil läuft.
+
+===== Szenario =====
+ 
+Das folgende Szenario beschreibt die Erstellung eines  GlusterFS auf 2 Fedora-Servern. Alle Server haben eine zweite zusätzliche Festplatte sdb.
+==== Schritt für Schritt ====
+
+
+Als erstes müssen die beiden Festplatten sdb formatiert und gemountet werden. Diese Schritte werden auf beiden Servern ausgeführt.  
+<code bash>
+fdisk /dev/sdb
+n
+w
+mkfs.xfs -i size=512 /dev/sdb1 -f
+mkdir -p /data/brick1
+echo "/dev/sdb1 /data/brick1 xfs defaults 1 2" >> /etc/fstab
+mount -a
+</code>  
+
+Nach der Partitionierung wird glusterfs installiert. Dieser Schritt wird auf beiden Servern ausgeführt.  
+
+<code bash>
+yum install glusterfs-server
+systemctl start glusterd
+</code>
+
+
+Alle beiden Server bekommen eine static IP-Addresse. Dazu wird die /etc/sysconfig/network-scripts/ifcfg-eth0 und die /etc/sysconfig/network Datei angepasst : 
+
+ifcfg-eth0 Datei
+<code>
+BOOTPROTO=none
+GATEWAY=10.0.75.1
+IPADDR0=10.0.75.51
+PREFIX="24"
+</code>
+
+network Datei
+<code>
+GATEWAY=10.0.75.2
+</code>
+
+In meinem Beispiel habe ich SELINUX und die Firewall (iptables -F) auf beiden Servern deaktiviert. Dazu muss die Datei /etc/selinux/config wie folgt angepasst werden. 
+<code>
+ SELINUX=disabled or SELINUX=permissive 
+</code>
+
+Nach einer Anpassung der selinux/config müssen die Server neu gestartet werden.
+
+Als nächstes wird über glusterfs eine Verbindung zu den beiden Servern aufgebaut. 
+
+Server01 
+<code bash>
+gluster peer probe Server02
+gluster peer Status 
+</code>
+
+Server02 
+<code bash>
+gluster peer probe Server01
+gluster peer Status 
+</code>
+
+Wenn SELinux und die Firewall korrekt konfiguriert sind zeigt der Status folgendes an "peer in Cluster (connected)"
+
+Falls der Service nicht dauerhaft läuft kann er aktiviert werden. 
+<code bash>
+systemctl enable glusterfsd 
+</code>
+
+Einrichtung des Clusters: 
+
+Das Mountverzeichnis wird auf beiden Servern angelegt. 
+
+</code>
+mkdir /data/brick1/gv0
+</code>
+Als nächstes wird das GlusterFS-Volumen formatiert. Die Ausführung erfolgt nur auf einen der Server. :
+
+<code bash>
+gluster  volume create gv0 replica 2 transport tcp Server1:/data/brick1/gv0 Server2:/data/brick1/gv0
+</code>  
+
+Das Volume wird nun gestartet. 
+
+<code bash>
+gluster volume start gv0
+</code>
+
+Der Status kann mit dem Kommando geprüft werden.
+
+<code bash>
+gluster volume info
+</code>
+
+Mit dem GlusterFS Client kann nun auf das Volumen von einen beliebigen Client zugriffen werden. 
+
+<code bash>
+yum install glusterfs-client 
+</code>
+
+Glusterfs-Volumen auf einem Client mounten 
+<code bash>
+mount.glusterfs server1:/gv0 /mnt/glusterfs
+</code>
+
+Der Eintrag in die /etc/fstab sieht dann wie folgt aus : 
+
+<code bash>
+server01:/gv0 /mnt/glusterfs glusterfs defaults,_netdev 0 0
+</code>
+
+**Samba-anpassung**
+
+Samba wird wie folgt Installiert 
+<code bash>
+yum install samba-vfs-glusterfs
+yum install samba-client
+</code>
+
+
+-----läuft noch nicht 
+
+
+**Fehleranalyse**: 
+
+Sollte bei der Erstellung des Volumen der Fehler erscheinen das, dass Volumen bereits existiert kann folgendes ausgeführt werden um das Problem zu lösen. 
+
+<code bash>
+yum install attr
+cd /data/brick1/gv0
+for i in `attr -lq .`; do   setfattr -x trusted.$i .; done
+attr -lq /data/brick1/gv0 # Bei leer läuft es wieder 
+</code>
+
+ 

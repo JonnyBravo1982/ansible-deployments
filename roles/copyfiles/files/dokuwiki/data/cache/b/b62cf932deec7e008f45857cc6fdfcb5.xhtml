@@ -1,0 +1,39 @@
+
+<p>
+Abfrage eines Kennworts beim Starten einer OSD-Tasksequence mit SCCM 2007 R3
+</p>
+
+<p>
+Beim starten der OSD-Tasksequence wird ein Kennwort abgefragt um zu Verhindern das unbefugte das System neu betanken können. Das Script besteht aus der promptforpassword.wsf und der shutdown.wsf, wie der Name schon sagt frage die erste wsf das Passwort ab und die zweite wsf fährt den Rechner ggf. herunter.
+</p>
+
+<p>
+promptforpassword.wsf
+</p>
+<pre class="code">&lt;job id=&quot;PromptForPassword&quot;&gt;
+&lt;script language=&quot;VBScript&quot; &gt;
+Dim env,oTSProgressUI,MyPass
+Set env = CreateObject(&quot;Microsoft.SMS.TSEnvironment&quot;)set oTSProgressUI = CreateObject(&quot;Microsoft.SMS.TSProgressUI&quot;)
+oTSProgressUI.CloseProgressDialog()env(&quot;ALLOWTSRUN&quot;) = &quot;NO&quot;MyPass=Inputbox(&quot;Bitte geben Sie das Passwort ein&quot;)If MyPass = &quot;test&quot; then
+  env(&quot;ALLOWTSRUN&quot;) = &quot;YES&quot;
+End If
+&lt;/script&gt;
+&lt;/job&gt;
+  shutdown.wsf  &lt;job id=&quot;setEnv&quot;&gt;
+  &lt;script language=&quot;VBScript&quot; src=&quot;ZTIUtility.vbs&quot;/&gt;
+  &lt;script language=&quot;VBScript&quot;&gt;
+ Dim oTSProgressUI
+set oTSProgressUI = CreateObject(&quot;Microsoft.SMS.TSProgressUI&quot;)
+oTSProgressUI.CloseProgressDialog()        On error resume next
+     Dim fso, WShell, oFile
+     Set WShell = CreateObject(&quot;WScript.Shell&quot;)
+     Set fso = CreateObject(&quot;scripting.filesystemobject&quot;)
+     scriptroot = oEnvironment.Item(&quot;SCRIPTROOT&quot;)
+     MsgBox &quot;Der Computer wird neugestartet&quot;,0, &quot;Task Sequence abgebrochen&quot;
+     WShell.Run &quot;wpeutil shutdown&quot;,0, True 
+&lt;/script&gt;
+&lt;/job&gt;</pre>
+
+<p>
+In der promptforpassword.wsf wird die Tasksequencevariable ALLOWTSRUN auf NO gesetzt und eine InputBox wird aufgerufen in der das Kennwort abgefragt wird. Danach wird die Eingabe aus der InputBox in die Variable MyPass geschrieben und abgeglichen. Wenn der Wert aus der Variable mit dem festgelegten Wert übereinstimmt wird die Tasksequence Variable auf YES gesetzt. Als nächstes muss die shutdown.wsg abgerufen werden, diese wird mit einer Condition versehen die Abfragt ob die Tasksequence Variable ALLOWTSRUN auf YES gesetzt ist, wenn ja wird die Tasksequence fortgesetzt. Wenn nicht wird der Rechner heruntergefahren. 
+</p>
