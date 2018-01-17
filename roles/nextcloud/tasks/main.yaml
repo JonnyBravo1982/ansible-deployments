@@ -1,7 +1,9 @@
 ---
  - name: Install nginx
-   yum: name=nginx state=latest
-
+   yum: name={{item}} state=latest
+   with_items:
+       - epel-release
+       - nginx  
  - name: Create a User {{allusers.nextcloud.name}}
    user: name={{allusers.nextcloud.name}} uid={{allusers.nextcloud.id}} groups=docker password=Start12345
 
