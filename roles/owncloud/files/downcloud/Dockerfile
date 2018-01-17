@@ -10,7 +10,7 @@ MAINTAINER Grey Christoforo <grey@christoforo.net>
 # set environmnt variable defaults
 ENV TARGET_SUBDIR owncloud
 ENV ALLOW_INSECURE false
-ENV OC_VERSION '10.0.4'
+ENV OC_VERSION '10.0.2'
 
 # do the install things
 ADD installOwnCloud.sh /usr/sbin/install-owncloud
