@@ -13,7 +13,7 @@ StartLimitInterval=0
 ExecStartPre=-/usr/bin/docker stop owncloud
 ExecStop=/usr/bin/docker stop owncloud
 ExecStopPost=/usr/bin/docker rm --force --volumes owncloud
-ExecStart=/usr/bin/docker run --rm -v /home/{{allusers.owncloud.name}}/owncloud/site/:/srv/http/ -v /home/{{allusers.owncloud.name}}/owncloud/data/:/owncloud/ -e DO_SSL_SELF_GENERATION=true -e SUBJECT=/C=DE/ST=CA/L=CITY/O=ORGANIZATION/OU=DANIEL/CN=localhost --name owncloud -p 10443:443 owncloud-dan:{{owncloudtag}}
+ExecStart=/usr/bin/docker run --rm -v /home/{{allusers.owncloud.name}}/owncloud/site/:/srv/http/ -v /home/{{allusers.owncloud.name}}/owncloud/data/:/owncloud/ -e DO_SSL_SELF_GENERATION=true -e SUBJECT=/C=DE/ST=Sachsen/L=Dresden/O=danielsit/OU=larponline.de/CN=lin-prod-01 --name owncloud -p 443:443 owncloud-dan:{{owncloudtag}}
 
 [Install]
 WantedBy=multi-user.target
