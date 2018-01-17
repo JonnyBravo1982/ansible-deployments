@@ -1,0 +1,19 @@
+[Unit]
+Description=owncloud-dan Container
+After=docker.service
+Requires=docker.service
+
+[Service]
+User={{allusers.nextcloud.name}}
+TimeoutStartSec=1min
+TimeoutStopSec=90s
+Restart=always
+RestartSec=10
+StartLimitInterval=0
+ExecStartPre=-/usr/bin/docker stop nextcloud
+ExecStop=/usr/bin/docker stop nextcloud
+ExecStopPost=/usr/bin/docker rm --force --volumes nextcloud
+ExecStart=/usr/bin/docker run --rm -v /home/{{allusers.nextcloud.name}}/nextcloud/data/:/var/www/html --name nextcloud -p {{ports.nextcloud.portnum}}:80 nextcloud
+
+[Install]
+WantedBy=multi-user.target

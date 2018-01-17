@@ -1,0 +1,33 @@
+---
+ - name: Install nginx
+   yum: name=nginx state=latest
+
+ - name: Create a User {{allusers.nextcloud.name}}
+   user: name={{allusers.nextcloud.name}} uid={{allusers.nextcloud.id}} groups=docker password=Start12345
+
+ - name: Create Folder for owncloud Files
+   file: state=directory path={{item}} mode=0777
+   with_items:
+         - /etc/nginx/ssl
+         - /home/{{allusers.nextcloud.name}}/nextcloud
+         - /home/{{allusers.nextcloud.name}}/nextcloud/data
+
+ - name: create self-signed SSL cert
+   command: openssl req -x509 -nodes -days 365 -newkey rsa:4096 -subj "/C=US/ST=Oregon/L=Portland/O=IT/CN=${ansible_fqdn}" -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
+   # notify: reload ngin
+ 
+ - name: Create a service
+   template: src={{item.src}} dest={{item.dest}}
+   with_items:
+        - {src: nextcloud.service.j2, dest: /etc/sysconfig/nextcloud}
+        - {src: nginx.conf, dest: /etc/nginx/nginx.conf}  
+ - name: Register Unit Dokuwiki
+   template: src=nextcloud.service.j2 dest=/lib/systemd/system/nextcloud.service mode=644
+   notify:
+       - reload systemctl
+       - reload nginx
+ - name: Start Service nextcloud
+   service: name={{item}} state=started enabled=yes
+   with_items:
+     - nextcloud.service
+     - nginx
