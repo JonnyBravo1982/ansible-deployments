@@ -3,3 +3,9 @@ allusers:
   owncloud:
        name: owncloud
        id: 10001
+  nextcloud:
+       name: nextcloud
+       id: 1010
+ports: 
+  nextcloud:
+      portnum: 23423
