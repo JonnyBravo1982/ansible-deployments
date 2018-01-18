@@ -19,7 +19,7 @@
          - /etc/nginx/ssl
          - /home/{{allusers.nextcloud.name}}/nextcloud
          - /home/{{allusers.nextcloud.name}}/nextcloud/data
-
+         - /home/{{allusers.nextcloud.name}}/nextcloud/data/config
  - name: create self-signed SSL cert
    command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=la/L=po/O=IT/CN=ichag" -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
    # notify: reload ngin
