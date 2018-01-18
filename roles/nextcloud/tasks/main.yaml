@@ -6,7 +6,7 @@
        - nginx
 
  - name Allow Firewall
-   firewalld: service={{item}} permanent: true state: enabled
+   firewalld: service={{item}} permanent=true state=enabled
    with_items:
       - http
       - https  
