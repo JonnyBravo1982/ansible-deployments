@@ -23,7 +23,8 @@ $CONFIG = array (
   'trusted_domains' => 
   array (
 	  0 => '{{targetIP}}',
-	  1 => '{{targetDomain}}'
+	  1 => '{{targetDomain}}',
+	  2 => '{{inventory_hostname_short}}'
   ),
   'datadirectory' => '/var/www/html/data',
   'overwrite.cli.url' => 'https://{{targetIP}}',
