@@ -1,6 +1,6 @@
 ---
 - name: Deploy nextcloud
-  hosts: all
+  hosts: test
   become: true 
   roles:
     - docker     

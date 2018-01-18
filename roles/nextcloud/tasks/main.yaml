@@ -4,12 +4,11 @@
    with_items:
        - epel-release
        - nginx
-
- - name Allow Firewall
+ - name: Firewall
    firewalld: service={{item}} permanent=true state=enabled
    with_items:
-      - http
-      - https  
+        - http
+        - https  
   
  - name: Create a User {{allusers.nextcloud.name}}
    user: name={{allusers.nextcloud.name}} uid={{allusers.nextcloud.id}} groups=docker password=Start12345
@@ -30,7 +29,7 @@
    with_items:
         - {src: nextcloud.service.j2, dest: /etc/sysconfig/nextcloud}
         - {src: nginx.conf, dest: /etc/nginx/nginx.conf}  
-        - {src: config.php, dest:/home/nextcloud/nextcloud/data/config/config.php}
+        - {src: config.php, dest: /home/nextcloud/nextcloud/data/config/config.php}
  
  - name: Register Unit Dokuwiki
    template: src=nextcloud.service.j2 dest=/lib/systemd/system/nextcloud.service mode=644

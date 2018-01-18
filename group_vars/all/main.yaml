@@ -1,4 +1,6 @@
 owncloudtag: 0.4
+targetDomain: larponline.de
+targetIP: 109.239.57.238 
 allusers: 
   owncloud:
        name: owncloud
