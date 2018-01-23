@@ -1,0 +1,7 @@
+---
+- name: Deploy dokuwiki
+  hosts: all
+  become: true 
+  roles:
+    - docker     
+    - dokuwikidock
