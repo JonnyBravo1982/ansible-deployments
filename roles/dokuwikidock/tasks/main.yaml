@@ -27,7 +27,7 @@
    unarchive: src=site.tar.xz dest=/home/{{allusers.dokuwiki.name}}/data
 
  - name: create self-signed SSL cert
-   command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=la/L=po/O=IT/CN=ichag" -keyout /etc/nginx/ssl/nginx_dokuwiki.key -out /etc/nginx/ssl/nginx_dokuwiki.crt
+   command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=la/L=po/O=IT/CN=jonnybravoserver" -keyout /etc/nginx/ssl/nginx_dokuwiki.key -out /etc/nginx/ssl/nginx_dokuwiki.crt
    # notify: reload ngin
  
  - name: Create a service
