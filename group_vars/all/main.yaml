@@ -1,5 +1,6 @@
 owncloudtag: 0.4
-targetDomain: larponline.de
+targetDomainNextcloud: larponline.de
+targetDomainDokuwiki: jonnybravoserver.de
 targetIP: 109.239.49.147
 allusers: 
   owncloud:
@@ -8,6 +9,11 @@ allusers:
   nextcloud:
        name: nextcloud
        id: 1010
+  dokuwiki:
+       name: dokuwiki
+       id: 1011
 ports: 
   nextcloud:
       portnum: 23423
+  dokuwiki:
+      portnum: 23424
