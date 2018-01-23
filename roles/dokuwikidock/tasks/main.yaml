@@ -1,17 +1,51 @@
----                                        
- - name: "Copy Files"                         
-   copy: src="docker-compose.yml" dest="/tmp/docker-compose.yml"          
+---
+
+ - name: Install epel
+   yum: name=epel-release state=latest
+
+ - name: Install nginx
+   yum: name=nginx state=latest
+
+ - name: Firewall
+   firewalld: service={{item}} permanent=true state=enabled zone=public
+   with_items:
+        - http
+        - https
+   notify:
+        - reload firewalld
+
+ - name: Create a User {{allusers.dokuwiki.name}}
+   user: name={{allusers.dokuwiki.name}} uid={{allusers.dokuwiki.id}} groups=docker password=Start12345
+
+ - name: Create Folder for dokuwiki Files
+   file: state=directory path={{item}} mode=0777
+   with_items:
+         - /etc/nginx/ssl
+         - /home/{{allusers.dokuwiki.name}}/data
+
+ - name: Extract folder 
+   unarchive: src=site.tar.xz dest=/home/{{allusers.dokuwiki.name}}/data
+
+ - name: create self-signed SSL cert
+   command: openssl req -x509 -nodes -days 365 -newkey rsa:4096 -subj "/C=US/ST=la/L=po/O=IT/CN=ichag" -keyout /etc/nginx/ssl/nginx_dokuwiki.key -out /etc/nginx/ssl/nginx_dokuwiki.crt
+   # notify: reload ngin
  
-   # - name: "Run Docker compose dokuwiki"          
-   #command: docker-compose up -d              
-   #args:                                      
-   # chdir: "/tmp/"
- - name: Create a service 
-   template: src=dokuwiki.service.j2 dest=/etc/sysconfig/dokuwiki
+ - name: Create a service
+   template: src={{item.src}} dest={{item.dest}}
+   with_items:
+        - {src: dokuwiki.service.j2, dest: /etc/sysconfig/nextcloud}
+        - {src: nginx_dokuwiki.conf, dest: /etc/nginx/conf.d/nginx_dokuwiki.conf}  
+      # - {src: config.php, dest: /home/nextcloud/nextcloud/data/config/config.php}
  
  - name: Register Unit Dokuwiki
    template: src=dokuwiki.service.j2 dest=/lib/systemd/system/dokuwiki.service mode=644
    notify:
-     - reload systemctl
- - name: Start Service Dokuwiki
-   service: name=dokuwiki.service state=started enabled=yes
+       - reload systemctl
+       - reload nginx  
+ 
+ - name: Start Service dokuwiki
+   service: name={{item}} state=restarted enabled=yes
+   with_items:
+     - dokuwiki.service
+     - nginx
+

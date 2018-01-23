@@ -6,10 +6,12 @@
    yum: name=nginx state=latest
  
  - name: Firewall
-   firewalld: service={{item}} permanent=true state=enabled
+   firewalld: service={{item}} permanent=true state=enabled zone=public
    with_items:
         - http
-        - https  
+        - https
+   notify: 
+        - reload firewalld  
   
  - name: Create a User {{allusers.nextcloud.name}}
    user: name={{allusers.nextcloud.name}} uid={{allusers.nextcloud.id}} groups=docker password=Start12345
@@ -39,7 +41,7 @@
        - reload nginx  
  
  - name: Start Service nextcloud
-   service: name={{item}} state=started enabled=yes
+   service: name={{item}} state=restarted enabled=yes
    with_items:
      - nextcloud.service
      - nginx

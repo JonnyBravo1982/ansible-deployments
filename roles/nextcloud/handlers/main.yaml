@@ -2,3 +2,5 @@
    command: systemctl daemon-reload
  - name: reload nginx 
    service: name=nginx state=restarted enabled=yes
+ - name: reload firewalld
+   service: name=firewalld state=restarted enabled=yes

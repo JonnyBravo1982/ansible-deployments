@@ -4,12 +4,16 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-TimeoutStartSec=0
+User={{allusers.dokuwiki.name}}
+TimeoutStartSec=1min
+TimeoutStopSec=90s
 Restart=always
-ExecStartPre=-/usr/bin/docker stop %n
-ExecStartPre=-/usr/bin/docker rm %n
-ExecStartPre=/usr/bin/docker pull bitnami/dokuwiki:latest
-ExecStart=/usr/bin/docker run --name dokuwiki -p 80:80 --rm bitnami/dokuwiki:latest
+RestartSec=10
+StartLimitInterval=0
+ExecStartPre=-/usr/bin/docker stop dokuwiki
+ExecStop=/usr/bin/docker stop dokuwiki
+ExecStopPost=/usr/bin/docker rm --force --volumes dokuwiki
+ExecStart=/usr/bin/docker run --rm -v /home/{{allusers.dokuwiki.name}}/data/site:/bitnami --name dokuwiki -p {{ports.dokuwiki.portnum}}:80 bitnami/dokuwiki:latest
 
 [Install]
 WantedBy=multi-user.target
