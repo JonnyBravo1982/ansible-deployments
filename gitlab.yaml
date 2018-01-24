@@ -1,4 +1,4 @@
-- hosts: test
+- hosts: all
   gather_facts: yes
   #remote_user: jonnybravo
   become: True
