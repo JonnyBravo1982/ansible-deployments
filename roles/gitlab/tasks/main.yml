@@ -1,10 +1,40 @@
 #Copy File and RUN
 #.---
 - name: "Copy Files"
-  copy:
-    src: "docker-compose.yml"
-    dest: "/tmp/docker-compose.yml"
+  template: src=docker-compose.yml dest=/tmp/docker-compose.yml
+
 - name: "Run Docker compose gitlab"
   command: docker-compose up -d
   args:
     chdir: "/tmp"
+
+ - name: Install epel
+   yum: name=epel-release state=latest
+
+ - name: Install nginx
+   yum: name=nginx state=latest
+
+ - name: Firewall
+   firewalld: service={{item}} permanent=true state=enabled zone=public
+   with_items:
+        - http
+        - https
+   notify:
+        - reload firewalld
+ 
+ - name: create self-signed SSL cert
+   command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=la/L=po/O=IT/CN=jonnybravoserver-gitlab" -keyout /etc/nginx/ssl/nginx_gitlab.key -out /etc/nginx/ssl/nginx_gitlab.crt
+   # notify: reload ngin
+ 
+ - name: Create a service
+   template: src={{item.src}} dest={{item.dest}}
+   with_items:
+        - {src: nginx_gitlab.conf, dest: /etc/nginx/conf.d/nginx_gitlab.conf}  
+      # - {src: config.php, dest: /home/nextcloud/nextcloud/data/config/config.php}
+ 
+ - name: Start Service dokuwiki
+   service: name={{item}} state=restarted enabled=yes
+   with_items:
+     - nginx
+
+
