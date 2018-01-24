@@ -1,7 +1,5 @@
 owncloudtag: 0.4
 targetDomainNextcloud: larponline.de
-targetDomainDokuwiki: jonnybravoserver.de
-targetIP: 109.239.49.147
 targetIPGitlab: 134.119.111.31
 gitlabstartps: Start12345678!Daniel
 allusers: 
