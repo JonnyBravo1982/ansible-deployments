@@ -7,7 +7,7 @@
      - docker
        # - copyfiles
        # - pause
-     - dokuwikidock  
+    
      
        
 #tasks:
