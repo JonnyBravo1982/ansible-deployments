@@ -12,8 +12,14 @@ allusers:
   dokuwiki:
        name: dokuwiki
        id: 1011
+  gitlab:
+       name: gitlab
+       id: 1012
 ports: 
   nextcloud:
       portnum: 23423
   dokuwiki:
       portnum: 23424
+  gitlab:
+      portnum: 23432
+      portssh: 22212

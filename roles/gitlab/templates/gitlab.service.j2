@@ -1,0 +1,19 @@
+[Unit]
+Description=gitlab Container
+After=docker.service
+Requires=docker.service
+
+[Service]
+User={{allusers.gitlab.name}}
+TimeoutStartSec=1min
+TimeoutStopSec=90s
+Restart=always
+RestartSec=10
+StartLimitInterval=0
+ExecStartPre=-/usr/bin/docker stop gitlab
+ExecStop=/usr/bin/docker stop gitlab
+ExecStopPost=/usr/bin/docker rm --force --volumes gitlab
+ExecStart=/usr/bin/docker run --rm --hostname {{targetIPGitlab}} --publish {{ports.gitlab.portnum}}:80 --publish {{ports.gitlab.portssh}}:22 --name gitlab --volume /home/{{allusers.gitlab.name}}/gitlab:/etc/gitlab --volume /home/{{allusers.gitlab.name}}/gitlab/logs:/var/log/gitlab --volume /home/{{allusers.gitlab.name}}/gitlab/data:/var/opt/gitlab  gitlab/gitlab-ce:latest
+
+[Install]
+WantedBy=multi-user.target

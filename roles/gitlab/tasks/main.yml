@@ -1,18 +1,15 @@
 #Copy File and RUN
 #.---
-- name: "Copy Files"
-  template: src=docker-compose.yaml dest=/docker-compose.yml
-
-- name: "Run Docker compose gitlab"
-  command: docker-compose up -d
-  args:
-    chdir: "/"
 
 - name: Install epel
   yum: name=epel-release state=latest
 
 - name: Install nginx
   yum: name=nginx state=latest
+
+- name: Create a User {{allusers.gitlab.name}}
+  user: name={{allusers.gitlab.name}} uid={{allusers.gitlab.id}} groups=docker password=Start12345
+
 
 - name: Firewall
   firewalld: service={{item}} permanent=true state=enabled zone=public
@@ -22,19 +19,38 @@
   notify:
         - reload firewalld
  
+- name: Create Folder for owncloud Files
+  file: state=directory path={{item}} mode=0777
+  with_items:
+      - /etc/nginx/conf.d    
+      - /etc/nginx/ssl
+      - /home/{{allusers.gitlab.name}}/gitlab/
+      - /home/{{allusers.gitlab.name}}/gitlab/logs  
+      - /home/{{allusers.gitlab.name}}/gitlab/data
+      
+
+
 - name: create self-signed SSL cert
-  command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=la/L=po/O=IT/CN=jonnybravoserver-gitlab" -keyout /etc/nginx/ssl/nginx_gitlab.key -out /etc/nginx/ssl/nginx_gitlab.crt
+  command: openssl req -x509 -nodes -days 365 -newkey rsa:4096 -subj "/C=US/ST=la/L=po/O=IT/CN=jonnybravoserver-gitlab" -keyout /etc/nginx/ssl/nginx_gitlab.key -out /etc/nginx/ssl/nginx_gitlab.crt
    # notify: reload ngin
  
 - name: Create a service
   template: src={{item.src}} dest={{item.dest}}
   with_items:
-        - {src: nginx_gitlab.conf, dest: /etc/nginx/conf.d/nginx_gitlab.conf}  
-      # - {src: config.php, dest: /home/nextcloud/nextcloud/data/config/config.php}
- 
-- name: Start Service dokuwiki
+        - {src: nginx_gitlab.conf, dest: /etc/nginx/conf.d/nginx_gitlab.conf}
+        - {src: gitlab.service.j2, dest: /etc/sysconfig/gitlab}
+
+
+- name: Register Unit Dokuwiki
+  template: src=gitlab.service.j2 dest=/lib/systemd/system/gitlab.service mode=644
+  notify:
+       - reload systemctl
+       - reload nginx
+
+- name: Start Service gitlab
   service: name={{item}} state=restarted enabled=yes
   with_items:
+     - gitlab.service    
      - nginx
 
 
