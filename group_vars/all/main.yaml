@@ -1,6 +1,6 @@
 owncloudtag: 0.4
 targetDomainNextcloud: larponline.de
-targetIPGitlab: 134.119.111.31
+targetIPGitlab: 109.239.49.147
 gitlabstartps: Start12345678!Daniel
 allusers: 
   owncloud:
