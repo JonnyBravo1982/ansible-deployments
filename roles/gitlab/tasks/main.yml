@@ -30,14 +30,14 @@
       
 
 
-- name: create self-signed SSL cert
-  command: openssl req -x509 -nodes -days 365 -newkey rsa:4096 -subj "/C=US/ST=la/L=po/O=IT/CN=jonnybravoserver-gitlab" -keyout /etc/nginx/ssl/nginx_gitlab.key -out /etc/nginx/ssl/nginx_gitlab.crt
+        #- name: create self-signed SSL cert
+        #command: openssl req -x509 -nodes -days 365 -newkey rsa:4096 -subj "/C=US/ST=la/L=po/O=IT/CN=jonnybravoserver-gitlab" -keyout /etc/nginx/ssl/nginx_gitlab.key -out /etc/nginx/ssl/nginx_gitlab.crt
    # notify: reload ngin
  
 - name: Create a service
   template: src={{item.src}} dest={{item.dest}}
   with_items:
-        - {src: nginx_gitlab.conf, dest: /etc/nginx/conf.d/nginx_gitlab.conf}
+          #  - {src: nginx_gitlab.conf, dest: /etc/nginx/conf.d/nginx_gitlab.conf}
         - {src: gitlab.service.j2, dest: /etc/sysconfig/gitlab}
 
 
@@ -45,12 +45,12 @@
   template: src=gitlab.service.j2 dest=/lib/systemd/system/gitlab.service mode=644
   notify:
        - reload systemctl
-       - reload nginx
+         #- reload nginx
 
 - name: Start Service gitlab
   service: name={{item}} state=restarted enabled=yes
   with_items:
      - gitlab.service    
-     - nginx
+       #    - nginx
 
 
