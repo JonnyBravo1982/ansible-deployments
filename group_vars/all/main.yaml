@@ -20,7 +20,8 @@ ports:
   nextcloud:
       portnum: 23423
   dokuwiki:
-      portnum: 234 gitlab:
+      portnum: 23424
+  gitlab:
       portnum: 23432
       portssh: 22212
   pritunl:
