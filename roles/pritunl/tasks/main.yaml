@@ -11,9 +11,9 @@
  - name: Create a User {{allusers.pritunl.name}}
    user: name={{allusers.pritunl.name}} uid={{allusers.pritunl.id}} groups=docker password=Start12345
 
-   #   - name: Create Folder for owncloud Files
-   #file: state=directory path={{item}} mode=0777
-   #with_items:
+ - name: Create Folder for owncloud Files
+   file: state=directory path={{item}} mode=0777
+   with_items:
    #      - /etc/nginx/ssl
          - /home/{{allusers.pritunl.name}}/mongodb
          - /home/{{allusers.pritunl.name}}/pritunl
