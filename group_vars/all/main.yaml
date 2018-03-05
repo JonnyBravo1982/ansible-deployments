@@ -16,6 +16,9 @@ allusers:
   gitlab:
        name: gitlab
        id: 1012
+  pritunl:
+       name: pritunl
+       id: 1013
 ports: 
   nextcloud:
       portnum: 23423
