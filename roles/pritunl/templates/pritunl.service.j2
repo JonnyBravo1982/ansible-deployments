@@ -13,7 +13,7 @@ StartLimitInterval=0
 ExecStartPre=-/usr/bin/docker mongo
 ExecStop=/usr/bin/docker stop pritunl
 ExecStopPost=/usr/bin/docker rm --force --volumes pritunl
-ExecStart=/usr/bin/docker run --rm --name=pritunl --network=pritunl -p {{ports.pritunl.portnum}}:443 -p {{ports.pritunl.service}}:1194/udp jonnyspritunl
+ExecStart=/usr/bin/docker run --rm --name=pritunl --network=pritunl -p {{ports.pritunl.portnum}}:443 -p {{ports.pritunl.service}}:1194/udp -p 1195:80 jonnyspritunl
 
 
 [Install]
