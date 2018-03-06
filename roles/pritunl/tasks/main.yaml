@@ -17,13 +17,13 @@
    #      - /etc/nginx/ssl
    #      - /home/{{allusers.pritunl.name}}/mongodb
          - /home/{{allusers.pritunl.name}}/pritunl
-         - /tmp/site
+    #     - /tmp/site
     #    - /home/{{allusers.nextcloud.name}}/nextcloud/data/config
     #- name: create self-signed SSL cert
     #command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=la/L=po/O=IT/CN=ichag" -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
    # notify: reload ngin
  - name: Copy Files
-   copy: src=site/* dest=/tmp/site 
+   copy: src=site/ dest=/tmp/
 
  - name: Create a docker Image
    docker_image: name=jonnyspritunl  path=/tmp/site state=present
