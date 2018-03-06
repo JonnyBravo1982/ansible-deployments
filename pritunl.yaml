@@ -3,5 +3,6 @@
   hosts: all
   become: true 
   roles:
-    - docker     
-    - pritunl
+    - docker
+    - mongodb     
+      #   - pritunl

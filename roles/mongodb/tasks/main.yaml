@@ -1,0 +1,42 @@
+---
+ 
+ - name: Firewall
+   firewalld: service={{item}} permanent=true state=enabled zone=public
+   with_items:
+        - http
+        - https
+   notify: 
+        - reload firewalld  
+  
+ - name: Create a User {{allusers.pritunl.name}}
+   user: name={{allusers.pritunl.name}} uid={{allusers.pritunl.id}} groups=docker password=Start12345
+
+ - name: Create Folder for owncloud Files
+   file: state=directory path={{item}} mode=0777
+   with_items:
+   #      - /etc/nginx/ssl
+         - /home/{{allusers.pritunl.name}}/mongodb
+    #     - /home/{{allusers.pritunl.name}}/pritunl
+    #    - /home/{{allusers.nextcloud.name}}/nextcloud/data/config
+    #- name: create self-signed SSL cert
+    #command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=la/L=po/O=IT/CN=ichag" -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
+   # notify: reload ngin
+ 
+ - name: Create a service
+   template: src={{item.src}} dest={{item.dest}}
+   with_items:
+        - {src: mongo.service.j2, dest: /etc/sysconfig/mongo}
+     #  - {src: nginx.conf, dest: /etc/nginx/nginx.conf}  
+      # - {src: config.php, dest: /home/nextcloud/nextcloud/data/config/config.php}
+ 
+ - name: Register Unit
+   template: src=mongo.service.j2 dest=/lib/systemd/system/mongo.service mode=644
+   notify:
+       - reload systemctl
+      #    - reload nginx  
+ 
+ - name: Start Service pritunl
+   service: name={{item}} state=restarted enabled=yes
+   with_items:
+     - mongo.service
+     #- nginx

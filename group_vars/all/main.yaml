@@ -19,6 +19,9 @@ allusers:
   pritunl:
        name: pritunl
        id: 1013
+  mongo:
+       name: mongo
+       id: 1014
 ports: 
   nextcloud:
       portnum: 23423
@@ -29,5 +32,8 @@ ports:
       portssh: 22212
   pritunl:
       portnum: 9000
-      service: 1194 
+      service: 1194
+  mongo:
+      portnum: 27017
+
 
