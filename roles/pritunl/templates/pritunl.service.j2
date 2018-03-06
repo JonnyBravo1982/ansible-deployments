@@ -10,10 +10,10 @@ TimeoutStopSec=90s
 Restart=always
 RestartSec=10
 StartLimitInterval=0
-ExecStartPre=-/usr/bin/docker pritunl
-ExecStop=/usr/bin/docker stop nextcloud
-ExecStopPost=/usr/bin/docker rm --force --volumes nextcloud
-ExecStart=/usr/bin/docker run --rm -v /home/{{allusers.pritunl.name}}/mongodb:/var/lib/mongodb -v /home/{{allusers.pritunl.name}}/pritunl:/var/lib/pritunl -v /home/{{allusers.pritunl.name}}/pritunl/pritunl.conf:/var/lib/pritunl/pritunl.conf --name=pritunl -p {{ports.pritunl.portnum}}:443 -p {{ports.pritunl.service}}:1194 johnae/pritunl
+ExecStartPre=-/usr/bin/docker mongo
+ExecStop=/usr/bin/docker stop pritunl
+ExecStopPost=/usr/bin/docker rm --force --volumes pritunl
+ExecStart=/usr/bin/docker run --rm --name=pritunl --network=pritunl -p {{ports.pritunl.portnum}}:443 -p {{ports.pritunl.service}}:1194/udp jonnyspritunl
 
 
 [Install]

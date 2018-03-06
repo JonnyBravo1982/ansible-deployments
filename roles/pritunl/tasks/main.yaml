@@ -11,17 +11,23 @@
  - name: Create a User {{allusers.pritunl.name}}
    user: name={{allusers.pritunl.name}} uid={{allusers.pritunl.id}} groups=docker password=Start12345
 
- - name: Create Folder for owncloud Files
+ - name: Create Folder for pritunl Files
    file: state=directory path={{item}} mode=0777
    with_items:
    #      - /etc/nginx/ssl
-         - /home/{{allusers.pritunl.name}}/mongodb
+   #      - /home/{{allusers.pritunl.name}}/mongodb
          - /home/{{allusers.pritunl.name}}/pritunl
+         - /tmp/site
     #    - /home/{{allusers.nextcloud.name}}/nextcloud/data/config
     #- name: create self-signed SSL cert
     #command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=la/L=po/O=IT/CN=ichag" -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
    # notify: reload ngin
- 
+ - name: Copy Files
+   copy: src=site/* dest=/tmp/site 
+
+ - name: Create a docker Image
+   docker_image: name=jonnyspritunl  path=/tmp/site state=present
+
  - name: Create a service
    template: src={{item.src}} dest={{item.dest}}
    with_items:
