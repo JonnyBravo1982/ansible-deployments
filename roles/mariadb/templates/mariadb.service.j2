@@ -13,7 +13,7 @@ StartLimitInterval=0
 ExecStartPre=-/usr/bin/docker stop mariadb
 ExecStop=/usr/bin/docker stop mariadb
 ExecStopPost=/usr/bin/docker rm --force --volumes mariadb
-ExecStart=/usr/bin/docker run --rm -v /home/{{allusers.mariadb.name}}/data/:/var/lib/mysql --name mariadb -e MYSQL_ROOT_PASSWORD="Start1234START1234T" --link some-mariadb:mysql  mariadb
+ExecStart=/usr/bin/docker run --rm -v /home/{{allusers.mariadb.name}}/data/:/var/lib/mysql --name mariadb -e MYSQL_ROOT_PASSWORD="Start1234START1234T" mariadb
 
 [Install]
 WantedBy=multi-user.target
