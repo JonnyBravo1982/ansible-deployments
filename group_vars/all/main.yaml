@@ -22,6 +22,9 @@ allusers:
   mongo:
        name: mongo
        id: 1014
+  mariadb:
+       name: mariadb
+       id: 1015
 ports: 
   nextcloud:
       portnum: 23423

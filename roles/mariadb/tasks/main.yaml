@@ -1,0 +1,37 @@
+---
+ - name: Install epel
+   yum: name=epel-release state=latest
+
+ - name: Install nginx
+   yum: name=nginx state=latest
+   
+ - name: Create a User {{allusers.mariadb.name}}
+   user: name={{allusers.mariadb.name}} uid={{allusers.mariadb.id}} groups=docker password=Start12345
+
+ - name: Create Folder for owncloud Files
+   file: state=directory path={{item}} mode=0777
+   with_items:
+         - /home/{{allusers.mariadb.name}}/nextcloud/data
+    #    - /home/{{allusers.nextcloud.name}}/nextcloud/data/config
+ - name: create self-signed SSL cert
+   command: openssl req -x509 -nodes -days 365 -newkey rsa:4096 -subj "/C=US/ST=la/L=po/O=IT/CN=ichag" -keyout /etc/nginx/ssl/mariadb.key -out /etc/nginx/ssl/mariadb.crt
+   # notify: reload ngin
+ 
+ - name: Create a service
+   template: src={{item.src}} dest={{item.dest}}
+   with_items:
+        - {src: mariadb.service.j2, dest: /etc/sysconfig/mariadb}
+          #  - {src: nginx.conf, dest: /etc/nginx/nginx.conf}  
+      # - {src: config.php, dest: /home/nextcloud/nextcloud/data/config/config.php}
+ 
+ - name: Register Unit Dokuwiki
+   template: src=mariadb.service.j2 dest=/lib/systemd/system/mariadb.service mode=644
+   notify:
+       - reload systemctl
+         # - reload nginx  
+ 
+ - name: Start Service mariadb
+   service: name={{item}} state=restarted enabled=yes
+   with_items:
+     - mariadb.service
+     - nginx
