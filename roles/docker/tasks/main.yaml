@@ -10,7 +10,7 @@
         docker-compose
     - name: Install Docker
       yum: name=docker state=latest
-      when: ansible_distribution == "CentOS"
+      when: ansible_distribution == "CentOS" or ansible_distribution == "Fedora"
     - name: create a docker Group
       group: name=docker state=present
     - name: Adding existing user {{ lookup('env','USER') }} to group sudo
