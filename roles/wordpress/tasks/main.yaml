@@ -21,5 +21,5 @@
  - name: Start Service mariadb
    service: name={{item}} state=restarted enabled=yes
    with_items:
-     - mariadb.service
+     - wordpress.service
        # - nginx
