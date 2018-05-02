@@ -3,7 +3,6 @@
       dnf:
          name: yum
          state: latest
-         autoremove: yes
     - name: Install python setup tools
       yum: name=python-setuptools
     - name: Install Pypi
