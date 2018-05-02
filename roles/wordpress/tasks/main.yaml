@@ -1,0 +1,25 @@
+---
+ - name: Install epel
+   yum: name=epel-release state=latest
+
+   #- name: Install nginx
+   #  yum: name=nginx state=latest
+   
+ - name: Create a service
+   template: src={{item.src}} dest={{item.dest}}
+   with_items:
+        - {src: wordpress.service.j2, dest: /etc/sysconfig/wordpress}
+          #  - {src: nginx.conf, dest: /etc/nginx/nginx.conf}  
+      # - {src: config.php, dest: /home/nextcloud/nextcloud/data/config/config.php}
+ 
+ - name: Register Unit Dokuwiki
+   template: src=wordpress.service.j2 dest=/lib/systemd/system/wordpress.service mode=644
+   notify:
+       - reload systemctl
+         # - reload nginx  
+ 
+ - name: Start Service mariadb
+   service: name={{item}} state=restarted enabled=yes
+   with_items:
+     - mariadb.service
+       # - nginx

@@ -1,0 +1,7 @@
+---
+- name: Deploy mariadb with wordpress
+  hosts: all
+  become: true 
+  roles:
+    - mariadb
+    - wordpress

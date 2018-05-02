@@ -1,0 +1,19 @@
+[Unit]
+Description=wordpress Container
+After=docker.service
+Requires=docker.service
+
+[Service]
+User={{allusers.mariadb.name}}
+TimeoutStartSec=1min
+TimeoutStopSec=90s
+Restart=always
+RestartSec=10
+StartLimitInterval=0
+ExecStartPre=-/usr/bin/docker stop wordpress mariadb
+ExecStop=/usr/bin/docker stop wordpres mariadb
+ExecStopPost=/usr/bin/docker rm --force --volumes mariadb wordpress
+ExecStart=/usr/bin/docker run --rm --name wordpress --link some-mysql:mariadb -p 8080:80 wordpress
+
+[Install]
+WantedBy=multi-user.target
