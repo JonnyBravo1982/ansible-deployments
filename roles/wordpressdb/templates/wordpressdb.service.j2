@@ -4,14 +4,14 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-User={{allusers.mariadb.name}}
+User={{allusers.wordpressdb.name}}
 TimeoutStartSec=1min
 TimeoutStopSec=90s
 Restart=always
 RestartSec=10
 StartLimitInterval=0
-ExecStartPre=-/usr/bin/docker stop mariadb
-ExecStop=/usr/bin/docker stop mariadb
+ExecStartPre=-/usr/bin/docker stop wordpressdb
+ExecStop=/usr/bin/docker stop wordpressdb
 ExecStopPost=/usr/bin/docker rm --force --volumes mariadb
 ExecStart=/usr/bin/docker run --rm -v /home/{{allusers.mariadb.name}}/data/:/var/lib/mysql --name wordpressdb -e MYSQL_ROOT_PASSWORD=Start1234START1234T -e MYSQL_DATABASE=wordpress mariadb
 
