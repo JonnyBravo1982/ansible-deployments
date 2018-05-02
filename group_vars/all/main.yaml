@@ -22,8 +22,8 @@ allusers:
   mongo:
        name: mongo
        id: 1014
-  mariadb:
-       name: mariadb
+  wordpressdb:
+       name: hans
        id: 1015
 ports: 
   nextcloud:

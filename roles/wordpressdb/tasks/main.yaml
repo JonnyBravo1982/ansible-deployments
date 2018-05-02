@@ -5,8 +5,8 @@
  - name: Install nginx
    yum: name=nginx state=latest
    
- - name: Create a User {{allusers.mariadb.name}}
-   user: name={{allusers.mariadb.name}} uid={{allusers.mariadb.id}} groups=docker password=Start12345
+ - name: Create a User {{allusers.wordpressdb.name}}
+   user: name={{allusers.wordpressdb.name}} uid={{allusers.wordpressdb.id}} groups=docker password=Start12345
 
  - name: Create Folder for owncloud Files
    file: state=directory path={{item}} mode=0777
@@ -20,12 +20,12 @@
  - name: Create a service
    template: src={{item.src}} dest={{item.dest}}
    with_items:
-        - {src: mariadb.service.j2, dest: /etc/sysconfig/mariadb}
+        - {src: wordpressdb.service.j2, dest: /etc/sysconfig/wordpressdb}
           #  - {src: nginx.conf, dest: /etc/nginx/nginx.conf}  
       # - {src: config.php, dest: /home/nextcloud/nextcloud/data/config/config.php}
  
  - name: Register Unit Dokuwiki
-   template: src=mariadb.service.j2 dest=/lib/systemd/system/mariadb.service mode=644
+   template: src=wordpressdb.service.j2 dest=/lib/systemd/system/wordpressdb.service mode=644
    notify:
        - reload systemctl
          # - reload nginx  
@@ -33,5 +33,5 @@
  - name: Start Service mariadb
    service: name={{item}} state=restarted enabled=yes
    with_items:
-     - mariadb.service
+     - wordpressdb.service
      - nginx

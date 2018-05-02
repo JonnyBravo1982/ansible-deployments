@@ -3,6 +3,8 @@
       dnf:
          name: yum
          state: latest
+      when:   
+         - ansible_distribution == "Fedora"
     - name: Install python setup tools
       yum: name=python-setuptools
     - name: Install Pypi
