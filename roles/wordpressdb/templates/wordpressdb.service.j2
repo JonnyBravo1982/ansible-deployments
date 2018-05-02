@@ -12,8 +12,8 @@ RestartSec=10
 StartLimitInterval=0
 ExecStartPre=-/usr/bin/docker stop wordpressdb
 ExecStop=/usr/bin/docker stop wordpressdb
-ExecStopPost=/usr/bin/docker rm --force --volumes mariadb
-ExecStart=/usr/bin/docker run --rm -v /home/{{allusers.mariadb.name}}/data/:/var/lib/mysql --name wordpressdb -e MYSQL_ROOT_PASSWORD=Start1234START1234T -e MYSQL_DATABASE=wordpress mariadb
+ExecStopPost=/usr/bin/docker rm --force --volumes wordpressdb
+ExecStart=/usr/bin/docker run --rm -v /home/{{allusers.wordpressdb.name}}/data/:/var/lib/mysql --name wordpressdb -e MYSQL_ROOT_PASSWORD=Start1234START1234T -e MYSQL_DATABASE=wordpress mariadb
 
 [Install]
 WantedBy=multi-user.target
