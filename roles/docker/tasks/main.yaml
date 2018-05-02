@@ -1,4 +1,8 @@
 ---
+    - name: install the latest version of yum
+      dnf:
+      name: yum
+      state: latest
     - name: Install python setup tools
       yum: name=python-setuptools
     - name: Install Pypi
