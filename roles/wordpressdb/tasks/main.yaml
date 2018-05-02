@@ -11,7 +11,7 @@
  - name: Create Folder for owncloud Files
    file: state=directory path={{item}} mode=0777
    with_items:
-         - /home/{{allusers.mariadb.name}}/nextcloud/data
+         - /home/{{allusers.wordpressdb.name}}/nextcloud/data
     #    - /home/{{allusers.nextcloud.name}}/nextcloud/data/config
     # - name: create self-signed SSL cert
     #command: openssl req -x509 -nodes -days 365 -newkey rsa:4096 -subj "/C=US/ST=la/L=po/O=IT/CN=ichag" -keyout /etc/nginx/ssl/mariadb.key -out /etc/nginx/ssl/mariadb.crt
